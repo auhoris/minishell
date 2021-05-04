@@ -32,14 +32,22 @@ libs			= $(gnldir)/$(gnl_a) $(libftdir)/$(libft_a)
 rm				= rm -rf
 
 
-all:			 $(name)
 
-$(name):		$(objects)
+all:			 lib gnl $(name)
+
+gnl:
+				@make -C $(gnldir)
+lib:
+				@make -C $(libftdir)
+
+
+$(name):		$(objects) $(libs)
 				$(cc) $(cflags) $^ -o $@
-				@echo ""$@" compiled"
+				@echo "\033[0;32m"$@" compiled"
 
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
 				$(cc) $(cflags) -c $< -o $@
+				@echo "Compiled "$<" successfully!"
 
 
 clean:
@@ -54,4 +62,4 @@ re:				fclean all
 
 
 .PHONY:			clean fclean re all
-.SILENT:		$(name)
+# .SILENT:		$(name)
