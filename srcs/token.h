@@ -13,11 +13,10 @@ typedef struct s_token
 		TOKEN_SEMICOLON, //3
 		TOKEN_LESS, //4
 		TOKEN_MORE, //5
-		TOKEN_DMORE, //6
-		TOKEN_PIPE, //7
-		TOKEN_DOLLAR, //8
-		TOKEN_NULL, //9
-		TOKEN_EOF //10
+		TOKEN_PIPE, //6
+		TOKEN_DOLLAR, //7
+		TOKEN_NULL, //8
+		TOKEN_EOF //9
 	}	e_type;
 	char	*value;
 }		t_token;

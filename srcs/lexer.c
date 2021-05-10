@@ -36,8 +36,30 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_collect_string(lexer));
 		if (ft_isalnum(lexer->c))
 			return (lexer_collect_id(lexer));
+		if (lexer->c == '\\')
+			return (lexer_advance_with_token(lexer, TOKEN_BSLASH));
+		else if (lexer->c == ';')
+			return (lexer_advance_with_token(lexer, TOKEN_SEMICOLON));
+		else if (lexer->c == '<')
+			return (lexer_advance_with_token(lexer, TOKEN_LESS));
+		else if (lexer->c == '>')
+			return (lexer_advance_with_token(lexer, TOKEN_MORE));
+		else if (lexer->c == '|')
+			return (lexer_advance_with_token(lexer, TOKEN_PIPE));
+		else if (lexer->c == '$')
+			return (lexer_advance_with_token(lexer, TOKEN_DOLLAR));
+		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_EOF, "\0"));
+}
+
+t_token	*lexer_advance_with_token(t_lexer *lexer, int type)
+{
+	char	save;
+
+	save = lexer->c;
+	lexer_advance(lexer);
+	return (init_token(type, lexer_get_char_as_str(save)));
 }
 
 t_token	*lexer_collect_id(t_lexer *lexer)
