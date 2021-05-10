@@ -9,14 +9,15 @@ typedef struct s_token
 	{
 		TOKEN_ID, //0
 		TOKEN_BSLASH, //1
-		TOKEN_STRING, //2
+		TOKEN_SQUOTE, //2
+		TOKEN_DQUOTE, //2
 		TOKEN_SEMICOLON, //3
 		TOKEN_LESS, //4
 		TOKEN_MORE, //5
 		TOKEN_PIPE, //6
 		TOKEN_DOLLAR, //7
 		TOKEN_NULL, //8
-		TOKEN_EOF //9
+		TOKEN_EOF, //9
 	}	e_type;
 	char	*value;
 }		t_token;
