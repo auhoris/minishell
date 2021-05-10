@@ -33,9 +33,13 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		if (lexer->c == ' ')
 			lexer_skip_whitespace(lexer);
 		if (lexer->c == '\'')
-			return (lexer_collect_string(lexer));
+			return (lexer_collect_squote(lexer));
+		if (lexer->c == '"')
+			return (lexer_collect_dquote(lexer));
 		if (ft_isalnum(lexer->c))
 			return (lexer_collect_id(lexer));
+		if (lexer->c == '$')
+			return (lexer_collect_dollar(lexer));
 		if (lexer->c == '\\')
 			return (lexer_advance_with_token(lexer, TOKEN_BSLASH));
 		else if (lexer->c == ';')
@@ -46,11 +50,27 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_advance_with_token(lexer, TOKEN_MORE));
 		else if (lexer->c == '|')
 			return (lexer_advance_with_token(lexer, TOKEN_PIPE));
-		else if (lexer->c == '$')
-			return (lexer_advance_with_token(lexer, TOKEN_DOLLAR));
 		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_EOF, "\0"));
+}
+
+t_token	*lexer_collect_dollar(t_lexer *lexer)
+{
+	char	*str;
+	char	*tmp;
+
+	str = ft_strdup("");
+	if (str == NULL)
+		return (NULL);
+	while (ft_isalnum(lexer->c) && lexer->current < lexer->length)
+	{
+		tmp = str;
+		str = ft_strjoin(str, lexer_get_char_as_str(lexer->c));
+		free(tmp);
+		lexer_advance(lexer);
+	}
+	return (init_token(TOKEN_DOLLAR, str));
 }
 
 t_token	*lexer_advance_with_token(t_lexer *lexer, int type)
@@ -80,7 +100,7 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	return (init_token(TOKEN_ID, str));
 }
 
-t_token	*lexer_collect_string(t_lexer *lexer)
+t_token	*lexer_collect_squote(t_lexer *lexer)
 {
 	char	*string;
 	char	*tmp;
@@ -97,7 +117,15 @@ t_token	*lexer_collect_string(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	lexer_advance(lexer);
-	return (init_token(TOKEN_STRING, string));
+	return (init_token(TOKEN_SQUOTE, string));
+}
+
+t_token	*lexer_collect_dquote(t_lexer *lexer)
+{
+	char	*string;
+	(void)lexer;
+	(void)string;
+	return (init_token(TOKEN_EOF, "\0"));
 }
 
 char	*lexer_get_char_as_str(char c)
