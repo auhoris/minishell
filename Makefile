@@ -63,4 +63,4 @@ re:				fclean all
 
 
 .PHONY:			clean fclean re all
-# .SILENT:		$(name)
+.SILENT:		$(name) $(objects)
