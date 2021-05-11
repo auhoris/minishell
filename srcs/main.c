@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/11 16:45:58 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/11 18:31:17 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*print_token_type(int type)
 
 int main(void)
 {
-	char	*str = "echo >>  $< > | ; 'hello' ";
+	char	*str = "echo blabla < > | ; $ 'string' ";
 	t_lexer	*lexer;
 	t_token	*token;
 
@@ -49,9 +49,9 @@ int main(void)
 	token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
 	{
-		printf("type = '%s'\t", print_token_type(token->e_type));
-		printf("value = '%s'\n", token->value);
+		printf("type='%s'\t", print_token_type(token->e_type));
+		printf("value='%s'\n", token->value);
 		token = lexer_get_next_token(lexer);
 	}
-	return 0;
+	return (0);
 }

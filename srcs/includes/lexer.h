@@ -26,5 +26,6 @@ t_token		*lexer_collect_dquote(t_lexer *lexer);
 t_token		*lexer_collect_dollar(t_lexer *lexer);
 char		lexer_peek(t_lexer *lexer, int offset);
 t_token		*lexer_collect_dgreat(t_lexer *lexer);
+t_token		*lexer_collect_bslash(t_lexer *lexer);
 
 #endif /* ifndef LEXER_H */

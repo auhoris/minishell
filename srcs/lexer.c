@@ -33,7 +33,13 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_advance_with(lexer, init_token(TOKEN_DOLLAR, lexer_chtostr(lexer->c))));
 		}
 		if (lexer->c == '\\')
+		{
+			if (lexer_peek(lexer, 1) == '$' || lexer_peek(lexer, 1) == '"')
+				return (lexer_collect_bslash(lexer));
+			/* else if (lexer_peek(lexer, 1) == '"')
+				lexer_collect_bslash(lexer); */
 			return (lexer_advance_with(lexer, init_token(TOKEN_BSLASH, lexer_chtostr(lexer->c))));
+		}
 		else if (lexer->c == ';')
 			return (lexer_advance_with(lexer, init_token(TOKEN_SEMI, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '<')

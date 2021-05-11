@@ -80,3 +80,28 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	lexer_advance(lexer);
 	return (init_token(TOKEN_DQUOTE, string));
 }
+
+t_token		*lexer_collect_bslash(t_lexer *lexer)
+{
+	char	*value;
+	char	*tmp;
+
+	if ((value = ft_strdup("")) == NULL)
+		return (NULL);
+	tmp = value;
+	lexer_advance(lexer);
+	if ((value = ft_strjoin(value, lexer_chtostr(lexer->c))) == NULL)
+		return (NULL);
+	free(tmp);
+	lexer_advance(lexer);
+	while (ft_isalnum(lexer->c))
+	{
+		// printf("%c\n", lexer->c);
+		tmp = value;
+		value = ft_strjoin(value, lexer_chtostr(lexer->c));
+		free(tmp);
+		lexer_advance(lexer);
+	}
+	printf("value = %s\n", value);
+	return (init_token(TOKEN_BSLASH, value));
+}
