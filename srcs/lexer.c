@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "includes/lexer.h"
 
 t_lexer	*init_lexer(char *content)
 {
@@ -14,18 +14,6 @@ t_lexer	*init_lexer(char *content)
 	return (lexer);
 }
 
-void	lexer_advance(t_lexer *lexer)
-{
-	lexer->current++;
-	lexer->c = lexer->content[lexer->current];
-}
-
-void	lexer_skip_whitespace(t_lexer *lexer)
-{
-	while (lexer->c == ' ')
-		lexer_advance(lexer);
-}
-
 t_token	*lexer_get_next_token(t_lexer *lexer)
 {
 	while (lexer->c != '\0' && lexer->current < lexer->length)
@@ -39,11 +27,15 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		if (ft_isalnum(lexer->c))
 			return (lexer_collect_id(lexer));
 		if (lexer->c == '$')
-			return (lexer_collect_dollar(lexer));
+		{
+			if (ft_isalnum(lexer_peek(lexer, 1)))
+				return (lexer_collect_dollar(lexer));
+			return (lexer_advance_with(lexer, init_token(TOKEN_DOLLAR, lexer_chtostr(lexer->c))));
+		}
 		if (lexer->c == '\\')
 			return (lexer_advance_with(lexer, init_token(TOKEN_BSLASH, lexer_chtostr(lexer->c))));
 		else if (lexer->c == ';')
-			return (lexer_advance_with(lexer, init_token(TOKEN_SEMICOLON, lexer_chtostr(lexer->c))));
+			return (lexer_advance_with(lexer, init_token(TOKEN_SEMI, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '<')
 			return (lexer_advance_with(lexer, init_token(TOKEN_LESS, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '>')
@@ -59,15 +51,3 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 	return (init_token(TOKEN_EOF, "\0"));
 }
 
-t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
-{
-	lexer_advance(lexer);
-	return (token);
-}
-
-char		lexer_peek(t_lexer *lexer, int offset)
-{
-	if (lexer->current + offset < lexer->length)
-		return (lexer->content[lexer->current + offset]);
-	return (lexer->content[lexer->length - 1]);
-}

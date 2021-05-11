@@ -6,12 +6,12 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/11 15:19:01 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/11 16:45:58 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
 #include "term.h"
+#include "includes/lexer.h"
 
 int main(int argc, char **argv)
 {

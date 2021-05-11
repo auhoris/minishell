@@ -3,7 +3,7 @@
 
 # include <unistd.h>
 # include <stdio.h>
-# include "../libs/libft/srcs/libft.h"
+# include "../../libs/libft/srcs/libft.h"
 # include "token.h"
 
 typedef struct s_lexer
