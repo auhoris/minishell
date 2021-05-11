@@ -41,15 +41,19 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		if (lexer->c == '$')
 			return (lexer_collect_dollar(lexer));
 		if (lexer->c == '\\')
-			return (lexer_advance_with_token(lexer, TOKEN_BSLASH));
+			return (lexer_advance_with(lexer, init_token(TOKEN_BSLASH, lexer_chtostr(lexer->c))));
 		else if (lexer->c == ';')
-			return (lexer_advance_with_token(lexer, TOKEN_SEMICOLON));
+			return (lexer_advance_with(lexer, init_token(TOKEN_SEMICOLON, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '<')
-			return (lexer_advance_with_token(lexer, TOKEN_LESS));
+			return (lexer_advance_with(lexer, init_token(TOKEN_LESS, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '>')
-			return (lexer_advance_with_token(lexer, TOKEN_MORE));
+		{
+			if (lexer_peek(lexer, 1) == '>')
+				return (lexer_advance_with(lexer, lexer_advance_with(lexer, init_token(TOKEN_DMORE, ">>"))));
+			return (lexer_advance_with(lexer, init_token(TOKEN_MORE, lexer_chtostr(lexer->c))));
+		}
 		else if (lexer->c == '|')
-			return (lexer_advance_with_token(lexer, TOKEN_PIPE));
+			return (lexer_advance_with(lexer, init_token(TOKEN_PIPE, lexer_chtostr(lexer->c))));
 		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_EOF, "\0"));
@@ -66,20 +70,17 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 	while (ft_isalnum(lexer->c) && lexer->current < lexer->length)
 	{
 		tmp = str;
-		str = ft_strjoin(str, lexer_get_char_as_str(lexer->c));
+		str = ft_strjoin(str, lexer_chtostr(lexer->c));
 		free(tmp);
 		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_DOLLAR, str));
 }
 
-t_token	*lexer_advance_with_token(t_lexer *lexer, int type)
+t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
 {
-	char	save;
-
-	save = lexer->c;
 	lexer_advance(lexer);
-	return (init_token(type, lexer_get_char_as_str(save)));
+	return (token);
 }
 
 t_token	*lexer_collect_id(t_lexer *lexer)
@@ -93,7 +94,7 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	while (ft_isalnum(lexer->c) && lexer->current < lexer->length)
 	{
 		tmp = str;
-		str = ft_strjoin(str, lexer_get_char_as_str(lexer->c));
+		str = ft_strjoin(str, lexer_chtostr(lexer->c));
 		free(tmp);
 		lexer_advance(lexer);
 	}
@@ -112,7 +113,7 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 	while (lexer->c != '\'' && lexer->current < lexer->length)
 	{
 		tmp = string;
-		string = ft_strjoin(string, lexer_get_char_as_str(lexer->c));
+		string = ft_strjoin(string, lexer_chtostr(lexer->c));
 		free(tmp);
 		lexer_advance(lexer);
 	}
@@ -128,7 +129,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	return (init_token(TOKEN_EOF, "\0"));
 }
 
-char	*lexer_get_char_as_str(char c)
+char	*lexer_chtostr(char c)
 {
 	char	*str;
 
@@ -138,4 +139,11 @@ char	*lexer_get_char_as_str(char c)
 	str[0] = c;
 	str[1] = '\0';
 	return (str);
+}
+
+char		lexer_peek(t_lexer *lexer, int offset)
+{
+	if (lexer->current + offset < lexer->length)
+		return (lexer->content[lexer->current + offset]);
+	return (lexer->content[lexer->length - 1]);
 }

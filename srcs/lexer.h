@@ -19,10 +19,12 @@ void		lexer_advance(t_lexer *lexer);
 t_token		*lexer_get_next_token(t_lexer *lexer);
 void		lexer_skip_whitespace(t_lexer *lexer);
 t_token		*lexer_collect_squote(t_lexer *lexer);
-char		*lexer_get_char_as_str(char c);
+char		*lexer_chtostr(char c);
 t_token		*lexer_collect_id(t_lexer *lexer);
-t_token		*lexer_advance_with_token(t_lexer *lexer, int type);
+t_token		*lexer_advance_with(t_lexer *lexer, t_token *token);
 t_token		*lexer_collect_dquote(t_lexer *lexer);
 t_token		*lexer_collect_dollar(t_lexer *lexer);
+char		lexer_peek(t_lexer *lexer, int offset);
+t_token		*lexer_collect_dgreat(t_lexer *lexer);
 
 #endif /* ifndef LEXER_H */
