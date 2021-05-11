@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "includes/lexer.h"
 
 t_lexer	*init_lexer(char *content)
 {

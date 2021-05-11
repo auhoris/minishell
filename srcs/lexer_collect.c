@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "includes/lexer.h"
 
 t_token	*lexer_collect_dollar(t_lexer *lexer)
 {

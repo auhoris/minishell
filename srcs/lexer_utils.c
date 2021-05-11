@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "includes/lexer.h"
 
 char	*lexer_chtostr(char c)
 {

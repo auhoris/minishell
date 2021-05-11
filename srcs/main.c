@@ -6,11 +6,11 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/11 16:41:49 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/11 16:45:58 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "includes/lexer.h"
 
 void	lexer_print_data(t_lexer *lexer)
 {
