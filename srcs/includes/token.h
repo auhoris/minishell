@@ -19,6 +19,7 @@ typedef struct s_token
 		TOKEN_DOLLAR, //9
 		TOKEN_NULL, //10
 		TOKEN_EOF, //11
+		TOKEN_EQUALS, //12
 	}	e_type;
 	char	*value;
 }		t_token;
