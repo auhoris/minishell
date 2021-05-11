@@ -46,6 +46,7 @@ $(name):		$(objects) $(libs)
 				@echo "\033[0;32m"$@" compiled"
 
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
+				@mkdir -p $(objdir)
 				$(cc) $(cflags) -c $< -o $@
 				@echo "Compiled "$<" successfully!"
 
@@ -53,7 +54,7 @@ $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
 clean:
 				@make -C $(gnldir) clean
 				@make -C $(libftdir) clean
-				$(rm) $(objects)
+				$(rm) $(objdir)
 fclean:			clean
 				@make -C $(gnldir) fclean
 				@make -C $(libftdir) fclean
