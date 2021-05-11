@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/11 15:29:09 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/11 16:41:49 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*print_token_type(int type)
 		case TOKEN_BSLASH: return ("TOKEN_BSLASH");
 		case TOKEN_SQUOTE: return ("TOKEN_SQUOTE");
 		case TOKEN_DQUOTE: return ("TOKEN_DQUOTE");
-		case TOKEN_SEMICOLON: return ("TOKEN_SEMICOLON");
+		case TOKEN_SEMI: return ("TOKEN_SEMI");
 		case TOKEN_LESS: return ("TOKEN_LESS");
 		case TOKEN_MORE: return ("TOKEN_MORE");
 		case TOKEN_DMORE: return ("TOKEN_DMORE");

@@ -35,7 +35,7 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		if (lexer->c == '\\')
 			return (lexer_advance_with(lexer, init_token(TOKEN_BSLASH, lexer_chtostr(lexer->c))));
 		else if (lexer->c == ';')
-			return (lexer_advance_with(lexer, init_token(TOKEN_SEMICOLON, lexer_chtostr(lexer->c))));
+			return (lexer_advance_with(lexer, init_token(TOKEN_SEMI, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '<')
 			return (lexer_advance_with(lexer, init_token(TOKEN_LESS, lexer_chtostr(lexer->c))));
 		else if (lexer->c == '>')

@@ -11,7 +11,7 @@ typedef struct s_token
 		TOKEN_BSLASH, //1
 		TOKEN_SQUOTE, //2
 		TOKEN_DQUOTE, //3
-		TOKEN_SEMICOLON, //4
+		TOKEN_SEMI, //4
 		TOKEN_LESS, //5
 		TOKEN_MORE, //6
 		TOKEN_DMORE, //7
