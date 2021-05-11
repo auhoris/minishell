@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/11 15:19:01 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/11 15:29:09 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*print_token_type(int type)
 
 int main(void)
 {
-	char	*str = "echo >> 'string";
+	char	*str = "echo >>  $< > | ; 'hello' ";
 	t_lexer	*lexer;
 	t_token	*token;
 
