@@ -11,6 +11,7 @@ libdir			= libs
 incdir			= $(srcdir)/includes
 gnldir			= $(libdir)/get_next_line
 libftdir		= $(libdir)/libft
+termcapdir		= $(srcdir)/termcap
 
 # Files
 sources			= $(wildcard $(srcdir)/*.c)
@@ -22,6 +23,7 @@ cc				= gcc
 cflags			= -Wall -Werror -Wextra
 dbgf			= -g
 sanitize		= -fsanitize=address
+termcap			= -ltermcap
 
 # Additional libraries
 libft_a			= libft.a
@@ -42,7 +44,7 @@ lib:
 
 
 $(name):		$(objects) $(libs)
-				$(cc) $(cflags) $^ -o $@
+				$(cc) $(cflags) $(termcap) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
 
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)

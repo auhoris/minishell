@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"types.h": "c",
+		"term.h": "c",
+		"minishell.h": "c",
+		"lexer.h": "c"
+	}
+}
