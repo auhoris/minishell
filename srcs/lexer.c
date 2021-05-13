@@ -34,11 +34,11 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		}
 		if (lexer->c == '\\')
 		{
-			if (lexer_peek(lexer, 1) == '$' || lexer_peek(lexer, 1) == '"')
-				return (lexer_collect_bslash(lexer));
-			/* else if (lexer_peek(lexer, 1) == '"')
-				lexer_collect_bslash(lexer); */
-			return (lexer_advance_with(lexer, init_token(TOKEN_BSLASH, lexer_chtostr(lexer->c))));
+			/* if (lexer_peek(lexer, 1) == '\'' || lexer_peek(lexer, 1) == '\"')
+			{ */
+				lexer_advance(lexer);
+				return (lexer_advance_with(lexer, init_token(TOKEN_BSLASH, lexer_chtostr(lexer->c))));
+			// }
 		}
 		else if (lexer->c == ';')
 			return (lexer_advance_with(lexer, init_token(TOKEN_SEMI, lexer_chtostr(lexer->c))));
@@ -52,6 +52,8 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		}
 		else if (lexer->c == '|')
 			return (lexer_advance_with(lexer, init_token(TOKEN_PIPE, lexer_chtostr(lexer->c))));
+		else
+			return (lexer_advance_with(lexer, init_token(TOKEN_NULL, lexer_chtostr(lexer->c))));
 		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_EOF, "\0"));

@@ -27,7 +27,7 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
-	while (ft_isalnum(lexer->c) && lexer->current < lexer->length)
+	while ((ft_isalnum(lexer->c) || lexer->c == '$') && lexer->current < lexer->length)
 	{
 		tmp = str;
 		str = ft_strjoin(str, lexer_chtostr(lexer->c));
