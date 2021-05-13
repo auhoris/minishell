@@ -6,7 +6,8 @@
 # include "../../libs/libft/srcs/libft.h"
 # include "token.h"
 
-# define SPECIAL "$\\;|><"
+# define SPECIAL "\"'$\\;|><"
+# define SPACE ' '
 
 typedef struct s_lexer
 {

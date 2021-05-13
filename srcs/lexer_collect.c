@@ -27,14 +27,14 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
-	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != ' ') && lexer->current < lexer->length)
+	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->current < lexer->length)
 	{
 		tmp = str;
 		str = ft_strjoin(str, lexer_chtostr(lexer->c));
 		free(tmp);
 		lexer_advance(lexer);
 	}
-	if (lexer->c == ' ' && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
+	if (lexer->c == SPACE && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
 	{
 		tmp = str;
 		str = ft_strjoin(str, lexer_chtostr(lexer->c));
@@ -48,15 +48,17 @@ t_token		*lexer_collect_bslash(t_lexer *lexer)
 	char	*value;
 	char	*tmp;
 
+	lexer_advance(lexer);
 	if ((value = ft_strdup("")) == NULL)
 		return (NULL);
-	tmp = value;
-	lexer_advance(lexer);
-	if ((value = ft_strjoin(value, lexer_chtostr(lexer->c))) == NULL)
+	// tmp = value;
+	/* if ((value = ft_strjoin(value, lexer_chtostr(lexer->c))) == NULL)
 		return (NULL);
-	free(tmp);
-	lexer_advance(lexer);
-	while (lexer->c != ' ')
+	free(tmp); */
+	// lexer_advance(lexer);
+	if (lexer->c == SPACE && lexer_peek(lexer, 1) == SPACE)
+		return (init_token(TOKEN_BSLASH, " "));
+	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->current < lexer->length)
 	{
 		tmp = value;
 		value = ft_strjoin(value, lexer_chtostr(lexer->c));
@@ -105,7 +107,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\"')
-		return (init_token(TOKEN_NULL, "\0"));
+		return (init_token(TOKEN_NULL, string));
 	lexer_advance(lexer);
 	return (init_token(TOKEN_DQUOTE, string));
 }

@@ -38,6 +38,7 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		}
 		if (lexer->c == '\\')
 		{
+			// if 
 			return (lexer_collect_bslash(lexer));
 		}
 		else if (lexer->c == ';')
