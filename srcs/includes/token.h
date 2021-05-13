@@ -20,6 +20,7 @@ typedef struct s_token
 		BAD_TOKEN, //10
 		TOKEN_EOF, //11
 		TOKEN_EQUALS, //12
+		TOKEN_CMD,
 	}	e_type;
 	char	*value;
 }		t_token;
