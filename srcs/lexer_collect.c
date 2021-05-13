@@ -53,12 +53,11 @@ t_token		*lexer_collect_bslash(t_lexer *lexer)
 	lexer_advance(lexer);
 	if ((value = ft_strdup("")) == NULL)
 		return (NULL);
-	if (lexer->c == SPACE && lexer_peek(lexer, 1) == SPACE)
-		return (init_token(TOKEN_BSLASH, " "));
 	spec_id = 0;
-	while (lexer->c != SPACE && lexer->current < lexer->length)
+	//	Забирает всё, что идёт после '\' до тех пор пока не встретит второй раз спец символ или пробел
+	while (lexer->current < lexer->length)
 	{
-		if (spec_id > 0 && ft_inset(SPECIAL, lexer->c))
+		if (spec_id > 0 && (ft_inset(SPECIAL, lexer->c) || lexer->c == SPACE))
 			return (init_token(TOKEN_BSLASH, value));
 		tmp = value;
 		value = ft_strjoin(value, lexer_chtostr(lexer->c));
