@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/13 20:46:14 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/13 21:15:01 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*print_token_type(int type)
 		case TOKEN_DOLLAR: return ("TOKEN_DOLLAR");
 		case BAD_TOKEN: return ("BAD_TOKEN");
 		case TOKEN_EOF: return ("TOKEN_EOF");
+		case TOKEN_CMD: return ("TOKEN_CMD");
 		default: return ("Undefined token");
 	}
 }
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
 		printf("value='%s'\n", token->value);
 		token = lexer_get_next_token(lexer);
 	}
-	printf("type='%s'\t", print_token_type(token->e_type));
-	printf("value='%s'\n", token->value);
+	/* printf("type='%s'\t", print_token_type(token->e_type));
+	printf("value='%s'\n", token->value); */
 	return (0);
 }
