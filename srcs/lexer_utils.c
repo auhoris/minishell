@@ -36,3 +36,19 @@ char		lexer_peek(t_lexer *lexer, int offset)
 		return (lexer->content[lexer->current + offset]);
 	return (lexer->content[lexer->length - 1]);
 }
+
+size_t	lexer_count_quotes(char *str, char qt)
+{
+	size_t	i;
+	size_t	cnt;
+
+	i = 0;
+	cnt = 0;
+	while (str[i] != ';' || str[i] != '|')
+	{
+		if (str[i] == qt)
+			cnt++;
+		i++;
+	}
+	return (cnt);
+}
