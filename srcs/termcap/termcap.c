@@ -1,6 +1,6 @@
-#include "./includes/types.h"
+#include "../includes/types.h"
 #include "term.h"
-#include "includes/lexer.h"
+#include "../includes/lexer.h"
 
 static int		get_term_param(struct termios *term)
 {
@@ -41,10 +41,36 @@ static int		get_term_param(struct termios *term)
 	return (1);
 }
 
-static int	input_processing(char *str, char *command_line)
+void		screen_clear(void)
+{
+	tputs(tgetstr("rc", 0), 1, ft_putint); // rc восстановление сохраненной позиции курсора
+	tputs(tgetstr("cd", 0), 1, ft_putint); // очистка до конца экрана
+}
+
+static int	processing_del(char **command_line)
+{
+	char	*temp;
+	int		len;
+
+	len = ft_strlen(*command_line);
+	if (len != 0)
+	{
+		temp = *command_line;
+		*command_line = ft_substr(temp, 0, len - 1);
+		if (*command_line == NULL)
+			return (ERROR_MALLOC);
+		free(temp);
+		tputs(tgetstr("le", 0), 1, ft_putint); // смещение каретки на 1 влево
+		tputs(tgetstr("dc", 0), 1, ft_putint); // удаление символа
+	}
+	return (1);
+}
+
+static int	input_processing(char *str, char **command_line)
 {
 	char	*temp;
 
+	// command_line = NULL;
 	if (!ft_strncmp(str, ARROW_UP, ft_strlen(str)))
 	{
 		printf("up\n");
@@ -55,23 +81,23 @@ static int	input_processing(char *str, char *command_line)
 	}
 	else if (str[0] == '\177')
 	{
-		printf("del\n");
+		processing_del(command_line);
 	}
-	else if (str[0] == 10) // пока что печатаем, но эта страка улетит на парсинг
+	else if (str[0] == 10)					// пока что печатаем, но в дальнейшем эта страка улетит на парсинг
 	{
-		write(1, command_line, ft_strlen(command_line));
-		write(1, "\n", 1);
-		free(command_line);
-		command_line = (char *)ft_calloc(1, 1);
+		screen_clear();
+		write(1, *command_line, ft_strlen(*command_line));
+		write(1, "\n<minishell>$", 13);
+		tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
+		free(*command_line);
+		*command_line = (char *)ft_calloc(1, 1);
 	}
-	else
+	else if (ft_isprint(str[0]) && str[1] == '\0')
 	{
-		// printf("код = %d\n", str[0]);
-		// printf("%s\n", str);
-		temp = command_line;
-		command_line = ft_strjoin(temp, str);
+		write(1, str, 1);
+		temp = *command_line;
+		*command_line = ft_strjoin(temp, str);
 		free(temp);
-		temp = NULL;
 	}
 	return (1);
 }
@@ -87,14 +113,21 @@ int		termcap()
 	{
 		// ERROR
 	}
-	str = (char *)ft_calloc(1, 10);
+	str = (char *)ft_calloc(10, 1);
 	command_line = (char *)ft_calloc(1, 1);
+	if (str == NULL || command_line == NULL)
+	{
+		printf("ERROR\n");
+		return (0);
+	}
+	write(1, "<minishell>$", 12);
+	tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
 	while (1)
 	{
 		l = read(0, str, 100);
 		if (l != 0)
 		{
-			input_processing(str, command_line);
+			input_processing(str, &command_line);
 		}
 	}
 	return (1);

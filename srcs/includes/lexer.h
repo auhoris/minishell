@@ -5,6 +5,7 @@
 # include <stdio.h>
 # include "../../libs/libft/srcs/libft.h"
 # include "token.h"
+# include "errors.h"
 
 typedef struct s_lexer
 {

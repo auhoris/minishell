@@ -14,9 +14,9 @@ libftdir		= $(libdir)/libft
 termcapdir		= $(srcdir)/termcap
 
 # Files
-sources			= $(wildcard $(srcdir)/*.c)
+sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c)
 inclds			= $(wildcard $(incdir)/*.h)
-objects			= $(sources:$(srcdir)/%.c=$(objdir)/%.o)
+objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(objdir)/%.o)
 
 # Flags and linkers
 cc				= gcc

@@ -69,6 +69,7 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 				void (*del)(void *));
 void			ft_putchar(char c);
 void			ft_putstr(char *str);
+int				ft_putint(int c);
 void			swap(void *a, void *b, size_t size);
 
 #endif
