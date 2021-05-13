@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/13 17:44:24 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/13 17:46:06 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*print_token_type(int type)
 
 int main(void)
 {
-	char	*str = "$PATH\\ $PWD";
+	char	*str = "echo '     ' ' ' ";
 	t_lexer	*lexer;
 	t_token	*token;
 

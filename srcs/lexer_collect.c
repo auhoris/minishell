@@ -66,7 +66,7 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 	if (string == NULL)
 		return (NULL);
 	lexer_advance(lexer);
-	while (lexer->c != '\'' && lexer->current < lexer->length)
+	while (lexer->c != '\'' && lexer->c != '\0')
 	{
 		string = connect_str(string, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
