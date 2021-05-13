@@ -34,6 +34,7 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 		free(tmp);
 		lexer_advance(lexer);
 	}
+	//	Сделано, чтобы различать ситуации, когда после ID есть пробел или нет, т.к. в bash можно написать echo asd$PATH
 	if (lexer->c == SPACE && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
 	{
 		tmp = str;
@@ -47,25 +48,23 @@ t_token		*lexer_collect_bslash(t_lexer *lexer)
 {
 	char	*value;
 	char	*tmp;
+	int		spec_id;
 
 	lexer_advance(lexer);
 	if ((value = ft_strdup("")) == NULL)
 		return (NULL);
 	if (lexer->c == SPACE && lexer_peek(lexer, 1) == SPACE)
 		return (init_token(TOKEN_BSLASH, " "));
-	if (ft_inset(SPECIAL, lexer->c))
+	spec_id = 0;
+	while (lexer->c != SPACE && lexer->current < lexer->length)
 	{
+		if (spec_id > 0 && ft_inset(SPECIAL, lexer->c))
+			return (init_token(TOKEN_BSLASH, value));
 		tmp = value;
 		value = ft_strjoin(value, lexer_chtostr(lexer->c));
 		free(tmp);
 		lexer_advance(lexer);
-	}
-	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->current < lexer->length)
-	{
-		tmp = value;
-		value = ft_strjoin(value, lexer_chtostr(lexer->c));
-		free(tmp);
-		lexer_advance(lexer);
+		spec_id++;
 	}
 	return (init_token(TOKEN_BSLASH, value));
 }

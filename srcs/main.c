@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/13 16:33:42 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/13 16:42:11 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*print_token_type(int type)
 
 int main(void)
 {
-	char	*str = "echo \\JOPA$PATH";
+	char	*str = "echo 1  1";
 	t_lexer	*lexer;
 	t_token	*token;
 
