@@ -38,6 +38,8 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	т.к. в bash можно написать echo asd$PATH */
 	if (lexer->c == SPACE && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
 		str = connect_str(str, lexer_chtostr(lexer->c));
+	if (check_command(str))
+		return (init_token(TOKEN_CMD, str));
 	return (init_token(TOKEN_ID, str));
 }
 
