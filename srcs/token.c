@@ -1,6 +1,6 @@
 #include "includes/token.h"
 
-t_token		*init_token(int type, char *value)
+t_token	*init_token(int type, char *value)
 {
 	t_token	*token;
 

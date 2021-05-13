@@ -30,28 +30,11 @@ t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
 	return (token);
 }
 
-char		lexer_peek(t_lexer *lexer, int offset)
+char	lexer_peek(t_lexer *lexer, int offset)
 {
 	if (lexer->current + offset < lexer->length)
 		return (lexer->content[lexer->current + offset]);
 	return (lexer->content[lexer->length - 1]);
-}
-
-// Пока какой-то бесполезняк
-size_t	lexer_count_quotes(char *str, char qt)
-{
-	size_t	i;
-	size_t	cnt;
-
-	i = 0;
-	cnt = 0;
-	while (str[i] != ';' || str[i] != '|')
-	{
-		if (str[i] == qt)
-			cnt++;
-		i++;
-	}
-	return (cnt);
 }
 
 char	*connect_str(char *s1, char *s2)

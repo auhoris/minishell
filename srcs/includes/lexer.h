@@ -31,5 +31,6 @@ char		lexer_peek(t_lexer *lexer, int offset);
 t_token		*lexer_collect_dgreat(t_lexer *lexer);
 t_token		*lexer_collect_bslash(t_lexer *lexer);
 size_t		lexer_count_quotes(char *str, char qt);
+t_token		*lexer_collect_equals(t_lexer *lexer);
 
 #endif /* ifndef LEXER_H */

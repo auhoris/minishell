@@ -17,7 +17,7 @@ typedef struct s_token
 		TOKEN_DMORE, //7
 		TOKEN_PIPE, //8
 		TOKEN_DOLLAR, //9
-		TOKEN_NULL, //10
+		BAD_TOKEN, //10
 		TOKEN_EOF, //11
 		TOKEN_EQUALS, //12
 	}	e_type;

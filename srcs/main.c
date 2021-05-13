@@ -6,11 +6,12 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/13 17:46:06 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/13 20:46:14 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/lexer.h"
+#include "../libs/get_next_line/srcs/includes/get_next_line.h"
 
 void	lexer_print_data(t_lexer *lexer)
 {
@@ -33,18 +34,21 @@ char	*print_token_type(int type)
 		case TOKEN_DMORE: return ("TOKEN_DMORE");
 		case TOKEN_PIPE: return ("TOKEN_PIPE");
 		case TOKEN_DOLLAR: return ("TOKEN_DOLLAR");
-		case TOKEN_NULL: return ("TOKEN_NULL");
+		case BAD_TOKEN: return ("BAD_TOKEN");
 		case TOKEN_EOF: return ("TOKEN_EOF");
 		default: return ("Undefined token");
 	}
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-	char	*str = "echo '     ' ' ' ";
+	(void)argc;
+	(void)argv;
+	char	*str;
 	t_lexer	*lexer;
 	t_token	*token;
 
+	get_next_line(0, &str);
 	lexer = init_lexer(str);
 	token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
@@ -53,5 +57,7 @@ int main(void)
 		printf("value='%s'\n", token->value);
 		token = lexer_get_next_token(lexer);
 	}
+	printf("type='%s'\t", print_token_type(token->e_type));
+	printf("value='%s'\n", token->value);
 	return (0);
 }
