@@ -37,6 +37,7 @@ char		lexer_peek(t_lexer *lexer, int offset)
 	return (lexer->content[lexer->length - 1]);
 }
 
+// Пока какой-то бесполезняк
 size_t	lexer_count_quotes(char *str, char qt)
 {
 	size_t	i;
@@ -51,4 +52,16 @@ size_t	lexer_count_quotes(char *str, char qt)
 		i++;
 	}
 	return (cnt);
+}
+
+char	*connect_str(char *s1, char *s2)
+{
+	char	*tmp;
+
+	tmp = s1;
+	s1 = ft_strjoin(s1, s2);
+	free(tmp);
+	if (s1 == NULL)
+		return (NULL);
+	return (s1);
 }

@@ -1,77 +1,66 @@
 #include "includes/lexer.h"
+#include "includes/utils.h"
 
 t_token	*lexer_collect_dollar(t_lexer *lexer)
 {
 	char	*str;
-	char	*tmp;
 
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
 	lexer_advance(lexer);
-	while (ft_isalnum(lexer->c) && lexer->current < lexer->length)
+	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->c != '\0')
 	{
-		tmp = str;
-		str = ft_strjoin(str, lexer_chtostr(lexer->c));
-		free(tmp);
+		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
+	if (lexer->c == SPACE)
+		str = connect_str(str, lexer_chtostr(lexer->c));
 	return (init_token(TOKEN_DOLLAR, str));
 }
 
 t_token	*lexer_collect_id(t_lexer *lexer)
 {
 	char	*str;
-	char	*tmp;
 
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
-	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->current < lexer->length)
+	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->c != '\0')
 	{
-		tmp = str;
-		str = ft_strjoin(str, lexer_chtostr(lexer->c));
-		free(tmp);
+		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
 	//	Сделано, чтобы различать ситуации, когда после ID есть пробел или нет, т.к. в bash можно написать echo asd$PATH
 	if (lexer->c == SPACE && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
-	{
-		tmp = str;
-		str = ft_strjoin(str, lexer_chtostr(lexer->c));
-		free(tmp);
-	}
+		str = connect_str(str, lexer_chtostr(lexer->c));
 	return (init_token(TOKEN_ID, str));
 }
 
 t_token		*lexer_collect_bslash(t_lexer *lexer)
 {
-	char	*value;
-	char	*tmp;
+	char	*str;
 	int		spec_id;
 
 	lexer_advance(lexer);
-	if ((value = ft_strdup("")) == NULL)
+	if ((str = ft_strdup("")) == NULL)
 		return (NULL);
 	spec_id = 0;
 	//	Забирает всё, что идёт после '\' до тех пор пока не встретит второй раз спец символ или пробел
-	while (lexer->current < lexer->length)
+	while (lexer->c != '\0')
 	{
 		if (spec_id > 0 && (ft_inset(SPECIAL, lexer->c) || lexer->c == SPACE))
-			return (init_token(TOKEN_BSLASH, value));
-		tmp = value;
-		value = ft_strjoin(value, lexer_chtostr(lexer->c));
-		free(tmp);
+			return (init_token(TOKEN_BSLASH, str));
+		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 		spec_id++;
 	}
-	return (init_token(TOKEN_BSLASH, value));
+	return (init_token(TOKEN_BSLASH, str));
 }
 
 t_token	*lexer_collect_squote(t_lexer *lexer)
 {
 	char	*string;
-	char	*tmp;
 
 	string = ft_strdup("");
 	if (string == NULL)
@@ -79,9 +68,7 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 	lexer_advance(lexer);
 	while (lexer->c != '\'' && lexer->current < lexer->length)
 	{
-		tmp = string;
-		string = ft_strjoin(string, lexer_chtostr(lexer->c));
-		free(tmp);
+		string = connect_str(string, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\'')
@@ -93,7 +80,6 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 t_token	*lexer_collect_dquote(t_lexer *lexer)
 {
 	char	*string;
-	char	*tmp;
 
 	string = ft_strdup("");
 	if (string == NULL)
@@ -101,9 +87,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	lexer_advance(lexer);
 	while (lexer->c != '\"' && lexer->current < lexer->length)
 	{
-		tmp = string;
-		string = ft_strjoin(string, lexer_chtostr(lexer->c));
-		free(tmp);
+		string = connect_str(string, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\"')
