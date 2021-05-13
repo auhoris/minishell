@@ -51,13 +51,15 @@ t_token		*lexer_collect_bslash(t_lexer *lexer)
 	lexer_advance(lexer);
 	if ((value = ft_strdup("")) == NULL)
 		return (NULL);
-	// tmp = value;
-	/* if ((value = ft_strjoin(value, lexer_chtostr(lexer->c))) == NULL)
-		return (NULL);
-	free(tmp); */
-	// lexer_advance(lexer);
 	if (lexer->c == SPACE && lexer_peek(lexer, 1) == SPACE)
 		return (init_token(TOKEN_BSLASH, " "));
+	if (ft_inset(SPECIAL, lexer->c))
+	{
+		tmp = value;
+		value = ft_strjoin(value, lexer_chtostr(lexer->c));
+		free(tmp);
+		lexer_advance(lexer);
+	}
 	while ((!ft_inset(SPECIAL, lexer->c) && lexer->c != SPACE) && lexer->current < lexer->length)
 	{
 		tmp = value;
