@@ -61,6 +61,9 @@ fclean:			clean
 				$(rm) $(name)
 re:				fclean all
 
+shclean:		
+				$(rm) $(objdir)
+
 
 .PHONY:			clean fclean re all
 .SILENT:		$(name) $(objects)

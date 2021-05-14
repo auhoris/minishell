@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/14 16:52:57 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/14 18:09:23 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,9 @@ void	print_list_info(t_token_list **head)
 	}
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
-	(void)argc;
-	(void)argv;
-	char	*str;
+	char			*str;
 	t_lexer			*lexer;
 	t_token			*token;
 	t_token_list	*head;
