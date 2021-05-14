@@ -80,7 +80,7 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\'')
-		return (init_token(BAD_TOKEN, "\0"));
+		return (init_token(BAD_TOKEN, string));
 	lexer_advance(lexer);
 	return (init_token(TOKEN_SQUOTE, string));
 }
