@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/14 16:45:35 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/14 16:52:57 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*print_token_type(int type)
 	}
 }
 
-void			print_list_info(t_token_list **head)
+void	print_list_info(t_token_list **head)
 {
 	t_token_list	*save;
 
@@ -60,8 +60,8 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 	char	*str;
-	t_lexer	*lexer;
-	t_token	*token;
+	t_lexer			*lexer;
+	t_token			*token;
 	t_token_list	*head;
 
 	get_next_line(0, &str);
@@ -70,8 +70,6 @@ int main(int argc, char **argv)
 	while (token->e_type != TOKEN_EOF)
 	{
 		list_push_back(&head, list_new_token(token));
-		/* printf("type='%s'\t", print_token_type(token->e_type));
-		printf("value='%s'\n", token->value); */
 		token = lexer_get_next_token(lexer);
 	}
 	print_list_info(&head);
