@@ -111,18 +111,13 @@ static int	input_processing(char *str, char **command_line, int *num_symbol)
 	return (1);
 }
 
-int		termcap()
+int		infinite_round()
 {
-	char	*str;
 	int		l;
-	struct termios	term;
+	char	*str;
 	char	*command_line;
 	int		num_symbol;
 
-	if (get_term_param(&term) != 1)
-	{
-		// ERROR
-	}
 	str = (char *)ft_calloc(10, 1);
 	command_line = (char *)ft_calloc(1, 1);
 	if (str == NULL || command_line == NULL)
@@ -130,8 +125,6 @@ int		termcap()
 		printf("ERROR\n");
 		return (0);
 	}
-	write(1, "<minishell>$", 12);
-	tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
 	num_symbol = 12;
 	while (1)
 	{
@@ -142,5 +135,19 @@ int		termcap()
 		}
 		ft_bzero(str, 10);
 	}
+}
+
+int		termcap()
+{
+
+	struct termios	term;
+
+	if (get_term_param(&term) != 1)
+	{
+		// ERROR
+	}
+	write(1, "<minishell>$", 12);
+	tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
+	infinite_round();
 	return (1);
 }

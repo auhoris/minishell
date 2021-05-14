@@ -6,8 +6,10 @@
 
 typedef struct	s_history
 {
-	char		*command;
-	
+	char				*command;
+	struct s_history	*next;
+	struct s_history	*prev;
+
 }				t_history;
 
 
