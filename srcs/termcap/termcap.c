@@ -47,7 +47,7 @@ void		screen_clear(void)
 	tputs(tgetstr("cd", 0), 1, ft_putint); // очистка до конца экрана
 }
 
-static int	processing_del(char **command_line)
+static int	processing_del(char **command_line, int *num_symbol)
 {
 	char	*temp;
 	int		len;
@@ -60,13 +60,17 @@ static int	processing_del(char **command_line)
 		if (*command_line == NULL)
 			return (ERROR_MALLOC);
 		free(temp);
+	}
+	if (*num_symbol > 12)
+	{
 		tputs(tgetstr("le", 0), 1, ft_putint); // смещение каретки на 1 влево
 		tputs(tgetstr("dc", 0), 1, ft_putint); // удаление символа
+		(*num_symbol)--;
 	}
 	return (1);
 }
 
-static int	input_processing(char *str, char **command_line)
+static int	input_processing(char *str, char **command_line, int *num_symbol)
 {
 	char	*temp;
 
@@ -81,7 +85,7 @@ static int	input_processing(char *str, char **command_line)
 	}
 	else if (str[0] == '\177')
 	{
-		processing_del(command_line);
+		processing_del(command_line, num_symbol);
 	}
 	else if (str[0] == 10)					// пока что печатаем, но в дальнейшем эта страка улетит на парсинг
 	{
@@ -91,13 +95,18 @@ static int	input_processing(char *str, char **command_line)
 		tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
 		free(*command_line);
 		*command_line = (char *)ft_calloc(1, 1);
+		*num_symbol = 12;
 	}
-	else if (ft_isprint(str[0]) && str[1] == '\0')
+	else if (ft_isprint(str[0]))
 	{
-		write(1, str, 1);
+		write(1, str, ft_strlen(str));
 		temp = *command_line;
 		*command_line = ft_strjoin(temp, str);
 		free(temp);
+		(*num_symbol) += ft_strlen(str);
+	}
+	else
+	{
 	}
 	return (1);
 }
@@ -106,8 +115,9 @@ int		termcap()
 {
 	char	*str;
 	int		l;
-	struct termios term;
+	struct termios	term;
 	char	*command_line;
+	int		num_symbol;
 
 	if (get_term_param(&term) != 1)
 	{
@@ -122,13 +132,15 @@ int		termcap()
 	}
 	write(1, "<minishell>$", 12);
 	tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
+	num_symbol = 12;
 	while (1)
 	{
-		l = read(0, str, 100);
+		l = read(0, str, 10);
 		if (l != 0)
 		{
-			input_processing(str, &command_line);
+			input_processing(str, &command_line, &num_symbol);
 		}
+		ft_bzero(str, 10);
 	}
 	return (1);
 }
