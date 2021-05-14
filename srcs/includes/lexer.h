@@ -7,6 +7,7 @@
 # include "token.h"
 
 # define SPECIAL "\"'$\\;|><"
+# define OTHER "!%+-.,/?:@^_{}~"
 # define SPACE ' '
 
 typedef struct s_lexer
