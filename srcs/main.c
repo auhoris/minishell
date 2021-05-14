@@ -6,11 +6,12 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/14 12:44:08 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/14 16:45:35 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/lexer.h"
+#include "includes/token_list.h"
 #include "../libs/get_next_line/srcs/includes/get_next_line.h"
 
 void	lexer_print_data(t_lexer *lexer)
@@ -41,6 +42,19 @@ char	*print_token_type(int type)
 	}
 }
 
+void			print_list_info(t_token_list **head)
+{
+	t_token_list	*save;
+
+	save = *head;
+	while (save)
+	{
+		printf("type = '%s'\t", print_token_type(save->token->e_type));
+		printf("value = '%s'\n", save->token->value);
+		save = save->next;
+	}
+}
+
 int main(int argc, char **argv)
 {
 	(void)argc;
@@ -48,28 +62,19 @@ int main(int argc, char **argv)
 	char	*str;
 	t_lexer	*lexer;
 	t_token	*token;
+	t_token_list	*head;
 
-	while (get_next_line(0, &str) > 0)
-	{
-		lexer = init_lexer(str);
-		token = lexer_get_next_token(lexer);
-		while (token->e_type != TOKEN_EOF)
-		{
-			printf("type='%s'\t", print_token_type(token->e_type));
-			printf("value='%s'\n", token->value);
-			token = lexer_get_next_token(lexer);
-		}
-	}
-	
-	/* lexer = init_lexer(str);
+	get_next_line(0, &str);
+	lexer = init_lexer(str);
 	token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
 	{
-		printf("type='%s'\t", print_token_type(token->e_type));
-		printf("value='%s'\n", token->value);
+		list_push_back(&head, list_new_token(token));
+		/* printf("type='%s'\t", print_token_type(token->e_type));
+		printf("value='%s'\n", token->value); */
 		token = lexer_get_next_token(lexer);
-	} */
-	/* printf("type='%s'\t", print_token_type(token->e_type));
-	printf("value='%s'\n", token->value); */
+	}
+	print_list_info(&head);
+	
 	return (0);
 }

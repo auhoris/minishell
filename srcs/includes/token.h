@@ -8,19 +8,19 @@ typedef struct s_token
 	enum
 	{
 		TOKEN_ID, //0
-		TOKEN_BSLASH, //1
-		TOKEN_SQUOTE, //2
-		TOKEN_DQUOTE, //3
-		TOKEN_SEMI, //4
-		TOKEN_LESS, //5
-		TOKEN_MORE, //6
-		TOKEN_DMORE, //7
-		TOKEN_PIPE, //8
-		TOKEN_DOLLAR, //9
-		BAD_TOKEN, //10
-		TOKEN_EOF, //11
-		TOKEN_EQUALS, //12
-		TOKEN_CMD,
+		TOKEN_CMD, //1
+		TOKEN_BSLASH, //2
+		TOKEN_SQUOTE, //3
+		TOKEN_DQUOTE, //4
+		TOKEN_SEMI, //5
+		TOKEN_LESS, //6
+		TOKEN_MORE, //7
+		TOKEN_DMORE, //8
+		TOKEN_PIPE, //9
+		TOKEN_DOLLAR, //10
+		TOKEN_EQUALS, //11
+		BAD_TOKEN, //12
+		TOKEN_EOF, //13
 	}	e_type;
 	char	*value;
 }		t_token;
