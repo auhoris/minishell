@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/13 21:15:01 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/14 12:44:08 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,26 @@ int main(int argc, char **argv)
 	t_lexer	*lexer;
 	t_token	*token;
 
-	get_next_line(0, &str);
-	lexer = init_lexer(str);
+	while (get_next_line(0, &str) > 0)
+	{
+		lexer = init_lexer(str);
+		token = lexer_get_next_token(lexer);
+		while (token->e_type != TOKEN_EOF)
+		{
+			printf("type='%s'\t", print_token_type(token->e_type));
+			printf("value='%s'\n", token->value);
+			token = lexer_get_next_token(lexer);
+		}
+	}
+	
+	/* lexer = init_lexer(str);
 	token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
 	{
 		printf("type='%s'\t", print_token_type(token->e_type));
 		printf("value='%s'\n", token->value);
 		token = lexer_get_next_token(lexer);
-	}
+	} */
 	/* printf("type='%s'\t", print_token_type(token->e_type));
 	printf("value='%s'\n", token->value); */
 	return (0);
