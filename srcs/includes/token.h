@@ -19,8 +19,9 @@ typedef struct s_token
 		TOKEN_PIPE, //9
 		TOKEN_DOLLAR, //10
 		TOKEN_EQUALS, //11
-		BAD_TOKEN, //12
-		TOKEN_EOF, //13
+		TOKEN_FLAG, //12
+		BAD_TOKEN, //13
+		TOKEN_EOF, //14
 	}	e_type;
 	char	*value;
 }		t_token;

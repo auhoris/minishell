@@ -7,7 +7,7 @@
 # include "token.h"
 
 # define SPECIAL "\"'$\\;|><"
-# define OTHER "!%+-.,/?:@^_{}~"
+# define OTHER "!%+.,/?:@^_{}~"
 # define SPACE ' '
 
 typedef struct s_lexer
@@ -33,5 +33,6 @@ t_token		*lexer_collect_dgreat(t_lexer *lexer);
 t_token		*lexer_collect_bslash(t_lexer *lexer);
 size_t		lexer_count_quotes(char *str, char qt);
 t_token		*lexer_collect_equals(t_lexer *lexer);
+t_token		*lexer_collect_flags(t_lexer *lexer);
 
 #endif /* ifndef LEXER_H */

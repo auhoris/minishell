@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/14 18:09:23 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/15 17:31:40 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	*print_token_type(int type)
 		case BAD_TOKEN: return ("BAD_TOKEN");
 		case TOKEN_EOF: return ("TOKEN_EOF");
 		case TOKEN_CMD: return ("TOKEN_CMD");
+		case TOKEN_FLAG: return ("TOKEN_FLAG");
 		default: return ("Undefined token");
 	}
 }
