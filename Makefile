@@ -42,7 +42,7 @@ lib:
 
 
 $(name):		$(objects) $(libs)
-				$(cc) $(cflags) $^ -o $@
+				$(cc) $(cflags) $(dbgf) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
 
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
