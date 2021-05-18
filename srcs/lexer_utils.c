@@ -49,26 +49,3 @@ char	*connect_str(char *s1, char *s2)
 		return (NULL);
 	return (s1);
 }
-
-int	check_command(char *value)
-{
-	char	*commands[10];
-	size_t	i;
-
-	commands[0] = "echo ";
-	commands[1] = "cd ";
-	commands[2] = "pwd ";
-	commands[3] = "export ";
-	commands[4] = "unset ";
-	commands[5] = "env ";
-	commands[6] = "exit ";
-	commands[7] = NULL;
-	i = 0;
-	while (commands[i])
-	{
-		if (!ft_strncmp(value, commands[i], ft_strlen(value)))
-			return (TRUE);
-		i++;
-	}
-	return (FALSE);
-}

@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/18 20:06:29 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/18 20:31:09 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	print_ast(t_ast *ast)
 	while (i < ast->table_size)
 	{
 		printf("command='%s'\nargs:", ast->table_value[i]->cmd_name);
+		printf("nodetype='%d'\n", ast->table_value[i]->e_nodetype);
 		j = 0;
 		while (j < ast->table_value[i]->argc)
 		{

@@ -16,24 +16,11 @@ t_parser	*init_parser(t_lexer *lexer)
 	return (parser);
 }
 
-void	parser_expect(t_parser *parser, int type)
-{
-	if ((int)parser->current_token->e_type != type)
-	{
-		printf("[Parser]: Unexpected token '%d', with value '%s'\n",
-				parser->current_token->e_type, parser->current_token->value);
-		exit(1);
-	}
-	parser->prev_token = parser->current_token;
-	parser->current_token = lexer_get_next_token(parser->lexer);
-}
-
 void	parser_get_next_token(t_parser *parser)
 {
 	parser->prev_token = parser->current_token;
 	parser->current_token = lexer_get_next_token(parser->lexer);
 	destroy_token(parser->prev_token);
-
 }
 
 t_ast	*parser_parse_commands(t_parser *parser)
@@ -82,8 +69,8 @@ t_ast	*parser_parse_command(t_parser *parser)
 	scmd->cmd_name = ft_strdup(parser->current_token->value);
 	parser_get_next_token(parser);
 	while (parser->current_token->e_type != TOKEN_PIPE
-			&& parser->current_token->e_type != TOKEN_SEMI
-			&& parser->current_token->e_type != TOKEN_EOF)
+		&& parser->current_token->e_type != TOKEN_SEMI
+		&& parser->current_token->e_type != TOKEN_EOF)
 	{
 		if (parser->current_token->e_type == BAD_TOKEN)
 		{
