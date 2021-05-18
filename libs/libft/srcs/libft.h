@@ -6,7 +6,7 @@
 /*   By: auhoris <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 14:23:42 by auhoris           #+#    #+#             */
-/*   Updated: 2021/05/13 15:08:59 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/18 17:52:26 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ void	ft_putchar(char c);
 void	ft_putstr(char *str);
 void	swap(void *a, void *b, size_t size);
 int		ft_inset(char *set, char c);
+int		ft_strcmp(const char *s1, const char *s2);
+void	*ft_realloc(void *ptr, size_t newsize, size_t oldsize);
 
 #endif

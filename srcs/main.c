@@ -6,13 +6,16 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/15 17:31:40 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/18 18:25:54 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/lexer.h"
 #include "includes/token_list.h"
 #include "../libs/get_next_line/srcs/includes/get_next_line.h"
+#include "includes/parser.h"
+#include "includes/ast.h"
+#include "includes/token.h"
 
 void	lexer_print_data(t_lexer *lexer)
 {
@@ -60,18 +63,13 @@ int main(void)
 {
 	char			*str;
 	t_lexer			*lexer;
-	t_token			*token;
-	t_token_list	*head;
+	t_parser		*parser;
+	t_ast			*root;
 
 	get_next_line(0, &str);
 	lexer = init_lexer(str);
-	token = lexer_get_next_token(lexer);
-	while (token->e_type != TOKEN_EOF)
-	{
-		list_push_back(&head, list_new_token(token));
-		token = lexer_get_next_token(lexer);
-	}
-	print_list_info(&head);
-	
+	parser = init_parser(lexer);
+	root = parser_parse_commands(parser);
+	printf("table_size = %zu\n", root->table_size);
 	return (0);
 }
