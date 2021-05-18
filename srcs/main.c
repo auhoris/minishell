@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/18 18:25:54 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/18 20:06:29 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,8 @@
 #include "includes/parser.h"
 #include "includes/ast.h"
 #include "includes/token.h"
-
-void	lexer_print_data(t_lexer *lexer)
-{
-	printf("%s\n", lexer->content);
-	printf("%c\n", lexer->c);
-	printf("%zu\n", lexer->current);
-	printf("lexer->length = %zu\n", lexer->length);
-}
+#include <stdio.h>
+#include <sys/_types/_size_t.h>
 
 char	*print_token_type(int type)
 {
@@ -46,6 +40,26 @@ char	*print_token_type(int type)
 	}
 }
 
+void	print_ast(t_ast *ast)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (i < ast->table_size)
+	{
+		printf("command='%s'\nargs:", ast->table_value[i]->cmd_name);
+		j = 0;
+		while (j < ast->table_value[i]->argc)
+		{
+			printf("'%s'\t", ast->table_value[i]->argv[j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
+
 void	print_list_info(t_token_list **head)
 {
 	t_token_list	*save;
@@ -63,13 +77,21 @@ int main(void)
 {
 	char			*str;
 	t_lexer			*lexer;
+	// t_token			*token;
 	t_parser		*parser;
 	t_ast			*root;
 
 	get_next_line(0, &str);
 	lexer = init_lexer(str);
+	/* token = lexer_get_next_token(lexer);
+	while (token->e_type != TOKEN_EOF)
+	{
+		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
+		token = lexer_get_next_token(lexer);
+	} */
 	parser = init_parser(lexer);
 	root = parser_parse_commands(parser);
+	print_ast(root);
 	printf("table_size = %zu\n", root->table_size);
 	return (0);
 }

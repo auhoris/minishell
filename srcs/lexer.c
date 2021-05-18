@@ -50,7 +50,7 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			if (lexer_peek(lexer, 1) == '>')
 				return (lexer_advance_with(lexer,
 						lexer_advance_with(lexer,
-							init_token(TOKEN_DMORE, ">>"))));
+							init_token(TOKEN_DMORE, ft_strdup(">>")))));
 			return (lexer_advance_with(lexer,
 					init_token(TOKEN_MORE, lexer_chtostr(lexer->c))));
 		}

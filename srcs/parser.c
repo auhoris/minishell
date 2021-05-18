@@ -32,6 +32,8 @@ void	parser_get_next_token(t_parser *parser)
 {
 	parser->prev_token = parser->current_token;
 	parser->current_token = lexer_get_next_token(parser->lexer);
+	destroy_token(parser->prev_token);
+
 }
 
 t_ast	*parser_parse_commands(t_parser *parser)
@@ -45,7 +47,8 @@ t_ast	*parser_parse_commands(t_parser *parser)
 		return (NULL);
 	table->table_value[table->table_size] = parser_parse_command(parser);
 	table->table_size++;
-	while (parser->current_token->e_type == TOKEN_SEMI)
+	while (parser->current_token->e_type == TOKEN_SEMI
+			|| parser->current_token->e_type == TOKEN_PIPE)
 	{
 		parser_get_next_token(parser);
 		scmd = parser_parse_command(parser);
@@ -60,6 +63,11 @@ t_ast	*parser_parse_commands(t_parser *parser)
 	return (table);
 }
 
+void	print_token(t_token *token)
+{
+	printf("type='%d'\tvalue='%s'\n", token->e_type, token->value);
+}
+
 t_ast	*parser_parse_command(t_parser *parser)
 {
 	t_ast	*scmd;
@@ -71,22 +79,23 @@ t_ast	*parser_parse_command(t_parser *parser)
 				parser->current_token->e_type, parser->current_token->value);
 		exit(1);
 	}
-	else
+	scmd->cmd_name = ft_strdup(parser->current_token->value);
+	parser_get_next_token(parser);
+	while (parser->current_token->e_type != TOKEN_PIPE
+			&& parser->current_token->e_type != TOKEN_SEMI
+			&& parser->current_token->e_type != TOKEN_EOF)
 	{
-		scmd->cmd_name = ft_strdup(parser->current_token->value);
-		parser_get_next_token(parser);
+		if (parser->current_token->e_type == BAD_TOKEN)
+		{
+			printf("[Parser]: Bad token '%d' with value '%s'",
+					parser->current_token->e_type, parser->current_token->value);
+			exit(1);
+		}
 		scmd->argc++;
 		scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
 					(scmd->argc - 1) * sizeof(*scmd->argv));
-		scmd->argv[0] = ft_strdup(parser->current_token->value);
-		while (parser->current_token->e_type == TOKEN_ID)
-		{
-			parser_get_next_token(parser);
-			scmd->argc++;
-			scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
-						(scmd->argc - 1) * sizeof(*scmd->argv));
-			scmd->argv[0] = ft_strdup(parser->current_token->value);
-		}
-		return (scmd);
+		scmd->argv[scmd->argc - 1] = ft_strdup(parser->current_token->value);
+		parser_get_next_token(parser);
 	}
+	return (scmd);
 }
