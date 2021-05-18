@@ -1,6 +1,7 @@
 #include "../includes/types.h"
-#include "term.h"
+#include <term.h>
 #include "../includes/lexer.h"
+#include "termcap.h"
 
 static int		get_term_param(struct termios *term)
 {
@@ -70,70 +71,70 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (1);
 }
 
-static int	input_processing(char *str, char **command_line, int *num_symbol)
+static int	processing_button(t_data_processing *data_processing, int button)
 {
-	char	*temp;
+	int	out;
 
-	// command_line = NULL;
-	if (!ft_strncmp(str, ARROW_UP, ft_strlen(str)))
+	screen_clear();
+	out = get_history_list(data_processing, button);
+	write_in_terminal(data_processing->actual_history->command, &data_processing->num_symbol);
+	return (out);
+}
+
+static int	input_processing(t_data_processing *data_processing)
+{
+	int		check_buf;
+
+	check_buf = check_buf_read(data_processing->buf_read);
+	if (check_buf == UP)
 	{
-		printf("up\n");
+		processing_button(data_processing, UP);
+		// printf("up\n");
 	}
-	else if (!ft_strncmp(str, ARROW_DOWN, ft_strlen(str)))
+	else if (check_buf == DOWN)
 	{
-		printf("down\n");
+		processing_button(data_processing, DOWN);
+		// printf("down\n");
 	}
-	else if (str[0] == '\177')
+	else if (check_buf == DEL)
 	{
-		processing_del(command_line, num_symbol);
+		processing_del(&data_processing->command_line, &data_processing->num_symbol);
 	}
-	else if (str[0] == 10)					// пока что печатаем, но в дальнейшем эта страка улетит на парсинг
+	else if (check_buf == ENTER)					// пока что печатаем, но в дальнейшем эта страка улетит на парсинг
 	{
 		screen_clear();
-		write(1, *command_line, ft_strlen(*command_line));
+		write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
 		write(1, "\n<minishell>$", 13);
 		tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
-		free(*command_line);
-		*command_line = (char *)ft_calloc(1, 1);
-		*num_symbol = 12;
+		free(data_processing->command_line);
+		data_processing->command_line = (char *)ft_calloc(1, 1);					// нет защиты
+		data_processing->num_symbol = 12;
 	}
-	else if (ft_isprint(str[0]))
+	else if (check_buf == ISPRINT)
 	{
-		write(1, str, ft_strlen(str));
-		temp = *command_line;
-		*command_line = ft_strjoin(temp, str);
-		free(temp);
-		(*num_symbol) += ft_strlen(str);
-	}
-	else
-	{
+		write_in_terminal_isprint(data_processing);
 	}
 	return (1);
 }
 
 int		infinite_round()
 {
+	t_data_processing	*data_processing;
 	int		l;
-	char	*str;
-	char	*command_line;
-	int		num_symbol;
 
-	str = (char *)ft_calloc(10, 1);
-	command_line = (char *)ft_calloc(1, 1);
-	if (str == NULL || command_line == NULL)
+	data_processing = init_data_processing();
+	if (data_processing == NULL)
 	{
-		printf("ERROR\n");
-		return (0);
+		return (ERROR_MALLOC);
 	}
-	num_symbol = 12;
 	while (1)
 	{
-		l = read(0, str, 10);
+		l = read(0, data_processing->buf_read, 10);
 		if (l != 0)
 		{
-			input_processing(str, &command_line, &num_symbol);
+			input_processing(data_processing);
 		}
-		ft_bzero(str, 10);
+		ft_bzero(data_processing->buf_read, 10);
 	}
 }
 

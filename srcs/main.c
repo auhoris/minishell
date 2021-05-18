@@ -15,9 +15,10 @@
 #include "includes/minishell.h"
 
 
-int main(int argc, char **argv)
+int main(void)
 {
-	check_input_params(argc, argv);
+	// printf("hi\n");
+	// check_input_params(argc, argv);
 	termcap();
-	return 0;
+	return (0);
 }

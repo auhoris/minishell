@@ -12,15 +12,16 @@ incdir			= $(srcdir)/includes
 gnldir			= $(libdir)/get_next_line
 libftdir		= $(libdir)/libft
 termcapdir		= $(srcdir)/termcap
+historydir		= $(srcdir)/history
 
 # Files
-sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c)
+sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c) $(wildcard $(historydir)/*.c)
 inclds			= $(wildcard $(incdir)/*.h)
-objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(objdir)/%.o)
+objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(objdir)/%.o) $(sources:$(historydir)/.c=$(objdir)/%.o)
 
 # Flags and linkers
 cc				= gcc
-cflags			= -Wall -Werror -Wextra
+cflags			= -Wall -Werror -Wextra -g
 dbgf			= -g
 sanitize		= -fsanitize=address
 termcap			= -ltermcap
