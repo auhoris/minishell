@@ -15,14 +15,11 @@ typedef struct s_ast
 {
 	enum
 	{
-		AST_TABLE,
-		AST_EMPTY,
-		AST_SIMPLECMD,
-		AST_PIPE_IN,
-		AST_PIPE_OUT,
-		AST_REDIR_IN,
-		AST_REDIR_OUT,
-		AST_LAST_NODE,
+		NODE_ROOT, //0
+		NODE_PIPE, //1
+		NODE_REDIRECT, //2
+		NODE_SEQUENCE, //3
+		NODE_SIMPLECOMMAND, //4
 	}	e_nodetype;
 	char			*cmd_name;
 	//				Arguments

@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/18 20:31:09 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/19 17:08:44 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,37 +40,71 @@ char	*print_token_type(int type)
 	}
 }
 
-void	print_ast(t_ast *ast)
+char	*print_node_type(int type)
 {
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	while (i < ast->table_size)
-	{
-		printf("command='%s'\nargs:", ast->table_value[i]->cmd_name);
-		printf("nodetype='%d'\n", ast->table_value[i]->e_nodetype);
-		j = 0;
-		while (j < ast->table_value[i]->argc)
-		{
-			printf("'%s'\t", ast->table_value[i]->argv[j]);
-			j++;
-		}
-		printf("\n");
-		i++;
+	switch (type) {
+		case NODE_ROOT: return ("NODE_ROOT");
+		case NODE_PIPE: return ("NODE_PIPE");
+		case NODE_REDIRECT: return ("NODE_REDIRECT");
+		case NODE_SEQUENCE: return ("NODE_SEQUENCE");
+		case NODE_SIMPLECOMMAND: return ("NODE_SIMPLECOMMAND");
+		default: return ("Undefined token");
 	}
 }
 
-void	print_list_info(t_token_list **head)
-{
-	t_token_list	*save;
+void	visit_root(t_ast *node);
+void	print_nodes(t_ast *node);
 
-	save = *head;
-	while (save)
+void	visit_simplecommand(t_ast *node)
+{
+	size_t	i;
+
+	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("command name = %s\t", node->cmd_name);
+	i = 0;
+	while (i < node->argc)
 	{
-		printf("type = '%s'\t", print_token_type(save->token->e_type));
-		printf("value = '%s'\n", save->token->value);
-		save = save->next;
+		printf("argv[%zu] = %s\t", i, node->argv[i]);
+		i++;
+	}
+	printf("\n\n<========>\n\n");
+}
+
+void	visit_pipe(t_ast *node)
+{
+	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	print_nodes(node->table_value[0]);
+	print_nodes(node->table_value[1]);
+}
+
+void	visit_redirect(t_ast *node)
+{
+	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	print_nodes(node->table_value[0]);
+	print_nodes(node->table_value[1]);
+}
+
+void	print_nodes(t_ast *node)
+{
+	if (node->e_nodetype == NODE_ROOT)
+		visit_root(node);
+	if (node->e_nodetype == NODE_SIMPLECOMMAND)
+		visit_simplecommand(node);
+	if (node->e_nodetype == NODE_PIPE)
+		visit_pipe(node);
+	if (node->e_nodetype == NODE_REDIRECT)
+		visit_redirect(node);
+}
+
+void	visit_root(t_ast *node)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < node->table_size)
+	{
+		print_nodes(node->table_value[i]);
+		i++;
 	}
 }
 
@@ -82,6 +116,7 @@ int main(void)
 	t_parser		*parser;
 	t_ast			*root;
 
+	// printf("[minishell]: ");
 	get_next_line(0, &str);
 	lexer = init_lexer(str);
 	/* token = lexer_get_next_token(lexer);
@@ -92,7 +127,7 @@ int main(void)
 	} */
 	parser = init_parser(lexer);
 	root = parser_parse_commands(parser);
-	print_ast(root);
-	printf("table_size = %zu\n", root->table_size);
+	print_nodes(root);
+	// printf("table_size = %zu\n", root->table_size);
 	return (0);
 }
