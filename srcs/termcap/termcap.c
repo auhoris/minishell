@@ -75,9 +75,22 @@ static int	processing_button(t_data_processing *data_processing, int button)
 {
 	int	out;
 
+	if (data_processing->actual_history == NULL && button != ENTER)
+		return (OUT);
 	screen_clear();
 	out = get_history_list(data_processing, button);
-	write_in_terminal(data_processing->actual_history->command, &data_processing->num_symbol);
+	if (button == ENTER)
+	{
+		write(1, " выполнение команды ", 38);
+		write(1, data_processing->actual_history->command, ft_strlen(data_processing->actual_history->command));
+		write(1, "\n<minishell>$", 13);
+		tputs(tgetstr("sc", 0), 1, ft_putint);										// сохранили позицию каретки
+		free(data_processing->command_line);
+		data_processing->command_line = (char *)ft_calloc(1, 1);					// нет защиты
+		data_processing->num_symbol = 12;
+	}
+	else
+		write_in_terminal(data_processing->actual_history->command, &data_processing->num_symbol);
 	return (out);
 }
 
@@ -102,13 +115,7 @@ static int	input_processing(t_data_processing *data_processing)
 	}
 	else if (check_buf == ENTER)					// пока что печатаем, но в дальнейшем эта страка улетит на парсинг
 	{
-		screen_clear();
-		write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
-		write(1, "\n<minishell>$", 13);
-		tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
-		free(data_processing->command_line);
-		data_processing->command_line = (char *)ft_calloc(1, 1);					// нет защиты
-		data_processing->num_symbol = 12;
+		processing_button(data_processing, ENTER);
 	}
 	else if (check_buf == ISPRINT)
 	{

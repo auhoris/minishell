@@ -3,6 +3,7 @@
 #include "../../libs/libft/srcs/libft.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 void		clear_history(t_history **start)
 {
@@ -57,9 +58,14 @@ int	create_new_element(t_history **start, t_history **actual, char *command_line
 		return (ERROR_MALLOC);
 	}
 	new->next = NULL;
+	while ((*actual)->next != NULL)
+	{
+		(*actual) = (*actual)->next;
+	}
 	new->prev = *actual;
 	(*actual)->next = new;
-	*actual = (*actual)->next;
+	*actual = new;
+	// printf("\n %s \n", (*actual)->command);
 	return (OUT);
 }
 
@@ -80,11 +86,11 @@ int	create_new_element(t_history **start, t_history **actual, char *command_line
 // }
 // 	}
 
-int	update_command_line(t_history *tmp, t_history **start, char *command_line)
+int	update_command_list(t_history **start, t_history **actual, char *command_line)
 {
-	free(tmp->command);
-	tmp->command = ft_strdup(command_line);
-	if (tmp->command == NULL)
+	free((*actual)->command);
+	(*actual)->command = ft_strdup(command_line);
+	if ((*actual)->command == NULL)
 	{
 		clear_history(start);
 		return (ERROR_MALLOC);
@@ -92,35 +98,56 @@ int	update_command_line(t_history *tmp, t_history **start, char *command_line)
 	return (OUT);
 }
 
-int	get_up(t_history **start, t_history **actual, char *command_line)
+int	update_command_line(t_history **start, t_history **actual, t_data_processing *data_processing)
 {
-	t_history *tmp;
-
-	tmp = *actual;
-	if (tmp->prev != NULL)
+	free(data_processing->command_line);
+	data_processing->command_line = ft_strdup((*actual)->command);
+	if (data_processing->command_line == NULL)
 	{
-		if (tmp->next == NULL)
-		{
-			if (create_new_element(start, actual, command_line) == ERROR_MALLOC)
-				return (ERROR_MALLOC);
-		}
-		if (update_command_line(tmp, start, command_line) == ERROR_MALLOC)
-			return (ERROR_MALLOC);
-		tmp = tmp->prev;
+		clear_history(start);
+		return (ERROR_MALLOC);
 	}
+	data_processing->num_symbol = 12 + ft_strlen((*actual)->command);
 	return (OUT);
 }
 
-int	get_down(t_history **start, t_history **actual, char *command_line)
+int	get_up(t_history **start, t_history **actual, t_data_processing *data_processing)
 {
-	t_history *tmp;
+	// t_history *tmp;
 
-	tmp = *actual;
-	if (tmp->next != NULL)
+	// printf("\n%s\n", command_line);
+	// tmp = *actual;
+	if ((*actual)->prev != NULL)
 	{
-		if (update_command_line(tmp, start, command_line) == ERROR_MALLOC)
+		if ((*actual)->next == NULL)
+		{
+			if (create_new_element(start, actual, data_processing->command_line) == ERROR_MALLOC)
+				return (ERROR_MALLOC);
+			// printf("\ncomand = %s\n", (*actual)->command);
+		}
+		if (update_command_list(start, actual, data_processing->command_line) == ERROR_MALLOC)
 			return (ERROR_MALLOC);
-		tmp = tmp->next;
+		(*actual) = (*actual)->prev;
+		if (update_command_line(start, actual, data_processing) == ERROR_MALLOC)
+			return (ERROR_MALLOC);
+		// printf("\ncomand = %s\n", (*actual)->command);
+	}
+	// printf("\n %s \n", (*actual)->command);
+	return (OUT);
+}
+
+int	get_down(t_history **start, t_history **actual, t_data_processing *data_processing)
+{
+	// t_history *tmp;
+
+	// tmp = *actual;
+	if ((*actual)->next != NULL)
+	{
+		if (update_command_list(start, actual, data_processing->command_line) == ERROR_MALLOC)
+			return (ERROR_MALLOC);
+		(*actual) = (*actual)->next;
+		if (update_command_line(start, actual, data_processing) == ERROR_MALLOC)
+			return (ERROR_MALLOC);
 	}
 	return (OUT);
 }
@@ -129,23 +156,26 @@ int	get_history_list(t_data_processing *data_processing, int button)
 {
 	int	out;
 
-	if (data_processing->start_history == NULL)
+	// printf("\n%s\n", data_processing->command_line);
+	if (button == UP && data_processing->start_history != NULL)
 	{
-		out = create_start_history(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
-		if (out == ERROR_MALLOC)
-			return (out);
+		out = get_up(&data_processing->start_history, &data_processing->actual_history, data_processing);
 	}
-	if (button == UP)
+	else if (button == DOWN && data_processing->start_history != NULL)
 	{
-		out = get_up(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
-	}
-	else if (button == DOWN)
-	{
-		out = get_down(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
+		out = get_down(&data_processing->start_history, &data_processing->actual_history, data_processing);
 	}
 	else if (button == ENTER)
 	{
-		out = create_new_element(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
+		if (data_processing->start_history == NULL)
+		{
+			// printf("\ntest\n");
+			out = create_start_history(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
+			if (out == ERROR_MALLOC)
+				return (out);
+		}
+		else
+			out = create_new_element(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
 	}
-	return (out);
+	return (OUT);
 }
