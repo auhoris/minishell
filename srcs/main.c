@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/19 20:43:48 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/19 21:06:28 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char	*print_node_type(int type)
 		case NODE_LREDIRECT: return ("NODE_LREDIRECT");
 		case NODE_RREDIRECT: return ("NODE_RREDIRECT");
 		case NODE_DOUBLE_REDIRECT: return ("NODE_DOUBLE_REDIRECT");
-		case NODE_SEQUENCE: return ("NODE_SEQUENCE");
 		case NODE_SIMPLECOMMAND: return ("NODE_SIMPLECOMMAND");
 		default: return ("Undefined token");
 	}

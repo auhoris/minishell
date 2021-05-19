@@ -25,28 +25,28 @@ void	parser_next_token(t_parser *parser)
 
 t_ast	*parser_parse_commands(t_parser *parser)
 {
-	t_ast	*table;
+	t_ast	*cmd;
 	t_ast	*scmd;
 
-	table = init_node(NODE_ROOT);
-	table->table_value = ft_calloc(1, sizeof(t_ast *));
-	if (table->table_value == NULL)
+	cmd = init_node(NODE_ROOT);
+	cmd->table_value = ft_calloc(1, sizeof(t_ast *));
+	if (cmd->table_value == NULL)
 		return (NULL);
-	table->table_value[table->table_size] = parser_parse_command(parser);
-	table->table_size++;
+	cmd->table_value[cmd->table_size] = parser_parse_command(parser);
+	cmd->table_size++;
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
 		parser_next_token(parser);
 		scmd = parser_parse_command(parser);
 		if (scmd)
 		{
-			table->table_size++;
-			table->table_value = ft_realloc(table->table_value, table->table_size * sizeof(t_ast *), (table->table_size - 1) * sizeof(t_ast *));
-			table->table_value[table->table_size - 1] = scmd;
+			cmd->table_size++;
+			cmd->table_value = ft_realloc(cmd->table_value, cmd->table_size * sizeof(t_ast *), (cmd->table_size - 1) * sizeof(t_ast *));
+			cmd->table_value[cmd->table_size - 1] = scmd;
 		}
 
 	}
-	return (table);
+	return (cmd);
 }
 
 t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
@@ -78,8 +78,9 @@ t_ast	*parser_parse_command(t_parser *parser)
 	t_ast	*command;
 
 	command = init_node(NODE_SIMPLECOMMAND);
-	while (parser->cur_tok->e_type != TOKEN_SEMI
-		&& parser->cur_tok->e_type != TOKEN_EOF)
+	if (command == NULL)
+		return (NULL);
+	while (parser->cur_tok->e_type != TOKEN_SEMI && parser->cur_tok->e_type != TOKEN_EOF)
 	{
 		if (parser->cur_tok->e_type == TOKEN_PIPE)
 			return (parser_parse_pipe(command, parser));
@@ -88,13 +89,18 @@ t_ast	*parser_parse_command(t_parser *parser)
 	return (command);
 }
 
-void	parser_parse_agruments(t_ast *scmd, t_parser *parser)
+t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
 {
 	scmd->argc++;
 	scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
 						(scmd->argc - 1) * sizeof(*scmd->argv));
+	if (scmd->argv == NULL)
+		return (NULL);
 	scmd->argv[scmd->argc - 1] = ft_strdup(parser->cur_tok->value);
+	if (scmd->argv[scmd->argc - 1] == NULL)
+		return (NULL);
 	parser_next_token(parser);
+	return (scmd);
 }
 
 t_ast	*parser_parse_simple_command(t_parser *parser)
@@ -102,7 +108,11 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 	t_ast	*scmd;
 
 	scmd = init_node(NODE_SIMPLECOMMAND);
+	if (scmd == NULL)
+		return (NULL);
 	scmd->cmd_name = ft_strdup(parser->cur_tok->value);
+	if (scmd->cmd_name == NULL)
+		return (NULL);
 	parser_next_token(parser);
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
@@ -111,7 +121,8 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 		if (parser->cur_tok->e_type == TOKEN_MORE || parser->cur_tok->e_type == TOKEN_LESS
 				|| parser->cur_tok->e_type == TOKEN_DMORE)
 			return (parser_parse_redirect(scmd, parser, parser->cur_tok->e_type));
-		parser_parse_agruments(scmd, parser);
+		if (parser_parse_agruments(scmd, parser) == NULL)
+			return (NULL);
 	}
 	return (scmd);
 }

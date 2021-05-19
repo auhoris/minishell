@@ -20,19 +20,13 @@ typedef struct s_ast
 		NODE_LREDIRECT, //2
 		NODE_RREDIRECT, //3
 		NODE_DOUBLE_REDIRECT, //4
-		NODE_SEQUENCE, //5
-		NODE_SIMPLECOMMAND, //6
+		NODE_SIMPLECOMMAND, //5
 	}	e_nodetype;
 	char			*cmd_name;
 	//				Arguments
 	size_t			argc;
 	char			**argv;
 	char			**flags;
-	//				Pipes and redirect
-	int				fd_pipe_read;
-	int				fd_pipe_write;
-	char			*redirect_in;
-	char			*redirect_out;
 	//				Table
 	struct s_ast	**table_value;
 	size_t			table_size;
