@@ -17,9 +17,11 @@ typedef struct s_ast
 	{
 		NODE_ROOT, //0
 		NODE_PIPE, //1
-		NODE_REDIRECT, //2
-		NODE_SEQUENCE, //3
-		NODE_SIMPLECOMMAND, //4
+		NODE_LREDIRECT, //2
+		NODE_RREDIRECT, //3
+		NODE_DOUBLE_REDIRECT, //4
+		NODE_SEQUENCE, //5
+		NODE_SIMPLECOMMAND, //6
 	}	e_nodetype;
 	char			*cmd_name;
 	//				Arguments

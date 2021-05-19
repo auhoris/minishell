@@ -36,6 +36,7 @@ t_ast	*parser_parse_commands(t_parser *parser)
 	table->table_size++;
 	while (parser->current_token->e_type == TOKEN_SEMI)
 	{
+		table->table_value[table->table_size - 1]->e_nodetype = NODE_SEQUENCE;
 		parser_next_token(parser);
 		scmd = parser_parse_simple_command(parser);
 		if (scmd)
@@ -66,11 +67,11 @@ t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 	return (pipe_node);
 }
 
-t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser)
+t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 {
 	t_ast	*redirect;
 
-	redirect = init_node(NODE_REDIRECT);
+	redirect = init_node(type);
 	redirect->table_value = ft_calloc(2, sizeof(t_ast *));
 	redirect->table_value[0] = left_node;
 	parser_next_token(parser);
@@ -91,7 +92,11 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 		if (parser->current_token->e_type == TOKEN_PIPE)
 			return (parser_parse_pipe(scmd, parser));
 		else if (parser->current_token->e_type == TOKEN_MORE)
-			return (parser_parse_redirect(scmd, parser));
+			return (parser_parse_redirect(scmd, parser, NODE_RREDIRECT));
+		else if (parser->current_token->e_type == TOKEN_LESS)
+			return (parser_parse_redirect(scmd, parser, NODE_LREDIRECT));
+		else if (parser->current_token->e_type == TOKEN_DMORE)
+			return (parser_parse_redirect(scmd, parser, NODE_DOUBLE_REDIRECT));
 		scmd->argc++;
 		scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
 							(scmd->argc - 1) * sizeof(*scmd->argv));
@@ -100,36 +105,3 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 	}
 	return (scmd);
 }
-
-
-/* t_ast	*parser_parse_command(t_parser *parser)
-{
-	t_ast	*scmd;
-
-	scmd = init_node(NODE_SIMPLECOMMAND);
-	if (parser->current_token->e_type == BAD_TOKEN)
-	{
-		printf("Unexpected token '%d' with value '%s'",
-				parser->current_token->e_type, parser->current_token->value);
-		exit(1);
-	}
-	scmd->cmd_name = ft_strdup(parser->current_token->value);
-	parser_next_token(parser);
-	while (parser->current_token->e_type != TOKEN_PIPE
-		&& parser->current_token->e_type != TOKEN_SEMI
-		&& parser->current_token->e_type != TOKEN_EOF)
-	{
-		if (parser->current_token->e_type == BAD_TOKEN)
-		{
-			printf("[Parser]: Bad token '%d' with value '%s'",
-					parser->current_token->e_type, parser->current_token->value);
-			exit(1);
-		}
-		scmd->argc++;
-		scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
-					(scmd->argc - 1) * sizeof(*scmd->argv));
-		scmd->argv[scmd->argc - 1] = ft_strdup(parser->current_token->value);
-		parser_next_token(parser);
-	}
-	return (scmd);
-} */

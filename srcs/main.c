@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/19 17:08:44 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/19 17:17:16 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ char	*print_node_type(int type)
 	switch (type) {
 		case NODE_ROOT: return ("NODE_ROOT");
 		case NODE_PIPE: return ("NODE_PIPE");
-		case NODE_REDIRECT: return ("NODE_REDIRECT");
+		case NODE_LREDIRECT: return ("NODE_LREDIRECT");
+		case NODE_RREDIRECT: return ("NODE_RREDIRECT");
+		case NODE_DOUBLE_REDIRECT: return ("NODE_DOUBLE_REDIRECT");
 		case NODE_SEQUENCE: return ("NODE_SEQUENCE");
 		case NODE_SIMPLECOMMAND: return ("NODE_SIMPLECOMMAND");
 		default: return ("Undefined token");
@@ -92,7 +94,7 @@ void	print_nodes(t_ast *node)
 		visit_simplecommand(node);
 	if (node->e_nodetype == NODE_PIPE)
 		visit_pipe(node);
-	if (node->e_nodetype == NODE_REDIRECT)
+	if (node->e_nodetype == NODE_LREDIRECT || node->e_nodetype == NODE_RREDIRECT || node->e_nodetype == NODE_DOUBLE_REDIRECT)
 		visit_redirect(node);
 }
 
