@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/19 17:17:16 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/19 20:43:48 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	visit_root(t_ast *node)
 	size_t	i;
 
 	i = 0;
+	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
 	while (i < node->table_size)
 	{
 		print_nodes(node->table_value[i]);
