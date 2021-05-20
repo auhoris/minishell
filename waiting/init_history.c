@@ -45,6 +45,8 @@ int	create_new_element(t_history **start, t_history **actual, char *command_line
 {
 	t_history	*new;
 
+	if (*command_line == '\0')
+		return (OUT);
 	new = (t_history *)malloc(sizeof(t_history));
 	if (new == NULL)
 	{
@@ -65,7 +67,6 @@ int	create_new_element(t_history **start, t_history **actual, char *command_line
 	new->prev = *actual;
 	(*actual)->next = new;
 	*actual = new;
-	// printf("\n %s \n", (*actual)->command);
 	return (OUT);
 }
 
@@ -119,10 +120,11 @@ int	get_up(t_history **start, t_history **actual, t_data_processing *data_proces
 	// tmp = *actual;
 	if ((*actual)->prev != NULL)
 	{
-		if ((*actual)->next == NULL)
+		if ((*actual)->next == NULL && (*actual)->command[0] != '\0' && data_processing->permission_create == 1)
 		{
 			if (create_new_element(start, actual, data_processing->command_line) == ERROR_MALLOC)
 				return (ERROR_MALLOC);
+			data_processing->permission_create = 0;
 			// printf("\ncomand = %s\n", (*actual)->command);
 		}
 		if (update_command_list(start, actual, data_processing->command_line) == ERROR_MALLOC)
@@ -165,7 +167,7 @@ int	get_history_list(t_data_processing *data_processing, int button)
 	{
 		out = get_down(&data_processing->start_history, &data_processing->actual_history, data_processing);
 	}
-	else if (button == ENTER)
+	else if (button == ENTER)// && data_processing->command_line == '\0')
 	{
 		if (data_processing->start_history == NULL)
 		{
@@ -175,7 +177,10 @@ int	get_history_list(t_data_processing *data_processing, int button)
 				return (out);
 		}
 		else
+		{
 			out = create_new_element(&data_processing->start_history, &data_processing->actual_history, data_processing->command_line);
+			data_processing->permission_create = 1;
+		}
 	}
 	return (OUT);
 }

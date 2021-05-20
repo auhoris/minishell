@@ -3,6 +3,7 @@
 		"types.h": "c",
 		"term.h": "c",
 		"minishell.h": "c",
-		"lexer.h": "c"
+		"lexer.h": "c",
+		"errors.h": "c"
 	}
 }

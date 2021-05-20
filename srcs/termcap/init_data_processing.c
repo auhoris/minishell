@@ -13,6 +13,7 @@ t_data_processing	*init_data_processing(void)
 	}
 	data_processing->actual_history = NULL;
 	data_processing->start_history = NULL;
+	data_processing->permission_create = 1;
 	data_processing->buf_read = (char *)ft_calloc(10, 1);
 	data_processing->command_line = (char *)ft_calloc(1, 1);
 	if (data_processing->buf_read == NULL

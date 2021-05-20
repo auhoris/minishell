@@ -78,11 +78,16 @@ static int	processing_button(t_data_processing *data_processing, int button)
 	if (data_processing->actual_history == NULL && button != ENTER)
 		return (OUT);
 	screen_clear();
-	out = get_history_list(data_processing, button);
+	// out = get_history_list(data_processing, button);
+	out = get_history_data(data_processing, button);
 	if (button == ENTER)
 	{
-		write(1, " выполнение команды ", 38);
-		write(1, data_processing->actual_history->command, ft_strlen(data_processing->actual_history->command));
+		data_processing->permission_create = 1;
+		if (*data_processing->command_line != '\0')
+		{
+			write(1, " выполнение команды ", 38);
+			write(1, data_processing->actual_history->prev->command, ft_strlen(data_processing->actual_history->prev->command));
+		}
 		write(1, "\n<minishell>$", 13);
 		tputs(tgetstr("sc", 0), 1, ft_putint);										// сохранили позицию каретки
 		free(data_processing->command_line);
@@ -90,17 +95,20 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		data_processing->num_symbol = 12;
 	}
 	else
-		write_in_terminal(data_processing->actual_history->command, &data_processing->num_symbol);
+		write_in_terminal(data_processing->command_line, &data_processing->num_symbol);
 	return (out);
 }
 
 static int	input_processing(t_data_processing *data_processing)
 {
 	int		check_buf;
+	int	out;
 
 	check_buf = check_buf_read(data_processing->buf_read);
+	out = OUT;
 	if (check_buf == UP)
 	{
+		// printf("\n%s\n", data_processing->command_line);
 		processing_button(data_processing, UP);
 		// printf("up\n");
 	}
@@ -119,9 +127,9 @@ static int	input_processing(t_data_processing *data_processing)
 	}
 	else if (check_buf == ISPRINT)
 	{
-		write_in_terminal_isprint(data_processing);
+		out = write_in_terminal_isprint(data_processing);
 	}
-	return (1);
+	return (out);
 }
 
 int		infinite_round()
