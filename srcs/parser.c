@@ -118,9 +118,12 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)
 	{
-		if (parser->cur_tok->e_type == TOKEN_MORE || parser->cur_tok->e_type == TOKEN_LESS
-				|| parser->cur_tok->e_type == TOKEN_DMORE)
-			return (parser_parse_redirect(scmd, parser, parser->cur_tok->e_type));
+		if (parser->cur_tok->e_type == TOKEN_MORE)
+			return (parser_parse_redirect(scmd, parser, NODE_RREDIRECT));
+		else if(parser->cur_tok->e_type == TOKEN_LESS)
+			return (parser_parse_redirect(scmd, parser, NODE_LREDIRECT));
+		else if (parser->cur_tok->e_type == TOKEN_DMORE)
+			return (parser_parse_redirect(scmd, parser, NODE_DOUBLE_REDIRECT));
 		if (parser_parse_agruments(scmd, parser) == NULL)
 			return (NULL);
 	}
