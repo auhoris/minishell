@@ -1,5 +1,7 @@
 #include "includes/lexer.h"
+#include "includes/token.h"
 #include "includes/utils.h"
+#include <stdlib.h>
 
 t_token	*lexer_collect_dollar(t_lexer *lexer)
 {
@@ -30,6 +32,8 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	while ((!ft_inset(SPECIAL, lexer->c)
 			&& lexer->c != SPACE) && lexer->c != '\0')
 	{
+		if (lexer->c == '=')
+			break ;
 		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
@@ -38,8 +42,6 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	т.к. в bash можно написать echo asd$PATH */
 	if (lexer->c == SPACE && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
 		str = connect_str(str, lexer_chtostr(lexer->c));
-	if (check_command(str))
-		return (init_token(TOKEN_CMD, str));
 	return (init_token(TOKEN_ID, str));
 }
 
@@ -108,7 +110,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	lexer_advance(lexer);
 	return (init_token(TOKEN_DQUOTE, string));
 }
-
+/*
 t_token	*lexer_collect_equals(t_lexer *lexer)
 {
 	if (lexer_peek(lexer, 1) == SPACE || lexer_peek(lexer, -1) == SPACE)
@@ -118,4 +120,20 @@ t_token	*lexer_collect_equals(t_lexer *lexer)
 	}
 	lexer_advance(lexer);
 	return (init_token(TOKEN_EQUALS, "="));
-}
+} */
+
+/* t_token		*lexer_collect_flags(t_lexer *lexer)
+{
+	char	*value;
+
+	value = ft_strdup("");
+	if (value == NULL)
+		return (NULL);
+	lexer_advance(lexer);
+	while (lexer->c != SPACE && lexer->c != '\0')
+	{
+		value = connect_str(value, lexer_chtostr(lexer->c));
+		lexer_advance(lexer);
+	}
+	return (init_token(TOKEN_FLAG, value));
+} */
