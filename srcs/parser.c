@@ -37,8 +37,8 @@ t_ast	*parser_parse_commands(t_parser *parser)
 	cmd->table_value = ft_calloc(1, sizeof(t_ast *));
 	if (cmd->table_value == NULL)
 		return (NULL);
-	cmd->table_value[cmd->table_size] = parser_parse_command(parser);
 	cmd->table_size++;
+	cmd->table_value[cmd->table_size - 1] = parser_parse_command(parser);
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
 		parser_next_token(parser);
