@@ -20,6 +20,10 @@ void	parser_next_token(t_parser *parser)
 {
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	printf("<=====>\n\n");
+	printf("[Previous]:type='%d'|value='%s'\n", parser->prev_token->e_type, parser->prev_token->value);
+	printf("[Current]:type='%d'|value='%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
+	printf("\n\n<=====>\n\n");
 	if (parser->cur_tok->e_type == BAD_TOKEN)
 	{
 		printf("[Parser]: Unexpected token type '%d' with value '%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);

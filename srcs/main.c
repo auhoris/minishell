@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/20 16:33:25 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/20 17:45:29 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int main(void)
 	} */
 	parser = init_parser(lexer);
 	root = parser_parse_commands(parser);
-	visitor_visit_nodes(root);
+	// visitor_visit_nodes(root);
 	// printf("table_size = %zu\n", root->table_size);
 	return (0);
 }
