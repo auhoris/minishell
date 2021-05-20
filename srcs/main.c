@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/20 17:45:29 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/20 18:56:54 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*print_token_type(int type)
 		case TOKEN_LESS: return ("TOKEN_LESS");
 		case TOKEN_MORE: return ("TOKEN_MORE");
 		case TOKEN_DMORE: return ("TOKEN_DMORE");
+		case TOKEN_EQUALS: return ("TOKEN_EQUALS");
 		case TOKEN_PIPE: return ("TOKEN_PIPE");
 		case TOKEN_DOLLAR: return ("TOKEN_DOLLAR");
 		case BAD_TOKEN: return ("BAD_TOKEN");
@@ -43,21 +44,26 @@ char	*print_token_type(int type)
 
 int main(void)
 {
-	char			*str;
-	t_lexer			*lexer;
-	t_parser		*parser;
-	t_ast			*root;
+	char		*str;
+	t_lexer		*lexer;
+	t_parser	*parser;
+	t_ast		*root;
+	// t_token		*token;
 
 	get_next_line(0, &str);
-	lexer = init_lexer(str);
+	// lexer = init_lexer(str);
+	/* while (get_next_line(0, &str) > 0)
+	{ */
+		lexer = init_lexer(str);
+		parser = init_parser(lexer);
+		root = parser_parse_commands(parser);
+	// }
 	/* token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
 	{
 		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
 		token = lexer_get_next_token(lexer);
 	} */
-	parser = init_parser(lexer);
-	root = parser_parse_commands(parser);
 	// visitor_visit_nodes(root);
 	// printf("table_size = %zu\n", root->table_size);
 	return (0);

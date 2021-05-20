@@ -1,4 +1,5 @@
 #include "includes/lexer.h"
+#include "includes/token.h"
 
 t_lexer	*init_lexer(char *content)
 {
@@ -35,8 +36,8 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_advance_with(lexer,
 					init_token(TOKEN_DOLLAR, lexer_chtostr(lexer->c))));
 		}
-		if (lexer->c == '=')
-			return (lexer_collect_equals(lexer));
+		/* if (lexer->c == '=')
+			return (lexer_collect_equals(lexer)); */
 		if (lexer->c == '\\')
 			return (lexer_collect_bslash(lexer));
 		else if (lexer->c == ';')
@@ -57,6 +58,12 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		else if (lexer->c == '|')
 			return (lexer_advance_with(lexer,
 					init_token(TOKEN_PIPE, lexer_chtostr(lexer->c))));
+		else if (lexer->c == '=')
+		{
+			if (lexer_peek(lexer, -1) == ' ' || lexer_peek(lexer, 1) == ' ')
+				return (lexer_advance_with(lexer, init_token(BAD_TOKEN, lexer_chtostr(lexer->c))));
+			return (lexer_advance_with(lexer, init_token(TOKEN_EQUALS, lexer_chtostr(lexer->c))));
+		}
 		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_EOF, "\0"));

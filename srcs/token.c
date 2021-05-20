@@ -10,6 +10,7 @@ t_token	*init_token(int type, char *value)
 		return (NULL);
 	token->e_type = type;
 	token->value = value;
+	token->number_of_tokens = 0;
 	return (token);
 }
 

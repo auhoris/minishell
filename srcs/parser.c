@@ -20,15 +20,26 @@ void	parser_next_token(t_parser *parser)
 {
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
-	printf("<=====>\n\n");
+	/* printf("<=====>\n\n");
 	printf("[Previous]:type='%d'|value='%s'\n", parser->prev_token->e_type, parser->prev_token->value);
 	printf("[Current]:type='%d'|value='%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
-	printf("\n\n<=====>\n\n");
+	printf("\n\n<=====>\n\n"); */
 	if (parser->cur_tok->e_type == BAD_TOKEN)
 	{
-		printf("[Parser]: Unexpected token type '%d' with value '%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
+		printf("minishell: syntax error near unexpected token'%s'\n", parser->prev_token->value);
 		exit(1);
 	}
+	else if (parser->cur_tok->e_type == TOKEN_SEMI && parser->prev_token->e_type == TOKEN_SEMI)
+	{
+		printf("minishell: syntax error near unexpected token'%s'\n", parser->prev_token->value);
+		exit(1);
+	}
+	else if ((parser->prev_token->e_type == TOKEN_SEMI || parser->prev_token->e_type == TOKEN_PIPE) && parser->cur_tok->number_of_tokens == 0)
+	{
+		printf("minishell: syntax error near unexpected token'%s'\n", parser->prev_token->value);
+		exit(1);
+	}
+	parser->cur_tok->number_of_tokens++;
 	destroy_token(parser->prev_token);
 }
 

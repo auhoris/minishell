@@ -2,6 +2,7 @@
 # define TOKEN_H
 
 # include "../../libs/libft/srcs/libft.h"
+#include <sys/_types/_size_t.h>
 
 typedef struct s_token
 {
@@ -24,6 +25,7 @@ typedef struct s_token
 		TOKEN_EOF, //14
 	}	e_type;
 	char	*value;
+	size_t	number_of_tokens;
 }		t_token;
 
 t_token		*init_token(int type, char *value);
