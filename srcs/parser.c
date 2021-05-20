@@ -20,6 +20,11 @@ void	parser_next_token(t_parser *parser)
 {
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok->e_type == BAD_TOKEN)
+	{
+		printf("[Parser]: Unexpected token type '%d' with value '%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
+		exit(1);
+	}
 	destroy_token(parser->prev_token);
 }
 
@@ -49,6 +54,22 @@ t_ast	*parser_parse_commands(t_parser *parser)
 	return (cmd);
 }
 
+t_ast	*parser_parse_command(t_parser *parser)
+{
+	t_ast	*command;
+
+	command = init_node(NODE_SIMPLECOMMAND);
+	if (command == NULL)
+		return (NULL);
+	while (parser->cur_tok->e_type != TOKEN_SEMI && parser->cur_tok->e_type != TOKEN_EOF)
+	{
+		if (parser->cur_tok->e_type == TOKEN_PIPE)
+			return (parser_parse_pipe(command, parser));
+		command = parser_parse_simple_command(parser);
+	}
+	return (command);
+}
+
 t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 {
 	t_ast	*pipe_node;
@@ -71,22 +92,6 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 	parser_next_token(parser);
 	redirect->table_value[1] = parser_parse_simple_command(parser);
 	return (redirect);
-}
-
-t_ast	*parser_parse_command(t_parser *parser)
-{
-	t_ast	*command;
-
-	command = init_node(NODE_SIMPLECOMMAND);
-	if (command == NULL)
-		return (NULL);
-	while (parser->cur_tok->e_type != TOKEN_SEMI && parser->cur_tok->e_type != TOKEN_EOF)
-	{
-		if (parser->cur_tok->e_type == TOKEN_PIPE)
-			return (parser_parse_pipe(command, parser));
-		command = parser_parse_simple_command(parser);
-	}
-	return (command);
 }
 
 t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
