@@ -18,28 +18,50 @@ t_parser	*init_parser(t_lexer *lexer)
 
 void	parser_next_token(t_parser *parser)
 {
+	static int	i;
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok->e_type == TOKEN_SEMI)
+		i = 0;
 	/* printf("<=====>\n\n");
 	printf("[Previous]:type='%d'|value='%s'\n", parser->prev_token->e_type, parser->prev_token->value);
 	printf("[Current]:type='%d'|value='%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
 	printf("\n\n<=====>\n\n"); */
+	// printf("parser->cur_tok->number_of_tokens = %zu\n", parser->cur_tok->number_of_tokens);
 	if (parser->cur_tok->e_type == BAD_TOKEN)
 	{
-		printf("minishell: syntax error near unexpected token'%s'\n", parser->prev_token->value);
+		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
+		exit(1);
+	}
+	else if (parser->prev_token->e_type == TOKEN_PIPE && parser->cur_tok->e_type == TOKEN_EOF)
+	{
+		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
 	else if (parser->cur_tok->e_type == TOKEN_SEMI && parser->prev_token->e_type == TOKEN_SEMI)
 	{
-		printf("minishell: syntax error near unexpected token'%s'\n", parser->prev_token->value);
+		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
-	else if ((parser->prev_token->e_type == TOKEN_SEMI || parser->prev_token->e_type == TOKEN_PIPE) && parser->cur_tok->number_of_tokens == 0)
+	/* else if (parser->cur_tok->e_type == TOKEN_PIPE && (parser->prev_token->e_type == TOKEN_SEMI || parser->prev_token->e_type == TOKEN_LESS || parser->prev_token->e_type == TOKEN_MORE || parser->cur_tok->e_type == TOKEN_DMORE))
 	{
-		printf("minishell: syntax error near unexpected token'%s'\n", parser->prev_token->value);
+		printf("minishell: syntax error near unexpected token '%s'\n", parser->cur_tok->value);
+		exit(1);
+	} */
+	else if ((parser->prev_token->e_type == TOKEN_SEMI
+			|| parser->prev_token->e_type == TOKEN_PIPE) && i == 0)
+	{
+		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
-	parser->cur_tok->number_of_tokens++;
+	else if ((parser->prev_token->e_type == TOKEN_LESS
+			|| parser->prev_token->e_type == TOKEN_MORE
+			|| parser->prev_token->e_type == TOKEN_DMORE) && parser->cur_tok->e_type == TOKEN_EOF)
+	{
+		printf("minishell: syntax error near unexpected token 'newline'\n");
+		exit(1);
+	}
+	i++;
 	destroy_token(parser->prev_token);
 }
 

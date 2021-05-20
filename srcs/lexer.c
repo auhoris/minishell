@@ -27,8 +27,6 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_collect_dquote(lexer));
 		if (ft_isalnum(lexer->c) || ft_inset(OTHER, lexer->c))
 			return (lexer_collect_id(lexer));
-		if (lexer->c == '-')
-			return (lexer_collect_flags(lexer));
 		if (lexer->c == '$')
 		{
 			if (ft_isalnum(lexer_peek(lexer, 1)))
@@ -36,8 +34,6 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_advance_with(lexer,
 					init_token(TOKEN_DOLLAR, lexer_chtostr(lexer->c))));
 		}
-		/* if (lexer->c == '=')
-			return (lexer_collect_equals(lexer)); */
 		if (lexer->c == '\\')
 			return (lexer_collect_bslash(lexer));
 		else if (lexer->c == ';')

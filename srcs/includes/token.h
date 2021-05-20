@@ -20,7 +20,7 @@ typedef struct s_token
 		TOKEN_PIPE, //9
 		TOKEN_DOLLAR, //10 При записи: $echo (и т.п.) value токена воспринимается как переменная окружения
 		TOKEN_EQUALS, //11
-		TOKEN_FLAG, //12
+		// TOKEN_FLAG, //12
 		BAD_TOKEN, //13
 		TOKEN_EOF, //14
 	}	e_type;

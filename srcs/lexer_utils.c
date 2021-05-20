@@ -35,7 +35,7 @@ char	lexer_peek(t_lexer *lexer, int offset)
 {
 	if (lexer->current + offset < lexer->length)
 		return (lexer->content[lexer->current + offset]);
-	return (lexer->content[lexer->length - 1]);
+	return ('\0');
 }
 
 char	*connect_str(char *s1, char *s2)

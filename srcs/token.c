@@ -1,5 +1,6 @@
 #include "includes/token.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 t_token	*init_token(int type, char *value)
 {
@@ -16,8 +17,17 @@ t_token	*init_token(int type, char *value)
 
 void		destroy_token(t_token *token)
 {
-	if (token->value)
-		free(token->value);
-	if (token)
-		free(token);
+	if (token->e_type != TOKEN_EOF)
+	{
+		if (token->value)
+		{
+			free(token->value);
+			token->value = NULL;
+		}
+		if (token)
+		{
+			free(token);
+			token = NULL;
+		}
+	}
 }

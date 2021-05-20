@@ -122,7 +122,7 @@ t_token	*lexer_collect_equals(t_lexer *lexer)
 	return (init_token(TOKEN_EQUALS, "="));
 } */
 
-t_token		*lexer_collect_flags(t_lexer *lexer)
+/* t_token		*lexer_collect_flags(t_lexer *lexer)
 {
 	char	*value;
 
@@ -136,4 +136,4 @@ t_token		*lexer_collect_flags(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	return (init_token(TOKEN_FLAG, value));
-}
+} */
