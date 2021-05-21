@@ -1,4 +1,5 @@
 #include "includes/lexer.h"
+#include "includes/minishell.h"
 #include "includes/token.h"
 #include "includes/utils.h"
 #include <stdlib.h>
@@ -18,8 +19,8 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	if (lexer->c == SPACE)
-		str = connect_str(str, lexer_chtostr(lexer->c));
-	return (init_token(TOKEN_DOLLAR, str));
+		return (init_token(TOKEN_DOLLAR, str, TRUE));
+	return (init_token(TOKEN_DOLLAR, str, FALSE));
 }
 
 t_token	*lexer_collect_id(t_lexer *lexer)
@@ -40,9 +41,9 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 	/* Сделано, чтобы различать ситуации,
 	когда после ID есть пробел или нет,
 	т.к. в bash можно написать echo asd$PATH */
-	if (lexer->c == SPACE && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
-		str = connect_str(str, lexer_chtostr(lexer->c));
-	return (init_token(TOKEN_ID, str));
+	if (lexer->c == SPACE)
+		return (init_token(TOKEN_ID, str, TRUE));
+	return (init_token(TOKEN_ID, str, FALSE));
 }
 
 t_token	*lexer_collect_bslash(t_lexer *lexer)
@@ -59,13 +60,15 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 	пор пока не встретит второй раз спец символ или пробел */
 	while (lexer->c != '\0')
 	{
-		if (spec_id > 0 && (ft_inset(SPECIAL, lexer->c) || lexer->c == SPACE))
-			return (init_token(TOKEN_BSLASH, str));
+		if (spec_id > 0 && ft_inset(SPECIAL, lexer->c))
+			return (init_token(TOKEN_BSLASH, str, FALSE));
+		else if (spec_id > 0 && lexer->c == SPACE)
+			return (init_token(TOKEN_BSLASH, str, TRUE));
 		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 		spec_id++;
 	}
-	return (init_token(TOKEN_BSLASH, str));
+	return (init_token(TOKEN_BSLASH, str, FALSE));
 }
 
 t_token	*lexer_collect_squote(t_lexer *lexer)
@@ -82,9 +85,13 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\'')
-		return (init_token(BAD_TOKEN, string));
+	{
+		return (init_token(BAD_TOKEN, string, FALSE));
+	}
 	lexer_advance(lexer);
-	return (init_token(TOKEN_SQUOTE, string));
+	if (lexer->c == SPACE)
+		return (init_token(TOKEN_SQUOTE, string, TRUE));
+	return (init_token(TOKEN_SQUOTE, string, FALSE));
 }
 
 t_token	*lexer_collect_dquote(t_lexer *lexer)
@@ -106,9 +113,11 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\"')
-		return (init_token(BAD_TOKEN, string));
+		return (init_token(BAD_TOKEN, string, FALSE));
 	lexer_advance(lexer);
-	return (init_token(TOKEN_DQUOTE, string));
+	if (lexer->c == SPACE)
+		return (init_token(TOKEN_SQUOTE, string, TRUE));
+	return (init_token(TOKEN_DQUOTE, string, FALSE));
 }
 /*
 t_token	*lexer_collect_equals(t_lexer *lexer)

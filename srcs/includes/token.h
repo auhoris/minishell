@@ -2,7 +2,7 @@
 # define TOKEN_H
 
 # include "../../libs/libft/srcs/libft.h"
-#include <sys/_types/_size_t.h>
+# include <sys/_types/_size_t.h>
 
 typedef struct s_token
 {
@@ -26,9 +26,10 @@ typedef struct s_token
 	}	e_type;
 	char	*value;
 	size_t	number_of_tokens;
+	int		f_space;
 }		t_token;
 
-t_token		*init_token(int type, char *value);
+t_token		*init_token(int type, char *value, int f_space);
 void		destroy_token(t_token *token);
 
 #endif /* ifndef TOKEN_H */
