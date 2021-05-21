@@ -1,6 +1,7 @@
 #include "includes/parser.h"
 #include "includes/lexer.h"
 #include "includes/ast.h"
+#include "includes/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,26 +20,31 @@ t_parser	*init_parser(t_lexer *lexer)
 void	parser_next_token(t_parser *parser)
 {
 	static int	i;
+	int			type;
+	int			prev_type;
+
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
-	if (parser->cur_tok->e_type == TOKEN_SEMI)
+	prev_type = parser->prev_token->e_type;
+	type = parser->cur_tok->e_type;
+	if (type == TOKEN_SEMI)
 		i = 0;
 	/* printf("<=====>\n\n");
 	printf("[Previous]:type='%d'|value='%s'\n", parser->prev_token->e_type, parser->prev_token->value);
 	printf("[Current]:type='%d'|value='%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
 	printf("\n\n<=====>\n\n"); */
 	// printf("parser->cur_tok->number_of_tokens = %zu\n", parser->cur_tok->number_of_tokens);
-	if (parser->cur_tok->e_type == BAD_TOKEN)
+	if (prev_type == BAD_TOKEN)
 	{
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
-	else if (parser->prev_token->e_type == TOKEN_PIPE && parser->cur_tok->e_type == TOKEN_EOF)
+	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
 	{
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
-	else if (parser->cur_tok->e_type == TOKEN_SEMI && parser->prev_token->e_type == TOKEN_SEMI)
+	else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
 	{
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
@@ -48,15 +54,14 @@ void	parser_next_token(t_parser *parser)
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->cur_tok->value);
 		exit(1);
 	} */
-	else if ((parser->prev_token->e_type == TOKEN_SEMI
-			|| parser->prev_token->e_type == TOKEN_PIPE) && i == 0)
+	else if ((prev_type == TOKEN_SEMI || prev_type == TOKEN_PIPE) && i == 0)
 	{
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
-	else if ((parser->prev_token->e_type == TOKEN_LESS
-			|| parser->prev_token->e_type == TOKEN_MORE
-			|| parser->prev_token->e_type == TOKEN_DMORE) && parser->cur_tok->e_type == TOKEN_EOF)
+	else if ((prev_type == TOKEN_LESS
+			|| prev_type == TOKEN_MORE
+			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
 	{
 		printf("minishell: syntax error near unexpected token 'newline'\n");
 		exit(1);
@@ -145,6 +150,35 @@ t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
 	return (scmd);
 }
 
+char		*parser_get_cmd_name(t_parser *parser)
+{
+	char	*str;
+	int		type;
+
+	str = ft_strdup("");
+	if (str == NULL)
+		return (NULL);
+	if (parser->cur_tok->e_type == TOKEN_MORE)
+		printf("ALERT\n");
+	type = parser->cur_tok->e_type;
+	while (!parser->cur_tok->f_space && parser->cur_tok->e_type != TOKEN_EOF)
+	{
+		if (type == TOKEN_DOLLAR || type == TOKEN_SEMI || type == TOKEN_MORE
+				|| type == TOKEN_LESS || type == TOKEN_DMORE)
+			return (str);
+		str = connect_str(str, parser->cur_tok->value);
+		if (str == NULL)
+			return (NULL);
+		parser_next_token(parser);
+		type = parser->cur_tok->e_type;
+	}
+	str = connect_str(str, parser->cur_tok->value);
+	if (str == NULL)
+		return (NULL);
+	parser_next_token(parser);
+	return (str);
+}
+
 t_ast	*parser_parse_simple_command(t_parser *parser)
 {
 	t_ast	*scmd;
@@ -152,10 +186,9 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 	scmd = init_node(NODE_SIMPLECOMMAND);
 	if (scmd == NULL)
 		return (NULL);
-	scmd->cmd_name = ft_strdup(parser->cur_tok->value);
+	scmd->cmd_name = parser_get_cmd_name(parser);
 	if (scmd->cmd_name == NULL)
 		return (NULL);
-	parser_next_token(parser);
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)
