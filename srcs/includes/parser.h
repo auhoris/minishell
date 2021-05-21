@@ -19,5 +19,6 @@ t_ast		*parser_parse_pipe(t_ast *left_node, t_parser *parser);
 t_ast		*parser_parse_command(t_parser *parser);
 t_ast		*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type);
 t_ast		*parser_parse_simple_command(t_parser *parser);
+char		*parser_get_cmd_name(t_parser *parser);
 
 #endif /* ifndef PARSER_H */

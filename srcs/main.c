@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/20 21:32:21 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/21 15:12:29 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int main(void)
 	// t_token		*token;
 
 	get_next_line(0, &str);
-	lexer = init_lexer(str);
+	// lexer = init_lexer(str);
 	/* while (get_next_line(0, &str) > 0)
 	{ */
 		lexer = init_lexer(str);
