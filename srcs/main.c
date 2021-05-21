@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/21 18:24:17 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/21 19:32:46 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include "includes/visitor.h"
 #include <sys/_types/_size_t.h>
+#include "includes/env.h"
 
 char	*print_token_type(int type)
 {
@@ -63,8 +64,11 @@ int main(int argc, char **argv, char **env)
 	t_parser	*parser;
 	t_ast		*root; */
 	// t_token		*token;
+	t_env_dict	**env_d;
 
-	print_env(env);
+
+	env_d = init_env(env);
+	show_dict(env_d);
 	// get_next_line(0, &str);
 	// lexer = init_lexer(str);
 	/* while (get_next_line(0, &str) > 0)
