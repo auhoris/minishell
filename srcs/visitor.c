@@ -1,6 +1,13 @@
 #include "includes/visitor.h"
 #include <sys/_types/_size_t.h>
 
+void	visitor_visit_vardef(t_ast *node)
+{
+	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("name = %s\n", node->var_name);
+	printf("value = %s\n", node->var_value);
+}
+
 void	visitor_visit_nodes(t_ast *node)
 {
 	if (node->e_nodetype == NODE_ROOT)
@@ -9,6 +16,8 @@ void	visitor_visit_nodes(t_ast *node)
 		visitor_visit_simplecommand(node);
 	if (node->e_nodetype == NODE_PIPE)
 		visitor_visit_pipe(node);
+	if (node->e_nodetype == NODE_VARDEF)
+		visitor_visit_vardef(node);
 	if (node->e_nodetype == NODE_LREDIRECT
 	|| node->e_nodetype == NODE_RREDIRECT
 	|| node->e_nodetype == NODE_DOUBLE_REDIRECT)
@@ -68,6 +77,7 @@ void	visitor_visit_simplecommand(t_ast *node)
 		case NODE_RREDIRECT: return ("NODE_RREDIRECT");
 		case NODE_DOUBLE_REDIRECT: return ("NODE_DOUBLE_REDIRECT");
 		case NODE_SIMPLECOMMAND: return ("NODE_SIMPLECOMMAND");
+		case NODE_VARDEF: return ("NODE_VARDEF");
 		default: return ("Undefined node type");
 	}
 }

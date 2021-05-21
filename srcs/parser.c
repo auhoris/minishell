@@ -49,11 +49,6 @@ void	parser_next_token(t_parser *parser)
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		exit(1);
 	}
-	/* else if (parser->cur_tok->e_type == TOKEN_PIPE && (parser->prev_token->e_type == TOKEN_SEMI || parser->prev_token->e_type == TOKEN_LESS || parser->prev_token->e_type == TOKEN_MORE || parser->cur_tok->e_type == TOKEN_DMORE))
-	{
-		printf("minishell: syntax error near unexpected token '%s'\n", parser->cur_tok->value);
-		exit(1);
-	} */
 	else if ((prev_type == TOKEN_SEMI || prev_type == TOKEN_PIPE) && i == 0)
 	{
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
@@ -150,7 +145,36 @@ t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
 	return (scmd);
 }
 
-char		*parser_get_cmd_name(t_parser *parser)
+char		*parser_get_dollar_value(t_token *token)
+{
+	(void)token;
+	// Написать логику подстановки значения переменной окружения
+	// Либо подставлять на этапе токенов?
+	return (NULL);
+}
+
+t_ast	*parser_parse_variable_definition(t_parser *parser)
+{
+	t_ast	*vardef;
+
+	vardef = init_node(NODE_VARDEF);
+	if (vardef == NULL)
+		return (NULL);
+	printf("prev %s\n", parser->prev_token->value);
+	printf("curr %s\n", parser->cur_tok->value);
+	vardef->var_name = ft_strdup(parser->prev_token->value);
+	if (vardef->var_name == NULL)
+		return (NULL);
+	printf("%s\n", vardef->var_name);
+	printf("%s\n", vardef->var_value);
+	parser_next_token(parser);
+	vardef->var_value = ft_strdup(parser->cur_tok->value);
+	if (vardef->var_value == NULL)
+		return (NULL);
+	return (vardef);
+}
+
+char	*parser_get_cmd_name(t_parser *parser)
 {
 	char	*str;
 	int		type;
@@ -158,13 +182,11 @@ char		*parser_get_cmd_name(t_parser *parser)
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
-	if (parser->cur_tok->e_type == TOKEN_MORE)
-		printf("ALERT\n");
 	type = parser->cur_tok->e_type;
 	while (!parser->cur_tok->f_space && parser->cur_tok->e_type != TOKEN_EOF)
 	{
 		if (type == TOKEN_DOLLAR || type == TOKEN_SEMI || type == TOKEN_MORE
-				|| type == TOKEN_LESS || type == TOKEN_DMORE)
+			|| type == TOKEN_LESS || type == TOKEN_DMORE)
 			return (str);
 		str = connect_str(str, parser->cur_tok->value);
 		if (str == NULL)

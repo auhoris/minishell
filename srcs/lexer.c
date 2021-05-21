@@ -20,8 +20,7 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 {
 	while (lexer->c != '\0' && lexer->c != '\0')
 	{
-		if (lexer->c == ' ')
-			lexer_skip_whitespace(lexer);
+		lexer_skip_whitespace(lexer);
 		if (lexer->c == '\'')
 			return (lexer_collect_squote(lexer));
 		if (lexer->c == '"')
@@ -29,12 +28,7 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		if (ft_isalnum(lexer->c) || ft_inset(OTHER, lexer->c))
 			return (lexer_collect_id(lexer));
 		if (lexer->c == '$')
-		{
-			if (ft_isalnum(lexer_peek(lexer, 1)))
 				return (lexer_collect_dollar(lexer));
-			return (lexer_advance_with(lexer,
-					init_token(TOKEN_DOLLAR, lexer_chtostr(lexer->c), FALSE)));
-		}
 		if (lexer->c == '\\')
 			return (lexer_collect_bslash(lexer));
 		else if (lexer->c == ';')
@@ -43,6 +37,9 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		else if (lexer->c == '<')
 			return (lexer_advance_with(lexer,
 					init_token(TOKEN_LESS, lexer_chtostr(lexer->c), FALSE)));
+		else if (lexer->c == '|')
+			return (lexer_advance_with(lexer,
+					init_token(TOKEN_PIPE, lexer_chtostr(lexer->c), FALSE)));
 		else if (lexer->c == '>')
 		{
 			if (lexer_peek(lexer, 1) == '>')
@@ -52,9 +49,6 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 			return (lexer_advance_with(lexer,
 					init_token(TOKEN_MORE, lexer_chtostr(lexer->c), FALSE)));
 		}
-		else if (lexer->c == '|')
-			return (lexer_advance_with(lexer,
-					init_token(TOKEN_PIPE, lexer_chtostr(lexer->c), FALSE)));
 		else if (lexer->c == '=')
 		{
 			if (lexer_peek(lexer, -1) == ' ' || lexer_peek(lexer, 1) == ' ')

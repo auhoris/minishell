@@ -21,6 +21,7 @@ typedef struct s_ast
 		NODE_RREDIRECT, //3
 		NODE_DOUBLE_REDIRECT, //4
 		NODE_SIMPLECOMMAND, //5
+		NODE_VARDEF, //6
 	}	e_nodetype;
 	char			*cmd_name;
 	//				Arguments
@@ -30,6 +31,8 @@ typedef struct s_ast
 	//				Table
 	struct s_ast	**table_value;
 	size_t			table_size;
+	char			*var_name;
+	char			*var_value;
 }			t_ast;
 
 t_ast	*init_node(int type);

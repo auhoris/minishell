@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/21 15:12:29 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/21 18:24:17 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,36 @@ char	*print_token_type(int type)
 	}
 }
 
-int main(void)
+void	print_env(char **env)
 {
-	char		*str;
+	int	i;
+
+	i = -1;
+	printf("!!!ENV!!!\n");
+	while (env[++i])
+	{
+		printf("%c\n", env[i][0]);
+		// printf("%s\n", env[i]);
+	}
+}
+int main(int argc, char **argv, char **env)
+{
+	(void)argc;
+	(void)argv;
+	/* char		*str;
 	t_lexer		*lexer;
 	t_parser	*parser;
-	t_ast		*root;
+	t_ast		*root; */
 	// t_token		*token;
 
-	get_next_line(0, &str);
+	print_env(env);
+	// get_next_line(0, &str);
 	// lexer = init_lexer(str);
 	/* while (get_next_line(0, &str) > 0)
 	{ */
-		lexer = init_lexer(str);
+		/* lexer = init_lexer(str);
 		parser = init_parser(lexer);
-		root = parser_parse_commands(parser);
+		root = parser_parse_commands(parser); */
 	// }
 	/* token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
@@ -64,7 +79,7 @@ int main(void)
 		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
 		token = lexer_get_next_token(lexer);
 	} */
-	visitor_visit_nodes(root);
+	// visitor_visit_nodes(root);
 	// printf("table_size = %zu\n", root->table_size);
 	return (0);
 }
