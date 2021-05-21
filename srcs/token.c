@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-t_token	*init_token(int type, char *value)
+t_token	*init_token(int type, char *value, int f_space)
 {
 	t_token	*token;
 
@@ -12,6 +12,7 @@ t_token	*init_token(int type, char *value)
 	token->e_type = type;
 	token->value = value;
 	token->number_of_tokens = 0;
+	token->f_space = f_space;
 	return (token);
 }
 
