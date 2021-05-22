@@ -22,15 +22,12 @@ int	write_in_terminal_isprint(t_data_processing *data_processing)
 
 void	write_in_terminal(char *command, int *num_symbol)
 {
-	// write(1, "\n<minishell>$", 13);
-	// tputs(tgetstr("sc", 0), 1, ft_putint);
+
 	if (command == NULL)
 	{
 		write(1, "\0", 1);
-		// (*num_symbol)++;
 		return ;
 	}
-	// write(1, "\ntest\n", 6);
 	write(1, command, ft_strlen(command));
 	(*num_symbol) = ft_strlen(command);
 }

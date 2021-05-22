@@ -21,7 +21,7 @@ objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(o
 
 # Flags and linkers
 cc				= gcc
-cflags			= -Wall -Werror -Wextra -g
+cflags			= -Wall -Werror -Wextra
 dbgf			= -g
 sanitize		= -fsanitize=address
 termcap			= -ltermcap
