@@ -24,7 +24,7 @@ t_data_processing	*init_data_processing(void)
 		free(data_processing);
 		return (NULL);
 	}
-	data_processing->num_symbol = 12;
+	data_processing->num_symbol = 0;
 	return (data_processing);
 }
 

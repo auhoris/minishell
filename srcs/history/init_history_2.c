@@ -116,12 +116,14 @@ static int	update_command_line(t_history **start, t_history **actual, t_data_pro
 		clear_history(start);
 		return (ERROR_MALLOC);
 	}
-	data_processing->num_symbol = 12 + ft_strlen((*actual)->command);
+	// data_processing->num_symbol = ft_strlen((*actual)->command);
 	return (OUT);
 }
 
 static void	get_last_element(t_history **actual)
 {
+	if (*actual == NULL)
+		return ;
 	while ((*actual)->next != NULL)
 		*actual = (*actual)->next;
 }
@@ -132,8 +134,19 @@ static int	get_enter(t_history **start, t_history **actual, t_data_processing *d
 	// printf("\n%s\n", (*actual)->command);
 	if (*data_processing->command_line != '\0')
 	{
-		if (update_command_list(start, actual, data_processing->command_line) != OUT)
-			return (ERROR_MALLOC);
+		if ((*actual)->next == NULL)
+		{
+			if (update_command_list(start, actual, data_processing->command_line) != OUT)
+				return (ERROR_MALLOC);
+		}
+		else
+		{
+			get_last_element(actual);
+			if (update_command_list(start, actual, data_processing->command_line) != OUT)
+				return (ERROR_MALLOC);
+		}
+		// if (create_new_element(start, actual, data_processing->command_line) != OUT)
+		// 	return (ERROR_MALLOC);
 		if (create_empty_elem(start, actual) != OUT)
 			return (ERROR_MALLOC);
 	}

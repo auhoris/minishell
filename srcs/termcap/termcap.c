@@ -62,7 +62,7 @@ static int	processing_del(char **command_line, int *num_symbol)
 			return (ERROR_MALLOC);
 		free(temp);
 	}
-	if (*num_symbol > 12)
+	if (*num_symbol > 0)
 	{
 		tputs(tgetstr("le", 0), 1, ft_putint); // смещение каретки на 1 влево
 		tputs(tgetstr("dc", 0), 1, ft_putint); // удаление символа
@@ -92,7 +92,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		tputs(tgetstr("sc", 0), 1, ft_putint);										// сохранили позицию каретки
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);					// нет защиты
-		data_processing->num_symbol = 12;
+		data_processing->num_symbol = 0;
 	}
 	else
 		write_in_terminal(data_processing->command_line, &data_processing->num_symbol);

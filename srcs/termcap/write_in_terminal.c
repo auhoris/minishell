@@ -16,7 +16,7 @@ int	write_in_terminal_isprint(t_data_processing *data_processing)
 	temp = data_processing->command_line;
 	data_processing->command_line = ft_strjoin(temp, data_processing->buf_read);
 	free(temp);
-	(data_processing->num_symbol) += ft_strlen(data_processing->buf_read);
+	data_processing->num_symbol += ft_strlen(data_processing->buf_read);
 	return (OUT);
 }
 
@@ -27,10 +27,10 @@ void	write_in_terminal(char *command, int *num_symbol)
 	if (command == NULL)
 	{
 		write(1, "\0", 1);
-		(*num_symbol)++;
+		// (*num_symbol)++;
 		return ;
 	}
 	// write(1, "\ntest\n", 6);
 	write(1, command, ft_strlen(command));
-	(*num_symbol) += ft_strlen(command);
+	(*num_symbol) = ft_strlen(command);
 }
