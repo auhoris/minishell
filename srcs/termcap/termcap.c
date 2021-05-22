@@ -10,19 +10,23 @@ static int		get_term_param(struct termios *term)
 
 	term_name = getenv("TERM");
 	if (term_name == NULL)
-	{
-		// ERROR
-	}
-
-
-	out = tcgetattr(0, term); // заполнит структуру term в соответствии с параметрами нашего терминала
+		return (ERROR_TERM_NAME);
+/*
+	tcgetattr заполнит структуру term в соответствии с параметрами нашего терминала
+*/
+	out = tcgetattr(0, term);
 	if (out != 0)
 	{
 		// ERROR (есть errno)
 	}
-	term->c_lflag &= ~(ECHO); // не отображать вводимые символы
-	term->c_lflag &= ~(ICANON); // выкл канонический режим (теперь мы видим то, что вводим)
-	tcsetattr(0, TCSANOW, term); // If optional_actions is TCSANOW, the change shall occur immediately (изменения произойдут немедленно).
+/*
+	~(ECHO) не отображать вводимые символы
+	~(ICANON) выкл канонический режим (теперь мы видим то, что вводим)
+	tcsetattr(0, TCSANOW, term) - If optional_actions is TCSANOW, the change shall occur immediately (изменения произойдут немедленно).
+*/
+	term->c_lflag &= ~(ECHO);
+	term->c_lflag &= ~(ICANON);
+	tcsetattr(0, TCSANOW, term);
 
 /*
 	tgetent
@@ -39,13 +43,17 @@ static int		get_term_param(struct termios *term)
 	{
 		// ERROR
 	}
-	return (1);
+	return (OUT);
 }
 
 void		screen_clear(void)
 {
-	tputs(tgetstr("rc", 0), 1, ft_putint); // rc восстановление сохраненной позиции курсора
-	tputs(tgetstr("cd", 0), 1, ft_putint); // очистка до конца экрана
+/*
+	rc восстановление сохраненной позиции курсора
+	cd очистка до конца экрана
+*/
+	tputs(tgetstr("rc", 0), 1, ft_putint);
+	tputs(tgetstr("cd", 0), 1, ft_putint);
 }
 
 static int	processing_del(char **command_line, int *num_symbol)
@@ -64,8 +72,12 @@ static int	processing_del(char **command_line, int *num_symbol)
 	}
 	if (*num_symbol > 0)
 	{
-		tputs(tgetstr("le", 0), 1, ft_putint); // смещение каретки на 1 влево
-		tputs(tgetstr("dc", 0), 1, ft_putint); // удаление символа
+/*
+	le смещение каретки на 1 влево
+	dc удаление символа
+*/
+		tputs(tgetstr("le", 0), 1, ft_putint);
+		tputs(tgetstr("dc", 0), 1, ft_putint);
 		(*num_symbol)--;
 	}
 	return (1);
@@ -78,7 +90,6 @@ static int	processing_button(t_data_processing *data_processing, int button)
 	if (data_processing->actual_history == NULL && button != ENTER)
 		return (OUT);
 	screen_clear();
-	// out = get_history_list(data_processing, button);
 	out = get_history_data(data_processing, button);
 	if (button == ENTER)
 	{
@@ -89,9 +100,11 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			write(1, data_processing->actual_history->prev->command, ft_strlen(data_processing->actual_history->prev->command));
 		}
 		write(1, "\n<minishell>$", 13);
-		tputs(tgetstr("sc", 0), 1, ft_putint);										// сохранили позицию каретки
+		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
-		data_processing->command_line = (char *)ft_calloc(1, 1);					// нет защиты
+		data_processing->command_line = (char *)ft_calloc(1, 1);
+		if (data_processing->command_line == NULL)
+			return (ERROR_MALLOC);
 		data_processing->num_symbol = 0;
 	}
 	else
@@ -101,27 +114,24 @@ static int	processing_button(t_data_processing *data_processing, int button)
 
 static int	input_processing(t_data_processing *data_processing)
 {
-	int		check_buf;
+	int	check_buf;
 	int	out;
 
 	check_buf = check_buf_read(data_processing->buf_read);
 	out = OUT;
 	if (check_buf == UP)
 	{
-		// printf("\n%s\n", data_processing->command_line);
 		processing_button(data_processing, UP);
-		// printf("up\n");
 	}
 	else if (check_buf == DOWN)
 	{
 		processing_button(data_processing, DOWN);
-		// printf("down\n");
 	}
 	else if (check_buf == DEL)
 	{
 		processing_del(&data_processing->command_line, &data_processing->num_symbol);
 	}
-	else if (check_buf == ENTER)					// пока что печатаем, но в дальнейшем эта страка улетит на парсинг
+	else if (check_buf == ENTER)
 	{
 		processing_button(data_processing, ENTER);
 	}
@@ -163,7 +173,10 @@ int		termcap()
 		// ERROR
 	}
 	write(1, "<minishell>$", 12);
-	tputs(tgetstr("sc", 0), 1, ft_putint);						// сохранили позицию каретки
+/*
+	sc сохранение позиции каретки
+*/
+	tputs(tgetstr("sc", 0), 1, ft_putint);
 	infinite_round();
 	return (1);
 }
