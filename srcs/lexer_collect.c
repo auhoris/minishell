@@ -103,27 +103,23 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	if (lexer->flag == FALSE)
 		lexer_advance(lexer);
 	lexer->flag = FALSE;
+	if (seek_quote(&lexer->content[lexer->current]) == FALSE)
+			return (init_token(BAD_TOKEN, string, FALSE));
 	while (lexer->c != '\"' && lexer->c != '\0')
 	{
-		/* if (seek_quote(&lexer->content[lexer->current]) == FALSE)
-			return (init_token(BAD_TOKEN, string, FALSE)); */
 		if (lexer->c == '\\' && lexer_peek(lexer, 1) == '"')
 			return (init_token(BAD_TOKEN, string, FALSE));
 		if (lexer->c == '$' || lexer->c == '\\')
 		{
 			lexer->flag = TRUE;
-			break ;
+			return (init_token(TOKEN_DQUOTE, string, FALSE));
 		}
 		string = connect_str(string, lexer_chtostr(lexer->c));
 		if (string == NULL)
 			return (NULL);
 		lexer_advance(lexer);
 	}
-	//	После функции seek_quote это скорее всего не нужно
-	/* if (lexer->c != '\"')
-		return (init_token(BAD_TOKEN, string, FALSE)); */
-	if (lexer->c != '$' && lexer->c != '\\')
-		lexer_advance(lexer);
+	lexer_advance(lexer);
 	if (lexer->c == SPACE)
 		return (init_token(TOKEN_DQUOTE, string, TRUE));
 	return (init_token(TOKEN_DQUOTE, string, FALSE));
