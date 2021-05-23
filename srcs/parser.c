@@ -159,7 +159,6 @@ t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
 	scmd->argv[scmd->argc - 1] = parser_get_cmd_name(parser);
 	if (scmd->argv[scmd->argc - 1] == NULL)
 		return (NULL);
-	parser_next_token(parser);
 	return (scmd);
 }
 
