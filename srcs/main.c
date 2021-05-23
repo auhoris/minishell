@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/21 19:32:46 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/23 17:29:42 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,23 +59,24 @@ int main(int argc, char **argv, char **env)
 {
 	(void)argc;
 	(void)argv;
-	/* char		*str;
+	(void)env;
+	char		*str;
 	t_lexer		*lexer;
 	t_parser	*parser;
-	t_ast		*root; */
+	t_ast		*root;
 	// t_token		*token;
 	t_env_dict	**env_d;
 
 
 	env_d = init_env(env);
-	show_dict(env_d);
-	// get_next_line(0, &str);
+	// show_dict(env_d);
+	get_next_line(0, &str);
 	// lexer = init_lexer(str);
 	/* while (get_next_line(0, &str) > 0)
 	{ */
-		/* lexer = init_lexer(str);
+		lexer = init_lexer(str);
 		parser = init_parser(lexer);
-		root = parser_parse_commands(parser); */
+		root = parser_parse_commands(parser);
 	// }
 	/* token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
@@ -83,7 +84,7 @@ int main(int argc, char **argv, char **env)
 		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
 		token = lexer_get_next_token(lexer);
 	} */
-	// visitor_visit_nodes(root);
+	visitor_visit_nodes(root);
 	// printf("table_size = %zu\n", root->table_size);
 	return (0);
 }

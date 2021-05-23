@@ -153,7 +153,8 @@ char		*parser_get_dollar_value(t_token *token)
 	return (NULL);
 }
 
-t_ast	*parser_parse_variable_definition(t_parser *parser)
+//Пока бесполезняк
+/* t_ast	*parser_parse_variable_definition(t_parser *parser)
 {
 	t_ast	*vardef;
 
@@ -172,7 +173,7 @@ t_ast	*parser_parse_variable_definition(t_parser *parser)
 	if (vardef->var_value == NULL)
 		return (NULL);
 	return (vardef);
-}
+} */
 
 char	*parser_get_cmd_name(t_parser *parser)
 {
@@ -194,6 +195,7 @@ char	*parser_get_cmd_name(t_parser *parser)
 		parser_next_token(parser);
 		type = parser->cur_tok->e_type;
 	}
+	// Зачем это?
 	str = connect_str(str, parser->cur_tok->value);
 	if (str == NULL)
 		return (NULL);

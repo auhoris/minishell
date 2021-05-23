@@ -1,6 +1,9 @@
 #include "includes/env.h"
 #include "../libs/libft/srcs/libft.h"
+#include "includes/token.h"
+#include "includes/utils.h"
 #include <stdio.h>
+#include <sys/_types/_size_t.h>
 
 size_t	env_length(char **env)
 {
@@ -38,6 +41,28 @@ char	*set_value(char *env_str)
 	i++;
 	eq_pos = equals_position(env_str);
 	return (ft_substr(env_str, ++eq_pos, ft_strlen(env_str)));
+}
+
+char	*get_value_by_key(t_token *token, t_env_dict **env_dict)
+{
+	size_t	i;
+	char	*ret;
+
+	i = 0;
+	ret = ft_strdup("");
+	if (ret == NULL)
+		return (ret);
+	while (env_dict[i])
+	{
+		if (ft_strcmp(env_dict[i]->key, token->value))
+		{
+			ret = connect_str(ret, env_dict[i]->value);
+			if (ret == NULL)
+				return (NULL);
+		}
+		i++;
+	}
+	return (ret);
 }
 
 void	clear_env(t_env_dict **env_dict)
