@@ -2,7 +2,6 @@
 #include "includes/minishell.h"
 #include "includes/token.h"
 #include "includes/utils.h"
-#include <stdlib.h>
 
 t_token	*lexer_collect_dollar(t_lexer *lexer)
 {

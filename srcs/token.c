@@ -1,6 +1,4 @@
 #include "includes/token.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 t_token	*init_token(int type, char *value, int f_space)
 {

@@ -1,6 +1,5 @@
 #include "includes/env.h"
 #include "../libs/libft/srcs/libft.h"
-#include <stdio.h>
 #include <sys/_types/_size_t.h>
 
 static size_t	env_length(char **env)

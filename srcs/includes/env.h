@@ -1,9 +1,9 @@
 #ifndef ENV_H
 # define ENV_H
 
+# include "minishell.h"
 # include <sys/_types/_size_t.h>
 # include "../../libs/libft/srcs/libft.h"
-# include <stdio.h>
 # include "token.h"
 # include "utils.h"
 

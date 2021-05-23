@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 # define TOKEN_H
 
+# include "minishell.h"
 # include "../../libs/libft/srcs/libft.h"
 # include <sys/_types/_size_t.h>
 
