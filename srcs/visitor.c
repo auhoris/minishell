@@ -57,13 +57,14 @@ void	visitor_visit_simplecommand(t_ast *node)
 	size_t	i;
 
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
-	printf("command name = %s\t", node->cmd_name);
+	printf("----command name = %s----\n", node->cmd_name);
 	i = 0;
 	while (i < node->argc)
 	{
-		printf("argv[%zu] = %s\t", i, node->argv[i]);
+		printf("%zu: argv[%zu] = %s\n", i, i, node->argv[i]);
 		i++;
 	}
+	// printf("%zu\n", ft_strlen(node->argv[--i]));
 	printf("\n\n<========>\n\n");
 
 }

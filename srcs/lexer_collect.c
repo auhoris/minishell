@@ -100,24 +100,41 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	string = ft_strdup("");
 	if (string == NULL)
 		return (NULL);
-	lexer_advance(lexer);
+	if (lexer->flag == FALSE)
+		lexer_advance(lexer);
+	lexer->flag = FALSE;
 	while (lexer->c != '\"' && lexer->c != '\0')
 	{
-		if (lexer->c == '\\')
+		/* if (seek_quote(&lexer->content[lexer->current]) == FALSE)
+			return (init_token(BAD_TOKEN, string, FALSE)); */
+		if (lexer->c == '\\' && lexer_peek(lexer, 1) == '"')
+			return (init_token(BAD_TOKEN, string, FALSE));
+		if (lexer->c == '$' || lexer->c == '\\')
+		{
+			lexer->flag = TRUE;
+			break ;
+		}
+		string = connect_str(string, lexer_chtostr(lexer->c));
+		if (string == NULL)
+			return (NULL);
+		lexer_advance(lexer);
+	}
+	//	После функции seek_quote это скорее всего не нужно
+	/* if (lexer->c != '\"')
+		return (init_token(BAD_TOKEN, string, FALSE)); */
+	if (lexer->c != '$' && lexer->c != '\\')
+		lexer_advance(lexer);
+	if (lexer->c == SPACE)
+		return (init_token(TOKEN_DQUOTE, string, TRUE));
+	return (init_token(TOKEN_DQUOTE, string, FALSE));
+}
+
+		//	Зачем?
+		/* if (lexer->c == '\\')
 		{
 			string = connect_str(string, lexer_chtostr(lexer->c));
 			lexer_advance(lexer);
-		}
-		string = connect_str(string, lexer_chtostr(lexer->c));
-		lexer_advance(lexer);
-	}
-	if (lexer->c != '\"')
-		return (init_token(BAD_TOKEN, string, FALSE));
-	lexer_advance(lexer);
-	if (lexer->c == SPACE)
-		return (init_token(TOKEN_SQUOTE, string, TRUE));
-	return (init_token(TOKEN_DQUOTE, string, FALSE));
-}
+		} */
 /*
 t_token	*lexer_collect_equals(t_lexer *lexer)
 {

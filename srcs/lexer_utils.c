@@ -1,5 +1,6 @@
 #include "includes/lexer.h"
 #include "includes/minishell.h"
+#include <sys/_types/_size_t.h>
 
 char	*lexer_chtostr(char c)
 {
@@ -36,6 +37,20 @@ char	lexer_peek(t_lexer *lexer, int offset)
 	if (lexer->current + offset < lexer->length)
 		return (lexer->content[lexer->current + offset]);
 	return ('\0');
+}
+
+int		seek_quote(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"')
+			return (TRUE);
+		i++;
+	}
+	return (FALSE);
 }
 
 char	*connect_str(char *s1, char *s2)
