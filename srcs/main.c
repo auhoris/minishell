@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/23 17:29:42 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/23 17:43:56 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,15 @@ int main(int argc, char **argv, char **env)
 	t_parser	*parser;
 	t_ast		*root;
 	// t_token		*token;
-	t_env_dict	**env_d;
+	// t_env_dict	**env_d;
 
 
-	env_d = init_env(env);
-	// show_dict(env_d);
 	get_next_line(0, &str);
 	// lexer = init_lexer(str);
 	/* while (get_next_line(0, &str) > 0)
 	{ */
 		lexer = init_lexer(str);
-		parser = init_parser(lexer);
+		parser = init_parser(lexer, init_env(env));
 		root = parser_parse_commands(parser);
 	// }
 	/* token = lexer_get_next_token(lexer);

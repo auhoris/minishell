@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-t_parser	*init_parser(t_lexer *lexer)
+t_parser	*init_parser(t_lexer *lexer, t_env_dict **env)
 {
 	t_parser	*parser;
 
@@ -14,10 +14,11 @@ t_parser	*init_parser(t_lexer *lexer)
 		return (NULL);
 	parser->lexer = lexer;
 	parser->cur_tok = lexer_get_next_token(lexer);
+	parser->env = env;
 	return (parser);
 }
 
-void	parser_next_token(t_parser *parser)
+int	parser_next_token(t_parser *parser)
 {
 	static int	i;
 	int			type;
@@ -29,11 +30,6 @@ void	parser_next_token(t_parser *parser)
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 		i = 0;
-	/* printf("<=====>\n\n");
-	printf("[Previous]:type='%d'|value='%s'\n", parser->prev_token->e_type, parser->prev_token->value);
-	printf("[Current]:type='%d'|value='%s'\n", parser->cur_tok->e_type, parser->cur_tok->value);
-	printf("\n\n<=====>\n\n"); */
-	// printf("parser->cur_tok->number_of_tokens = %zu\n", parser->cur_tok->number_of_tokens);
 	if (prev_type == BAD_TOKEN)
 	{
 		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
@@ -63,6 +59,7 @@ void	parser_next_token(t_parser *parser)
 	}
 	i++;
 	destroy_token(parser->prev_token);
+	return (type);
 }
 
 t_ast	*parser_parse_commands(t_parser *parser)
@@ -131,28 +128,6 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 	return (redirect);
 }
 
-t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
-{
-	scmd->argc++;
-	scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
-						(scmd->argc - 1) * sizeof(*scmd->argv));
-	if (scmd->argv == NULL)
-		return (NULL);
-	scmd->argv[scmd->argc - 1] = ft_strdup(parser->cur_tok->value);
-	if (scmd->argv[scmd->argc - 1] == NULL)
-		return (NULL);
-	parser_next_token(parser);
-	return (scmd);
-}
-
-char		*parser_get_dollar_value(t_token *token)
-{
-	(void)token;
-	// Написать логику подстановки значения переменной окружения
-	// Либо подставлять на этапе токенов?
-	return (NULL);
-}
-
 //Пока бесполезняк
 /* t_ast	*parser_parse_variable_definition(t_parser *parser)
 {
@@ -175,6 +150,26 @@ char		*parser_get_dollar_value(t_token *token)
 	return (vardef);
 } */
 
+static char	*make_argument(char *str, t_parser *parser)
+{
+	int	type;
+
+	type = parser->cur_tok->e_type;
+	if (type == TOKEN_DOLLAR)
+	{
+		str = connect_str(str, get_value_by_key(parser->cur_tok, parser->env));
+		if (str == NULL)
+			return (NULL);
+	}
+	else
+	{
+		str = connect_str(str, parser->cur_tok->value);
+		if (str == NULL)
+			return (NULL);
+	}
+	return (str);
+}
+
 char	*parser_get_cmd_name(t_parser *parser)
 {
 	char	*str;
@@ -186,21 +181,34 @@ char	*parser_get_cmd_name(t_parser *parser)
 	type = parser->cur_tok->e_type;
 	while (!parser->cur_tok->f_space && parser->cur_tok->e_type != TOKEN_EOF)
 	{
-		if (type == TOKEN_DOLLAR || type == TOKEN_SEMI || type == TOKEN_MORE
+		if (type == TOKEN_SEMI || type == TOKEN_MORE
 			|| type == TOKEN_LESS || type == TOKEN_DMORE)
 			return (str);
-		str = connect_str(str, parser->cur_tok->value);
+		str = make_argument(str, parser);
 		if (str == NULL)
 			return (NULL);
-		parser_next_token(parser);
-		type = parser->cur_tok->e_type;
+		type = parser_next_token(parser);
 	}
-	// Зачем это?
-	str = connect_str(str, parser->cur_tok->value);
+	// Зачем это? - Это нада
+	str = make_argument(str, parser);
 	if (str == NULL)
 		return (NULL);
 	parser_next_token(parser);
 	return (str);
+}
+
+t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
+{
+	scmd->argc++;
+	scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
+						(scmd->argc - 1) * sizeof(*scmd->argv));
+	if (scmd->argv == NULL)
+		return (NULL);
+	scmd->argv[scmd->argc - 1] = parser_get_cmd_name(parser);
+	if (scmd->argv[scmd->argc - 1] == NULL)
+		return (NULL);
+	parser_next_token(parser);
+	return (scmd);
 }
 
 t_ast	*parser_parse_simple_command(t_parser *parser)

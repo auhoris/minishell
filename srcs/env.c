@@ -1,11 +1,9 @@
 #include "includes/env.h"
 #include "../libs/libft/srcs/libft.h"
-#include "includes/token.h"
-#include "includes/utils.h"
 #include <stdio.h>
 #include <sys/_types/_size_t.h>
 
-size_t	env_length(char **env)
+static size_t	env_length(char **env)
 {
 	size_t	len;
 
@@ -51,14 +49,15 @@ char	*get_value_by_key(t_token *token, t_env_dict **env_dict)
 	i = 0;
 	ret = ft_strdup("");
 	if (ret == NULL)
-		return (ret);
+		return (NULL);
 	while (env_dict[i])
 	{
-		if (ft_strcmp(env_dict[i]->key, token->value))
+		if (ft_strcmp(env_dict[i]->key, token->value) == 0)
 		{
 			ret = connect_str(ret, env_dict[i]->value);
 			if (ret == NULL)
 				return (NULL);
+			break ;
 		}
 		i++;
 	}
@@ -83,7 +82,7 @@ void	clear_env(t_env_dict **env_dict)
 	free(env_dict);
 }
 
-void	show_dict(t_env_dict **env)
+/* void	show_dict(t_env_dict **env)
 {
 	size_t	i;
 
@@ -93,7 +92,7 @@ void	show_dict(t_env_dict **env)
 		printf("%s=%s\n", env[i]->key, env[i]->value);
 		i++;
 	}
-}
+} */
 
 t_env_dict	**init_env(char **env)
 {
