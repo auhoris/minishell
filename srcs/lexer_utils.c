@@ -1,4 +1,6 @@
 #include "includes/lexer.h"
+#include "includes/minishell.h"
+#include <sys/_types/_size_t.h>
 
 char	*lexer_chtostr(char c)
 {
@@ -30,9 +32,35 @@ t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
 	return (token);
 }
 
-char		lexer_peek(t_lexer *lexer, int offset)
+char	lexer_peek(t_lexer *lexer, int offset)
 {
 	if (lexer->current + offset < lexer->length)
 		return (lexer->content[lexer->current + offset]);
-	return (lexer->content[lexer->length - 1]);
+	return ('\0');
+}
+
+int		seek_quote(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"')
+			return (TRUE);
+		i++;
+	}
+	return (FALSE);
+}
+
+char	*connect_str(char *s1, char *s2)
+{
+	char	*tmp;
+
+	tmp = s1;
+	s1 = ft_strjoin(s1, s2);
+	free(tmp);
+	if (s1 == NULL)
+		return (NULL);
+	return (s1);
 }
