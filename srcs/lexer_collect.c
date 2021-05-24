@@ -107,13 +107,13 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 			return (init_token(BAD_TOKEN, string, FALSE));
 	while (lexer->c != '\"' && lexer->c != '\0')
 	{
-		/* if (lexer->c == '\\' && lexer_peek(lexer, 1) == '"')
-			return (init_token(BAD_TOKEN, string, FALSE)); */
-		if (lexer->c == '$' || lexer->c == '\\')
+		if (lexer->c == '$')
 		{
 			lexer->flag = TRUE;
 			return (init_token(TOKEN_DQUOTE, string, FALSE));
 		}
+		else if (lexer->c == '\\' && ft_inset(SPECIAL, lexer_peek(lexer, 1)))
+			lexer_advance(lexer);
 		string = connect_str(string, lexer_chtostr(lexer->c));
 		if (string == NULL)
 			return (NULL);
