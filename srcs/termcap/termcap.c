@@ -2,6 +2,11 @@
 #include <term.h>
 #include "../includes/lexer.h"
 #include "termcap.h"
+#include "../includes/lexer.h"
+#include "../includes/parser.h"
+#include "../includes/ast.h"
+#include "../includes/visitor.h"
+#include "../includes/env.h"
 
 static int		get_term_param(struct termios *term)
 {
@@ -83,6 +88,18 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (1);
 }
 
+void	start_parsing(char *input, t_env_dict **env)
+{
+	t_lexer		*lexer;
+	t_parser	*parser;
+	t_ast		*root;
+
+	lexer = init_lexer(input);
+	parser = init_parser(lexer, env);
+	root = parser_parse_commands(parser);
+	visitor_visit_nodes(root);
+
+}
 static int	processing_button(t_data_processing *data_processing, int button)
 {
 	int	out;
@@ -96,8 +113,9 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		data_processing->permission_create = 1;
 		if (*data_processing->command_line != '\0')
 		{
-			write(1, " выполнение команды ", 38);
-			write(1, data_processing->actual_history->prev->command, ft_strlen(data_processing->actual_history->prev->command));
+			start_parsing(data_processing->actual_history->prev->command, data_processing->env);
+			// write(1, " выполнение команды ", 38);
+			// write(1, data_processing->actual_history->prev->command, ft_strlen(data_processing->actual_history->prev->command));
 		}
 		write(1, "\n<minishell>$", 13);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
@@ -112,7 +130,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 	return (out);
 }
 
-static int	input_processing(t_data_processing *data_processing)
+static char	input_processing(t_data_processing *data_processing)
 {
 	int	check_buf;
 	int	out;
@@ -142,12 +160,12 @@ static int	input_processing(t_data_processing *data_processing)
 	return (out);
 }
 
-int		infinite_round()
+static int		infinite_round(t_env_dict **env)
 {
 	t_data_processing	*data_processing;
 	int		l;
 
-	data_processing = init_data_processing();
+	data_processing = init_data_processing(env);
 	if (data_processing == NULL)
 	{
 		return (ERROR_MALLOC);
@@ -163,7 +181,7 @@ int		infinite_round()
 	}
 }
 
-int		termcap()
+int		termcap(t_env_dict **env)
 {
 
 	struct termios	term;
@@ -177,6 +195,6 @@ int		termcap()
 	sc сохранение позиции каретки
 */
 	tputs(tgetstr("sc", 0), 1, ft_putint);
-	infinite_round();
+	infinite_round(env);
 	return (1);
 }

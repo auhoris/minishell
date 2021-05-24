@@ -3,7 +3,7 @@
 
 # include "../includes/types.h"
 
-t_data_processing	*init_data_processing(void);
+t_data_processing	*init_data_processing(t_env_dict **env);
 int					check_buf_read(char	*buf_read);
 int					write_in_terminal_isprint(t_data_processing
 						*data_processing);

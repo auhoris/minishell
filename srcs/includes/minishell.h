@@ -1,7 +1,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-int		termcap();
+#include "env.h"
+
+int		termcap(t_env_dict **env);
 int		check_input_params(int argc, char **argv);
 //	Дефайны
 # define TRUE 1

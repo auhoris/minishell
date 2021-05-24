@@ -65,7 +65,7 @@ void	visitor_visit_simplecommand(t_ast *node)
 		i++;
 	}
 	// printf("%zu\n", ft_strlen(node->argv[--i]));
-	printf("\n\n<========>\n\n");
+	printf("\n<========>\n");
 
 }
 

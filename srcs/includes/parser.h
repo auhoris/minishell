@@ -2,7 +2,6 @@
 # define PARSER_H
 
 # include "minishell.h"
-# include "env.h"
 # include "lexer.h"
 # include "token.h"
 # include "ast.h"
