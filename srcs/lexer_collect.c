@@ -17,7 +17,7 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
-	if (lexer->c == SPACE)
+	if (lexer->c == SPACE && !lexer->flag)
 		return (init_token(TOKEN_DOLLAR, str, TRUE));
 	return (init_token(TOKEN_DOLLAR, str, FALSE));
 }
@@ -107,8 +107,8 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 			return (init_token(BAD_TOKEN, string, FALSE));
 	while (lexer->c != '\"' && lexer->c != '\0')
 	{
-		if (lexer->c == '\\' && lexer_peek(lexer, 1) == '"')
-			return (init_token(BAD_TOKEN, string, FALSE));
+		/* if (lexer->c == '\\' && lexer_peek(lexer, 1) == '"')
+			return (init_token(BAD_TOKEN, string, FALSE)); */
 		if (lexer->c == '$' || lexer->c == '\\')
 		{
 			lexer->flag = TRUE;

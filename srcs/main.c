@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/23 19:49:15 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/24 15:56:19 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,14 @@ void	print_env(char **env)
 	int	i;
 
 	i = -1;
-	printf("!!!ENV!!!\n");
+	// printf("!!!ENV!!!\n");
 	while (env[++i])
 	{
 		printf("%c\n", env[i][0]);
 		// printf("%s\n", env[i]);
 	}
 }
+
 int main(int argc, char **argv, char **env)
 {
 	(void)argc;
@@ -79,7 +80,7 @@ int main(int argc, char **argv, char **env)
 	token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
 	{
-		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
+		printf("type='%s'\tvalue='%s'\tspace_flag='%d'\n", print_token_type(token->e_type), token->value, token->f_space);
 		token = lexer_get_next_token(lexer);
 	}
 	// visitor_visit_nodes(root);

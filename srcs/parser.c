@@ -107,6 +107,7 @@ static char	*make_argument(char *str, t_parser *parser)
 {
 	int	type;
 
+	printf("HERE\n");
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_DOLLAR)
 	{
