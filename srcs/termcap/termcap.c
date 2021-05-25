@@ -1,10 +1,9 @@
-#include "../includes/types.h"
 #include <term.h>
-#include "../includes/lexer.h"
 #include "termcap.h"
+#include "../includes/minishell.h"
+#include "../includes/types.h"
 #include "../includes/lexer.h"
 #include "../includes/parser.h"
-#include "../includes/ast.h"
 #include "../includes/visitor.h"
 #include "../includes/env.h"
 
@@ -88,7 +87,7 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (1);
 }
 
-void	start_parsing(char *input, t_env_list *env)
+void	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
@@ -97,16 +96,17 @@ void	start_parsing(char *input, t_env_list *env)
 	(void)env; */
 
 	// show_dict(&env);
-	lexer = init_lexer(input);
+	lexer = init_lexer(data_processing->actual_history->prev->command);
 	/* token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
 	{
 		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
 		token = lexer_get_next_token(lexer);
 	} */
-	parser = init_parser(lexer, env);
+	parser = init_parser(lexer, data_processing->env);
 	root = parser_parse_commands(parser);
-	visitor_visit_nodes(root);
+	detour_tree(root, data_processing->env);
+	// visitor_visit_nodes(root);
 }
 
 static int	processing_button(t_data_processing *data_processing, int button)
@@ -122,11 +122,12 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		data_processing->permission_create = 1;
 		if (*data_processing->command_line != '\0')
 		{
-			start_parsing(data_processing->actual_history->prev->command, data_processing->env);
+			write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
+			start_parsing(data_processing);
 			// write(1, " выполнение команды ", 38);
 			// write(1, data_processing->actual_history->prev->command, ft_strlen(data_processing->actual_history->prev->command));
 		}
-		write(1, "\n<minishell>$", 13);
+		write(1, "\n<minishell>$ ", 14);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);
@@ -198,7 +199,7 @@ int		termcap(t_env_list *env)
 	{
 		// ERROR
 	}
-	write(1, "<minishell>$", 12);
+	write(1, "<minishell>$ ", 13);
 /*
 	sc сохранение позиции каретки
 */

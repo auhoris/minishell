@@ -4,6 +4,10 @@
 		"term.h": "c",
 		"minishell.h": "c",
 		"lexer.h": "c",
-		"errors.h": "c"
+		"errors.h": "c",
+		"visitor.h": "c",
+		"ast.h": "c",
+		"libft.h": "c",
+		"executor.h": "c"
 	}
 }
