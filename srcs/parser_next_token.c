@@ -11,6 +11,11 @@ int	parser_next_token(t_parser *parser)
 
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok == NULL)
+	{
+		destroy_token(parser->prev_token);
+		destroy_token(parser->cur_tok);
+	}
 	prev_type = parser->prev_token->e_type;
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)

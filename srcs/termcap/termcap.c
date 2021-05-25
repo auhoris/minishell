@@ -1,5 +1,7 @@
 #include "../includes/types.h"
+#include <stdlib.h>
 #include <term.h>
+#include <unistd.h>
 #include "../includes/lexer.h"
 #include "termcap.h"
 #include "../includes/lexer.h"
@@ -86,6 +88,21 @@ static int	processing_del(char **command_line, int *num_symbol)
 		(*num_symbol)--;
 	}
 	return (1);
+}
+
+void	free_lexer(t_lexer *lexer)
+{
+	free(lexer->content);
+	free(lexer);
+}
+
+void	free_parser(t_parser *parser)
+{
+	free_lexer(parser->lexer);
+	destroy_token(parser->prev_token);
+	destroy_token(parser->cur_tok);
+	env_list_clear(&parser->env);
+	free(parser);
 }
 
 void	start_parsing(char *input, t_env_list *env)

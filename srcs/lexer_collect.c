@@ -42,6 +42,8 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 		if (lexer->c == '=')
 			break ;
 		str = connect_str(str, lexer_chtostr(lexer->c));
+		if (str == NULL)
+			return (NULL);
 		lexer_advance(lexer);
 	}
 	if (lexer->c == SPACE)
@@ -66,6 +68,8 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 		else if (spec_id > 0 && lexer->c == SPACE)
 			return (init_token(TOKEN_BSLASH, str, TRUE));
 		str = connect_str(str, lexer_chtostr(lexer->c));
+		if (str == NULL)
+			return (NULL);
 		lexer_advance(lexer);
 		spec_id++;
 	}
@@ -83,6 +87,8 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 	while (lexer->c != '\'' && lexer->c != '\0')
 	{
 		string = connect_str(string, lexer_chtostr(lexer->c));
+		if (string == NULL)
+			return (NULL);
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\'')

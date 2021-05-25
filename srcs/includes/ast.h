@@ -4,13 +4,6 @@
 # include <unistd.h>
 # include "../../libs/libft/srcs/libft.h"
 
-typedef struct s_args
-{
-	size_t	number_of_agrs;
-	char	**args_value;
-	char	**flags;
-}			t_args;
-
 typedef struct s_ast
 {
 	enum
@@ -36,5 +29,6 @@ typedef struct s_ast
 }			t_ast;
 
 t_ast	*init_node(int type);
+void	free_nodes(t_ast *node);
 
 #endif /* ifndef AST_H */

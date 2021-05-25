@@ -21,6 +21,8 @@ t_ast	*parser_parse_commands(t_parser *parser)
 	t_ast	*scmd;
 
 	cmd = init_node(NODE_ROOT);
+	if (cmd == NULL)
+		return (NULL);
 	cmd->table_value = ft_calloc(1, sizeof(t_ast *));
 	if (cmd->table_value == NULL)
 		return (NULL);
@@ -83,29 +85,6 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 	return (redirect);
 }
 
-//Пока бесполезняк
-/* t_ast	*parser_parse_variable_definition(t_parser *parser)
-{
-	t_ast	*vardef;
-
-	vardef = init_node(NODE_VARDEF);
-	if (vardef == NULL)
-		return (NULL);
-	printf("prev %s\n", parser->prev_token->value);
-	printf("curr %s\n", parser->cur_tok->value);
-	vardef->var_name = ft_strdup(parser->prev_token->value);
-	if (vardef->var_name == NULL)
-		return (NULL);
-	printf("%s\n", vardef->var_name);
-	printf("%s\n", vardef->var_value);
-	parser_next_token(parser);
-	vardef->var_value = ft_strdup(parser->cur_tok->value);
-	if (vardef->var_value == NULL)
-		return (NULL);
-	return (vardef);
-} */
-
-// static char	
 static char	*make_argument(char *str, t_parser *parser)
 {
 	int	type;
@@ -192,3 +171,25 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 	}
 	return (scmd);
 }
+
+//Пока бесполезняк
+/* t_ast	*parser_parse_variable_definition(t_parser *parser)
+{
+	t_ast	*vardef;
+
+	vardef = init_node(NODE_VARDEF);
+	if (vardef == NULL)
+		return (NULL);
+	printf("prev %s\n", parser->prev_token->value);
+	printf("curr %s\n", parser->cur_tok->value);
+	vardef->var_name = ft_strdup(parser->prev_token->value);
+	if (vardef->var_name == NULL)
+		return (NULL);
+	printf("%s\n", vardef->var_name);
+	printf("%s\n", vardef->var_value);
+	parser_next_token(parser);
+	vardef->var_value = ft_strdup(parser->cur_tok->value);
+	if (vardef->var_value == NULL)
+		return (NULL);
+	return (vardef);
+} */
