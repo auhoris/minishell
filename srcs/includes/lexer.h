@@ -37,5 +37,4 @@ t_token		*lexer_collect_equals(t_lexer *lexer);
 t_token		*lexer_collect_flags(t_lexer *lexer);
 int			seek_quote(char *str);
 
-
 #endif /* ifndef LEXER_H */

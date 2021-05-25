@@ -14,7 +14,7 @@ t_token	*init_token(int type, char *value, int f_space)
 	return (token);
 }
 
-void		destroy_token(t_token *token)
+void	destroy_token(t_token *token)
 {
 	if (token->e_type != TOKEN_EOF)
 	{

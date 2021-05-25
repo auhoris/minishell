@@ -15,20 +15,20 @@ typedef struct s_ast
 {
 	enum
 	{
-		NODE_ROOT, //0
-		NODE_PIPE, //1
-		NODE_LREDIRECT, //2
-		NODE_RREDIRECT, //3
-		NODE_DOUBLE_REDIRECT, //4
-		NODE_SIMPLECOMMAND, //5
-		NODE_VARDEF, //6
+		NODE_ROOT,
+		NODE_PIPE,
+		NODE_LREDIRECT,
+		NODE_RREDIRECT,
+		NODE_DOUBLE_REDIRECT,
+		NODE_SIMPLECOMMAND,
+		NODE_VARDEF,
 	}	e_nodetype;
 	char			*cmd_name;
-	//				Arguments
+	// Arguments
 	size_t			argc;
 	char			**argv;
 	char			**flags;
-	//				Table
+	// Table
 	struct s_ast	**table_value;
 	size_t			table_size;
 	char			*var_name;

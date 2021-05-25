@@ -19,8 +19,8 @@ void	visitor_visit_nodes(t_ast *node)
 	if (node->e_nodetype == NODE_VARDEF)
 		visitor_visit_vardef(node);
 	if (node->e_nodetype == NODE_LREDIRECT
-	|| node->e_nodetype == NODE_RREDIRECT
-	|| node->e_nodetype == NODE_DOUBLE_REDIRECT)
+		|| node->e_nodetype == NODE_RREDIRECT
+		|| node->e_nodetype == NODE_DOUBLE_REDIRECT)
 		visitor_visit_redirect(node);
 }
 
@@ -36,6 +36,7 @@ void	visitor_visit_root(t_ast *node)
 		i++;
 	}
 }
+
 void	visitor_visit_redirect(t_ast *node)
 {
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
@@ -64,12 +65,10 @@ void	visitor_visit_simplecommand(t_ast *node)
 		printf("%zu: argv[%zu] = %s\n", i, i, node->argv[i]);
 		i++;
 	}
-	// printf("%zu\n", ft_strlen(node->argv[--i]));
 	printf("\n<========>\n");
-
 }
 
- char	*print_node_type(int type)
+char	*print_node_type(int type)
 {
 	switch (type) {
 		case NODE_ROOT: return ("NODE_ROOT");

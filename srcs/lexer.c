@@ -17,6 +17,18 @@ t_lexer	*init_lexer(char *content)
 	return (lexer);
 }
 
+void	lexer_skip_whitespace(t_lexer *lexer)
+{
+	while (lexer->c == ' ')
+		lexer_advance(lexer);
+}
+
+t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
+{
+	lexer_advance(lexer);
+	return (token);
+}
+
 t_token	*lexer_get_next_token(t_lexer *lexer)
 {
 	while (lexer->c != '\0' && lexer->c != '\0')
@@ -28,7 +40,7 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		if (ft_isalnum(lexer->c) || ft_inset(OTHER, lexer->c))
 			return (lexer_collect_id(lexer));
 		if (lexer->c == '$')
-				return (lexer_collect_dollar(lexer));
+			return (lexer_collect_dollar(lexer));
 		if (lexer->c == '"' || lexer->flag == TRUE)
 		{
 			return (lexer_collect_dquote(lexer));

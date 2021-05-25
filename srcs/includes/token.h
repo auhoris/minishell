@@ -27,7 +27,7 @@ typedef struct s_token
 		TOKEN_MORE, //7 То же что и выше
 		TOKEN_DMORE, //8 То же что и выше
 		TOKEN_PIPE, //9
-		TOKEN_DOLLAR, //10 При записи: $echo (и т.п.) value токена воспринимается как переменная окружения
+		TOKEN_DOLLAR, //10
 		TOKEN_EQUALS, //11
 		BAD_TOKEN, //12
 		TOKEN_EOF, //13

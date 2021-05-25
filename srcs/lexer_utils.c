@@ -20,18 +20,6 @@ void	lexer_advance(t_lexer *lexer)
 	lexer->c = lexer->content[lexer->current];
 }
 
-void	lexer_skip_whitespace(t_lexer *lexer)
-{
-	while (lexer->c == ' ')
-		lexer_advance(lexer);
-}
-
-t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
-{
-	lexer_advance(lexer);
-	return (token);
-}
-
 char	lexer_peek(t_lexer *lexer, int offset)
 {
 	if (lexer->current + offset < lexer->length)
@@ -39,7 +27,7 @@ char	lexer_peek(t_lexer *lexer, int offset)
 	return ('\0');
 }
 
-int		seek_quote(char *str)
+int	seek_quote(char *str)
 {
 	size_t	i;
 

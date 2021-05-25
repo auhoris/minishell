@@ -32,10 +32,11 @@ t_ast	*parser_parse_commands(t_parser *parser)
 		if (scmd)
 		{
 			cmd->table_size++;
-			cmd->table_value = ft_realloc(cmd->table_value, cmd->table_size * sizeof(t_ast *), (cmd->table_size - 1) * sizeof(t_ast *));
+			cmd->table_value = ft_realloc(cmd->table_value,
+					cmd->table_size * sizeof(t_ast *),
+					(cmd->table_size - 1) * sizeof(t_ast *));
 			cmd->table_value[cmd->table_size - 1] = scmd;
 		}
-
 	}
 	return (cmd);
 }
@@ -47,7 +48,8 @@ t_ast	*parser_parse_command(t_parser *parser)
 	command = init_node(NODE_SIMPLECOMMAND);
 	if (command == NULL)
 		return (NULL);
-	while (parser->cur_tok->e_type != TOKEN_SEMI && parser->cur_tok->e_type != TOKEN_EOF)
+	while (parser->cur_tok->e_type != TOKEN_SEMI
+		&& parser->cur_tok->e_type != TOKEN_EOF)
 	{
 		if (parser->cur_tok->e_type == TOKEN_PIPE)
 			return (parser_parse_pipe(command, parser));
@@ -154,7 +156,7 @@ t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
 {
 	scmd->argc++;
 	scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
-						(scmd->argc - 1) * sizeof(*scmd->argv));
+			(scmd->argc - 1) * sizeof(*scmd->argv));
 	if (scmd->argv == NULL)
 		return (NULL);
 	scmd->argv[scmd->argc - 1] = parser_get_cmd_name(parser);
@@ -179,7 +181,7 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 	{
 		if (parser->cur_tok->e_type == TOKEN_MORE)
 			return (parser_parse_redirect(scmd, parser, NODE_RREDIRECT));
-		else if(parser->cur_tok->e_type == TOKEN_LESS)
+		else if (parser->cur_tok->e_type == TOKEN_LESS)
 			return (parser_parse_redirect(scmd, parser, NODE_LREDIRECT));
 		else if (parser->cur_tok->e_type == TOKEN_DMORE)
 			return (parser_parse_redirect(scmd, parser, NODE_DOUBLE_REDIRECT));

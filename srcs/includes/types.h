@@ -10,9 +10,9 @@
 # define UP 1
 # define DOWN 0
 
-#include "env.h"
+# include "env.h"
 
-typedef struct	s_history
+typedef struct s_history
 {
 	char				*command;
 	struct s_history	*next;
@@ -20,7 +20,7 @@ typedef struct	s_history
 
 }				t_history;
 
-typedef struct	s_data_processing
+typedef struct s_data_processing
 {
 	int					l;
 	char				*buf_read;
@@ -32,6 +32,5 @@ typedef struct	s_data_processing
 	t_history			*actual_history;
 
 }				t_data_processing;
-
 
 #endif

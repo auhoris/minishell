@@ -44,9 +44,6 @@ t_token	*lexer_collect_id(t_lexer *lexer)
 		str = connect_str(str, lexer_chtostr(lexer->c));
 		lexer_advance(lexer);
 	}
-	/* Сделано, чтобы различать ситуации,
-	когда после ID есть пробел или нет,
-	т.к. в bash можно написать echo asd$PATH */
 	if (lexer->c == SPACE)
 		return (init_token(TOKEN_ID, str, TRUE));
 	return (init_token(TOKEN_ID, str, FALSE));
@@ -62,8 +59,6 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 	if (str == NULL)
 		return (NULL);
 	spec_id = 0;
-	/* Забирает всё, что идёт после '\' до тех
-	пор пока не встретит второй раз спец символ или пробел */
 	while (lexer->c != '\0')
 	{
 		if (spec_id > 0 && ft_inset(SPECIAL, lexer->c))
@@ -111,7 +106,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 		lexer_advance(lexer);
 	lexer->flag = FALSE;
 	if (seek_quote(&lexer->content[lexer->current]) == FALSE)
-			return (init_token(BAD_TOKEN, string, FALSE));
+		return (init_token(BAD_TOKEN, string, FALSE));
 	while (lexer->c != '\"' && lexer->c != '\0')
 	{
 		if (lexer->c == '$')
@@ -120,9 +115,9 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 			return (init_token(TOKEN_DQUOTE, string, FALSE));
 		}
 		else if (lexer->c == '\\'
-				&& lexer_peek(lexer, 1) != '\''
-				&& lexer_peek(lexer, 1) != ';'
-				&& ft_inset(SPECIAL, lexer_peek(lexer, 1)))
+			&& lexer_peek(lexer, 1) != '\''
+			&& lexer_peek(lexer, 1) != ';'
+			&& ft_inset(SPECIAL, lexer_peek(lexer, 1)))
 			lexer_advance(lexer);
 		string = connect_str(string, lexer_chtostr(lexer->c));
 		if (string == NULL)
