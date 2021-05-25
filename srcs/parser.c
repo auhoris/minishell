@@ -134,10 +134,11 @@ char	*parser_get_cmd_name(t_parser *parser)
 	if (str == NULL)
 		return (NULL);
 	type = parser->cur_tok->e_type;
-	while (!parser->cur_tok->f_space && parser->cur_tok->e_type != TOKEN_EOF)
+	while (!parser->cur_tok->f_space && type != TOKEN_EOF)
 	{
 		if (type == TOKEN_SEMI || type == TOKEN_MORE
-			|| type == TOKEN_LESS || type == TOKEN_DMORE)
+			|| type == TOKEN_LESS || type == TOKEN_DMORE
+			|| type == TOKEN_PIPE)
 			return (str);
 		str = make_argument(str, parser);
 		if (str == NULL)
