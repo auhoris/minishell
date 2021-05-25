@@ -15,8 +15,13 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 			&& lexer->c != SPACE) && lexer->c != '\0')
 	{
 		str = connect_str(str, lexer_chtostr(lexer->c));
+		if (str == NULL)
+			return (NULL);
 		lexer_advance(lexer);
+		if (ft_isdigit(lexer->c))
+			break ;
 	}
+	// printf("%s\n", str);
 	if (lexer->c == SPACE && !lexer->flag)
 		return (init_token(TOKEN_DOLLAR, str, TRUE));
 	return (init_token(TOKEN_DOLLAR, str, FALSE));

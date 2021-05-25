@@ -39,5 +39,6 @@ typedef struct s_token
 
 t_token		*init_token(int type, char *value, int f_space);
 void		destroy_token(t_token *token);
+char		*print_token_type(int type);
 
 #endif /* ifndef TOKEN_H */

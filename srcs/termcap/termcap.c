@@ -93,8 +93,16 @@ void	start_parsing(char *input, t_env_dict **env)
 	t_lexer		*lexer;
 	t_parser	*parser;
 	t_ast		*root;
+	/* t_token		*token;
+	(void)env; */
 
 	lexer = init_lexer(input);
+	/* token = lexer_get_next_token(lexer);
+	while (token->e_type != TOKEN_EOF)
+	{
+		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
+		token = lexer_get_next_token(lexer);
+	} */
 	parser = init_parser(lexer, env);
 	root = parser_parse_commands(parser);
 	visitor_visit_nodes(root);

@@ -102,7 +102,7 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 	return (vardef);
 } */
 
-// static char	*_Atomic
+// static char	
 static char	*make_argument(char *str, t_parser *parser)
 {
 	int	type;
