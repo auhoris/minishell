@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
+# include "env.h"
 # include "minishell.h"
 # include "lexer.h"
 # include "token.h"
@@ -11,10 +12,10 @@ typedef struct s_parser
 	t_lexer		*lexer;
 	t_token		*prev_token;
 	t_token		*cur_tok;
-	t_env_dict	**env;
+	t_env_list	*env;
 }			t_parser;
 
-t_parser	*init_parser(t_lexer *lexer, t_env_dict **env);
+t_parser	*init_parser(t_lexer *lexer, t_env_list *env);
 int			parser_next_token(t_parser *parser);
 t_ast		*parser_parse_commands(t_parser *parser);
 t_ast		*parser_parse_pipe(t_ast *left_node, t_parser *parser);

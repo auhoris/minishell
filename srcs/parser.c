@@ -1,7 +1,8 @@
 #include "includes/parser.h"
+#include "includes/env.h"
 #include "includes/utils.h"
 
-t_parser	*init_parser(t_lexer *lexer, t_env_dict **env)
+t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
 	t_parser	*parser;
 
@@ -112,7 +113,7 @@ static char	*make_argument(char *str, t_parser *parser)
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_DOLLAR)
 	{
-		str = connect_str(str, get_value_by_key(parser->cur_tok, parser->env));
+		str = connect_str(str, get_value_by_key(parser->cur_tok, &parser->env));
 		if (str == NULL)
 			return (NULL);
 	}

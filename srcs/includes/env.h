@@ -6,19 +6,24 @@
 # include "token.h"
 # include "utils.h"
 
-typedef struct s_env_dict
+typedef struct s_env_list
 {
-	char	*key;
-	char	*value;
-}			t_env_dict;
+	char				*key;
+	char				*value;
+	struct s_env_list	*next;
+}			t_env_list;
 
-t_env_dict	**init_env(char **env);
-void		show_dict(t_env_dict **env);
-char		*get_value_by_key(t_token *token, t_env_dict **env_dict);
-void		clear_env(t_env_dict **env_dict);
+t_env_list	*init_env_list(char **env);
+t_env_list	*env_new(char *key, char *value);
+void		env_addback(t_env_list **head, t_env_list *env_new);
+void		env_list_delone(t_env_list *elem);
+void		env_list_clear(t_env_list **head);
+char		*get_value_by_key(t_token *token, t_env_list **env_dict);
+// Utils
 char		*set_value(char *env_str);
 char		*set_key(char *env_str);
 size_t		equals_position(char *str);
 size_t		env_length(char **env);
+void		show_dict(t_env_list **env);
 
 #endif /* ifndef ENV_H */

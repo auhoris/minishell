@@ -10,7 +10,7 @@
 # define TRUE 1
 # define FALSE 0
 
-int		termcap(t_env_dict **env);
+int		termcap(t_env_list *env);
 int		check_input_params(int argc, char **argv);
 
 #endif /* ifndef MINISHELL_H */

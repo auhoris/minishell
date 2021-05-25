@@ -27,7 +27,7 @@ typedef struct s_data_processing
 	char				*command_line;
 	int					num_symbol;
 	int					permission_create;
-	t_env_dict			**env;
+	t_env_list			*env;
 	t_history			*start_history;
 	t_history			*actual_history;
 

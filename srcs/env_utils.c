@@ -35,21 +35,3 @@ char	*set_value(char *env_str)
 	eq_pos = equals_position(env_str);
 	return (ft_substr(env_str, ++eq_pos, ft_strlen(env_str)));
 }
-
-void	clear_env(t_env_dict **env_dict)
-{
-	size_t	i;
-
-	i = 0;
-	while (env_dict[i])
-	{
-		if (env_dict[i]->value)
-			free(env_dict[i]->value);
-		if (env_dict[i]->key)
-			free(env_dict[i]->key);
-		if (env_dict[i])
-			free(env_dict[i]);
-		i++;
-	}
-	free(env_dict);
-}

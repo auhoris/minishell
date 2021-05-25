@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/25 13:16:40 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/05/25 15:20:58 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@
 
 int	main(int argc, char **argv, char **env)
 {
-	t_env_dict	**env_dict;
+	t_env_list	*env_dict;
 
 	(void)argc;
 	(void)argv;
-	env_dict = init_env(env);
+	env_dict = init_env_list(env);
+	// show_dict(&env_dict);
 	// printf("hi\n");
 	// check_input_params(argc, argv);
 	termcap(env_dict);

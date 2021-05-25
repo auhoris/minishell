@@ -2,7 +2,7 @@
 #include "../../libs/libft/srcs/libft.h"
 #include <stdlib.h>
 
-t_data_processing	*init_data_processing(t_env_dict **env)
+t_data_processing	*init_data_processing(t_env_list *env)
 {
 	t_data_processing	*data_processing;
 

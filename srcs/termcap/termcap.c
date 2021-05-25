@@ -88,7 +88,7 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (1);
 }
 
-void	start_parsing(char *input, t_env_dict **env)
+void	start_parsing(char *input, t_env_list *env)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
@@ -96,6 +96,7 @@ void	start_parsing(char *input, t_env_dict **env)
 	/* t_token		*token;
 	(void)env; */
 
+	// show_dict(&env);
 	lexer = init_lexer(input);
 	/* token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
@@ -106,8 +107,8 @@ void	start_parsing(char *input, t_env_dict **env)
 	parser = init_parser(lexer, env);
 	root = parser_parse_commands(parser);
 	visitor_visit_nodes(root);
-
 }
+
 static int	processing_button(t_data_processing *data_processing, int button)
 {
 	int	out;
@@ -168,7 +169,7 @@ static char	input_processing(t_data_processing *data_processing)
 	return (out);
 }
 
-static int		infinite_round(t_env_dict **env)
+static int		infinite_round(t_env_list *env)
 {
 	t_data_processing	*data_processing;
 	int		l;
@@ -189,9 +190,8 @@ static int		infinite_round(t_env_dict **env)
 	}
 }
 
-int		termcap(t_env_dict **env)
+int		termcap(t_env_list *env)
 {
-
 	struct termios	term;
 
 	if (get_term_param(&term) != 1)

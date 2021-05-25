@@ -1,67 +1,69 @@
 #include "includes/env.h"
 #include "../libs/libft/srcs/libft.h"
+#include "includes/errors.h"
+#include <stdlib.h>
 #include <sys/_types/_size_t.h>
 
-char	*get_value_by_key(t_token *token, t_env_dict **env_dict)
+char	*get_value_by_key(t_token *token, t_env_list **env_dict)
 {
-	size_t	i;
 	char	*ret;
+	t_env_list	*start;
 
-	i = 0;
+	start = *env_dict;
 	ret = ft_strdup("");
 	if (ret == NULL)
 		return (NULL);
-	while (env_dict[i])
+	while (start)
 	{
-		if (ft_strcmp(env_dict[i]->key, token->value) == 0)
+		if (ft_strcmp(start->key, token->value) == 0)
 		{
-			ret = connect_str(ret, env_dict[i]->value);
+			ret = connect_str(ret, start->value);
 			if (ret == NULL)
 				return (NULL);
 			break ;
 		}
-		i++;
+		start = start->next;
 	}
 	return (ret);
 }
 
-/* void	show_dict(t_env_dict **env)
+void	show_dict(t_env_list **env)
 {
-	size_t	i;
+	t_env_list	*start;
 
+	start = *env;
+	while (start)
+	{
+		printf("%s=%s\n", start->key, start->value);
+		start = start->next;
+	}
+}
+
+t_env_list	*init_env_list(char **env)
+{
+	t_env_list	*env_list;
+	t_env_list	*temp;
+	size_t		i;
+
+	env_list = NULL;
 	i = 0;
 	while (env[i])
 	{
-		printf("%s=%s\n", env[i]->key, env[i]->value);
-		i++;
-	}
-} */
-
-t_env_dict	**init_env(char **env)
-{
-	t_env_dict	**env_dict;
-	size_t		len;
-	size_t		i;
-
-	i = 0;
-	len = env_length(env);
-	env_dict = malloc((len + 1) * sizeof(t_env_dict *));
-	if (env_dict == NULL)
-		return (NULL);
-	while (i < len)
-	{
-		env_dict[i] = malloc(sizeof(t_env_dict));
-		env_dict[i]->value = set_value(env[i]);
-		env_dict[i]->key = set_key(env[i]);
-		if (env_dict[i] == NULL
-			|| env_dict[i]->key == NULL
-			|| env_dict[i]->value == NULL)
+		temp = env_new(set_key(env[i]), set_value(env[i]));
+		if (temp == NULL)
 		{
-			clear_env(env_dict);
+			env_list_clear(&env_list);
 			return (NULL);
 		}
+		env_addback(&env_list, temp);
 		i++;
 	}
-	env_dict[i] = NULL;
-	return (env_dict);
+	temp = env_new(ft_strdup("?"), ft_strdup("0"));
+	if (temp == NULL)
+	{
+		env_list_clear(&env_list);
+		return (NULL);
+	}
+	env_addback(&env_list, temp);
+	return (env_list);
 }
