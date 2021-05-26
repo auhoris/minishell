@@ -8,6 +8,7 @@
 		"visitor.h": "c",
 		"ast.h": "c",
 		"libft.h": "c",
-		"executor.h": "c"
+		"executor.h": "c",
+		"env.h": "c"
 	}
 }
