@@ -99,7 +99,6 @@ void	free_lexer(t_lexer *lexer)
 void	free_parser(t_parser *parser)
 {
 	free_lexer(parser->lexer);
-	// destroy_token(parser->prev_token);
 	destroy_token(parser->cur_tok);
 	free(parser);
 }
