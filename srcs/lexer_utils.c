@@ -1,5 +1,6 @@
 #include "includes/lexer.h"
 #include "includes/minishell.h"
+#include <stdlib.h>
 #include <sys/_types/_size_t.h>
 
 char	*lexer_chtostr(char c)
@@ -16,8 +17,11 @@ char	*lexer_chtostr(char c)
 
 void	lexer_advance(t_lexer *lexer)
 {
-	lexer->current++;
-	lexer->c = lexer->content[lexer->current];
+	if (lexer->c && lexer->current < lexer->length)
+	{
+		lexer->current++;
+		lexer->c = lexer->content[lexer->current];
+	}
 }
 
 char	lexer_peek(t_lexer *lexer, int offset)
@@ -50,5 +54,7 @@ char	*connect_str(char *s1, char *s2)
 	free(tmp);
 	if (s1 == NULL)
 		return (NULL);
+	free(s2);
+	s2 = NULL;
 	return (s1);
 }

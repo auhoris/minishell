@@ -73,5 +73,5 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 		}
 		lexer_advance(lexer);
 	}
-	return (init_token(TOKEN_EOF, "\0", FALSE));
+	return (init_token(TOKEN_EOF, ft_strdup(""), FALSE));
 }

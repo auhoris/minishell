@@ -1,6 +1,8 @@
 #include "includes/parser.h"
+#include "includes/ast.h"
 #include "includes/env.h"
 #include "includes/utils.h"
+#include <stdlib.h>
 
 t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
@@ -10,6 +12,7 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 	if (!parser)
 		return (NULL);
 	parser->lexer = lexer;
+	parser->prev_token = NULL;
 	parser->cur_tok = lexer_get_next_token(lexer);
 	parser->env = env;
 	return (parser);
@@ -48,9 +51,10 @@ t_ast	*parser_parse_command(t_parser *parser)
 {
 	t_ast	*command;
 
-	command = init_node(NODE_SIMPLECOMMAND);
+	command = NULL;
+	/* command = init_node(NODE_SIMPLECOMMAND);
 	if (command == NULL)
-		return (NULL);
+		return (NULL); */
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF)
 	{
@@ -87,18 +91,23 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 
 static char	*make_argument(char *str, t_parser *parser)
 {
-	int	type;
+	int		type;
+	char	*tmp;
 
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_DOLLAR)
 	{
-		str = connect_str(str, get_value_by_key(parser->cur_tok, &parser->env));
+		tmp = str;
+		str = ft_strjoin(str, get_value_by_key(parser->cur_tok, &parser->env));
+		free(tmp);
 		if (str == NULL)
 			return (NULL);
 	}
 	else
 	{
-		str = connect_str(str, parser->cur_tok->value);
+		tmp = str;
+		str = ft_strjoin(str, parser->cur_tok->value);
+		free(tmp);
 		if (str == NULL)
 			return (NULL);
 	}
