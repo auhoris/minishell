@@ -10,6 +10,8 @@ void	visitor_visit_vardef(t_ast *node)
 
 void	visitor_visit_nodes(t_ast *node)
 {
+	if (node == NULL)
+		return ;
 	if (node->e_nodetype == NODE_ROOT)
 		visitor_visit_root(node);
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)

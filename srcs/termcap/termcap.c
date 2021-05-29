@@ -99,6 +99,7 @@ void	free_lexer(t_lexer *lexer)
 void	free_parser(t_parser *parser)
 {
 	free_lexer(parser->lexer);
+	// destroy_token(parser->prev_token);
 	destroy_token(parser->cur_tok);
 	free(parser);
 }
@@ -119,8 +120,9 @@ void	start_parsing(char *input, t_env_list *env)
 	parser = init_parser(lexer, env);
 	root = parser_parse_commands(parser);
 	free_parser(parser);
+	// free_nodes(root);
 	visitor_visit_nodes(root);
-	// exit(1);
+	exit(1);
 }
 
 static int	processing_button(t_data_processing *data_processing, int button)

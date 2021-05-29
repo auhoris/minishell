@@ -1,7 +1,10 @@
 #include "includes/parser.h"
 #include "includes/ast.h"
 #include "includes/env.h"
+#include "includes/errors.h"
+#include "includes/lexer.h"
 #include "includes/utils.h"
+#include "includes/visitor.h"
 #include <stdlib.h>
 
 t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
@@ -13,7 +16,12 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 		return (NULL);
 	parser->lexer = lexer;
 	parser->prev_token = NULL;
-	parser->cur_tok = lexer_get_next_token(lexer);
+	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok == NULL)
+	{
+		free(parser);
+		return (NULL);
+	}
 	parser->env = env;
 	return (parser);
 }
@@ -28,12 +36,15 @@ t_ast	*parser_parse_commands(t_parser *parser)
 		return (NULL);
 	cmd->table_value = ft_calloc(1, sizeof(t_ast *));
 	if (cmd->table_value == NULL)
-		return (NULL);
+		return (cmd);
 	cmd->table_size++;
 	cmd->table_value[cmd->table_size - 1] = parser_parse_command(parser);
+	if (cmd->table_value[cmd->table_size - 1] == NULL)
+		return (cmd);
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
-		parser_next_token(parser);
+		if (parser_next_token(parser) == ERROR)
+			return (cmd);
 		scmd = parser_parse_command(parser);
 		if (scmd)
 		{
@@ -43,6 +54,8 @@ t_ast	*parser_parse_commands(t_parser *parser)
 					(cmd->table_size - 1) * sizeof(t_ast *));
 			cmd->table_value[cmd->table_size - 1] = scmd;
 		}
+		else
+			break ;
 	}
 	return (cmd);
 }
@@ -52,15 +65,14 @@ t_ast	*parser_parse_command(t_parser *parser)
 	t_ast	*command;
 
 	command = NULL;
-	/* command = init_node(NODE_SIMPLECOMMAND);
-	if (command == NULL)
-		return (NULL); */
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF)
 	{
 		if (parser->cur_tok->e_type == TOKEN_PIPE)
 			return (parser_parse_pipe(command, parser));
 		command = parser_parse_simple_command(parser);
+		if (command == NULL)
+			return (command);
 	}
 	return (command);
 }
@@ -72,7 +84,8 @@ t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 	pipe_node = init_node(NODE_PIPE);
 	pipe_node->table_value = ft_calloc(2, sizeof(t_ast *));
 	pipe_node->table_value[0] = left_node;
-	parser_next_token(parser);
+	if (parser_next_token(parser) == ERROR)
+		return (pipe_node);
 	pipe_node->table_value[1] = parser_parse_command(parser);
 	return (pipe_node);
 }
@@ -84,7 +97,8 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 	redirect = init_node(type);
 	redirect->table_value = ft_calloc(2, sizeof(t_ast *));
 	redirect->table_value[0] = left_node;
-	parser_next_token(parser);
+	if (parser_next_token(parser) == ERROR)
+		return (redirect);
 	redirect->table_value[1] = parser_parse_simple_command(parser);
 	return (redirect);
 }
@@ -95,22 +109,14 @@ static char	*make_argument(char *str, t_parser *parser)
 	char	*tmp;
 
 	type = parser->cur_tok->e_type;
+	tmp = str;
 	if (type == TOKEN_DOLLAR)
-	{
-		tmp = str;
 		str = ft_strjoin(str, get_value_by_key(parser->cur_tok, &parser->env));
-		free(tmp);
-		if (str == NULL)
-			return (NULL);
-	}
 	else
-	{
-		tmp = str;
 		str = ft_strjoin(str, parser->cur_tok->value);
-		free(tmp);
-		if (str == NULL)
-			return (NULL);
-	}
+	free(tmp);
+	if (str == NULL)
+		return (NULL);
 	return (str);
 }
 
@@ -127,7 +133,7 @@ char	*parser_get_cmd_name(t_parser *parser)
 	{
 		if (type == TOKEN_SEMI || type == TOKEN_MORE
 			|| type == TOKEN_LESS || type == TOKEN_DMORE
-			|| type == TOKEN_PIPE)
+			|| type == TOKEN_PIPE || type == ERROR)
 			return (str);
 		str = make_argument(str, parser);
 		if (str == NULL)
@@ -150,8 +156,6 @@ t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
 	if (scmd->argv == NULL)
 		return (NULL);
 	scmd->argv[scmd->argc - 1] = parser_get_cmd_name(parser);
-	if (scmd->argv[scmd->argc - 1] == NULL)
-		return (NULL);
 	return (scmd);
 }
 

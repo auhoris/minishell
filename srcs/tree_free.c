@@ -33,6 +33,7 @@ void	free_simplecommand(t_ast *node)
 	i = 0;
 	while (i < node->argc)
 	{
+		free(node->argv[i]);
 		i++;
 	}
 }

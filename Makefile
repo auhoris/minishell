@@ -22,7 +22,7 @@ objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(o
 # Flags and linkers
 cc				= gcc
 cflags			= -Wall -Werror -Wextra
-dbgf			= -g
+dbgf			= -std=c11 -ggdb3
 sanitize		= -fsanitize=address
 termcap			= -ltermcap
 
@@ -43,13 +43,13 @@ gnl:
 lib:
 				@make -C $(libftdir)
 
-# $(name):		$(objects) $(libs)
-# 				$(cc) $(cflags) $(termcap) $^ -o $@
-# 				@echo "\033[0;32m"$@" compiled"
-
 $(name):		$(objects) $(libs)
-				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
+				$(cc) $(dbgf) $(cflags) $(termcap) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
+
+# $(name):		$(objects) $(libs)
+# 				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
+# 				@echo "\033[0;32m"$@" compiled"
 
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
 				@mkdir -p $(objdir)

@@ -6,25 +6,16 @@
 
 char	*get_value_by_key(t_token *token, t_env_list **env_dict)
 {
-	char	*ret;
 	t_env_list	*start;
 
 	start = *env_dict;
-	ret = ft_strdup("");
-	if (ret == NULL)
-		return (NULL);
 	while (start)
 	{
 		if (ft_strcmp(start->key, token->value) == 0)
-		{
-			ret = connect_str(ret, start->value);
-			if (ret == NULL)
-				return (NULL);
-			break ;
-		}
+			return (start->value);
 		start = start->next;
 	}
-	return (ret);
+	return ("");
 }
 
 void	show_dict(t_env_list **env)
