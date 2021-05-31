@@ -6,78 +6,22 @@
 #include <unistd.h>
 #include <string.h>
 
-static void	execution_echo(t_ast *node)
+int	outher_command(t_ast *node, t_env_list *env)
 {
-	size_t	i;
+	char	**env_array;
+	char	**args;
 
-	i = 0;
-	write (1, "\n", 1);
-	while (i < node->argc)
-	{
-		if (i != 0)
-			write (1, " ", 1);
-		write(1, node->argv[i], ft_strlen(node->argv[i]));
-		i++;
-	}
-}
-
-static int	execution_cd(t_ast *node, t_env_list *env)
-{
-	int	out;
-	char	pwd_dir[256];
-
-	if (getcwd(pwd_dir, 256) == NULL)
+	args = create_args(node);
+	if (args == NULL)
 		return (ERROR_MALLOC);
-	if (set_old_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
-		return (ERROR_MALLOC);
-	out = chdir(node->argv[0]);
-	ft_bzero(pwd_dir, 256);
-	if (getcwd(pwd_dir, 256) == NULL)
-		return (ERROR_MALLOC);
-	if (out != 0)
+	env_array = create_env(env);
+	if (env_array == NULL)
 	{
-		write(1, "\nminishell: cd: ", 16);
-		write(1, node->argv[0], ft_strlen(node->argv[0]));
-		write(1, ": ", 2);
-		write(1, strerror(errno), ft_strlen(strerror(errno)));
-		// printf("\nminishell: cd: %s: %s", node->argv[0], strerror(errno));
+		clear_array(args, ALL_ARRAY);
+		return(ERROR_MALLOC);
 	}
-	else
-	{
-		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
-			return (ERROR_MALLOC);
-	}
-	return (OUT);
-}
-
-static int execution_pwd(t_env_list *env)
-{
-	int	out;
-	char	*pwd_dir;
-
-	pwd_dir = NULL;
-	out = get_pwd_dir(env, &pwd_dir);
-	if (out == OUT)
-	{
-		write(1, "\n", 1);
-		write(1, pwd_dir, ft_strlen(pwd_dir));
-	}
-	return (out);
-}
-
-static int	execution_export(t_ast *node, t_env_list *env)
-{
-	size_t	i;
-	int		out;
-
-	i = 0;
-	while (i < node->argc)
-	{
-		out = set_key_value(node->argv[i], env);
-		if (out == ERROR_MALLOC)
-			return (ERROR_MALLOC);
-		i++;
-	}
+	execve("/bin/bash", args, env_array);
+	perror("Error: ");
 	return (OUT);
 }
 
@@ -88,11 +32,17 @@ int	check_builtin(t_ast *node, t_env_list *env)
 	out = OUT;
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
 		execution_echo(node);
-	if (ft_strcmp(node->cmd_name, "cd") == 0)
+	else if (ft_strcmp(node->cmd_name, "cd") == 0)
 		out = execution_cd(node, env);
-	if (ft_strcmp(node->cmd_name, "pwd") == 0)
+	else if (ft_strcmp(node->cmd_name, "pwd") == 0)
 		out = execution_pwd(env);
-	if (ft_strcmp(node->cmd_name, "export") == 0)
+	else if (ft_strcmp(node->cmd_name, "export") == 0)
 		out = execution_export(node, env);
+	else if (ft_strcmp(node->cmd_name, "env") == 0)
+		out = execution_env(node, env);
+	else if (ft_strcmp(node->cmd_name, "exit") == 0)
+		out = ERROR_EXIT;
+	else
+		out = outher_command(node, env);
 	return (out);
 }

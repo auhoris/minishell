@@ -9,6 +9,8 @@
 # define DEL 2
 # define UP 1
 # define DOWN 0
+# define ALL_ARRAY -1
+# define BUFFER_SIZE 10
 
 # include "env.h"
 

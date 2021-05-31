@@ -84,18 +84,20 @@ static int	processing_del(char **command_line, int *num_symbol)
 		tputs(tgetstr("dc", 0), 1, ft_putint);
 		(*num_symbol)--;
 	}
-	return (1);
+	return (OUT);
 }
 
-void	start_parsing(t_data_processing *data_processing)
+static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
 	t_ast		*root;
+	int			out;
 	/* t_token		*token;
 	(void)env; */
 
 	// show_dict(&env);
+	out = OUT;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	/* token = lexer_get_next_token(lexer);
 	while (token->e_type != TOKEN_EOF)
@@ -105,8 +107,9 @@ void	start_parsing(t_data_processing *data_processing)
 	} */
 	parser = init_parser(lexer, data_processing->env);
 	root = parser_parse_commands(parser);
-	detour_tree(root, data_processing->env);
+	out = detour_tree(root, data_processing->env);
 	// visitor_visit_nodes(root);
+	return (out);
 }
 
 static int	processing_button(t_data_processing *data_processing, int button)
@@ -117,15 +120,17 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		return (OUT);
 	screen_clear();
 	out = get_history_data(data_processing, button);
+	if (out != OUT)
+		return (out);
 	if (button == ENTER)
 	{
 		data_processing->permission_create = 1;
 		if (*data_processing->command_line != '\0')
 		{
 			write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
-			start_parsing(data_processing);
-			// write(1, " выполнение команды ", 38);
-			// write(1, data_processing->actual_history->prev->command, ft_strlen(data_processing->actual_history->prev->command));
+			out = start_parsing(data_processing);
+			if (out != OUT)
+				return (out);
 		}
 		write(1, "\n<minishell>$ ", 14);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
@@ -140,7 +145,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 	return (out);
 }
 
-static char	input_processing(t_data_processing *data_processing)
+static int	input_processing(t_data_processing *data_processing)
 {
 	int	check_buf;
 	int	out;
@@ -149,19 +154,20 @@ static char	input_processing(t_data_processing *data_processing)
 	out = OUT;
 	if (check_buf == UP)
 	{
-		processing_button(data_processing, UP);
+		out = processing_button(data_processing, UP);
 	}
 	else if (check_buf == DOWN)
 	{
-		processing_button(data_processing, DOWN);
+		out = processing_button(data_processing, DOWN);
 	}
 	else if (check_buf == DEL)
 	{
-		processing_del(&data_processing->command_line, &data_processing->num_symbol);
+		out = processing_del(&data_processing->command_line, &data_processing->num_symbol);
 	}
 	else if (check_buf == ENTER)
 	{
-		processing_button(data_processing, ENTER);
+		out = processing_button(data_processing, ENTER);
+		// printf("\nпосле processing_button |%d|\n", out);
 	}
 	else if (check_buf == ISPRINT)
 	{
@@ -174,7 +180,9 @@ static int		infinite_round(t_env_list *env)
 {
 	t_data_processing	*data_processing;
 	int		l;
+	int		out;
 
+	out = OUT;
 	data_processing = init_data_processing(env);
 	if (data_processing == NULL)
 	{
@@ -182,12 +190,13 @@ static int		infinite_round(t_env_list *env)
 	}
 	while (1)
 	{
-		l = read(0, data_processing->buf_read, 10);
+		l = read(0, data_processing->buf_read, BUFFER_SIZE);
 		if (l != 0)
 		{
-			input_processing(data_processing);
+			out = input_processing(data_processing);
+			error_processing(env, data_processing, out);
 		}
-		ft_bzero(data_processing->buf_read, 10);
+		ft_bzero(data_processing->buf_read, BUFFER_SIZE);
 	}
 }
 

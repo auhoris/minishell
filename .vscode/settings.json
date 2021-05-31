@@ -9,6 +9,10 @@
 		"ast.h": "c",
 		"libft.h": "c",
 		"executor.h": "c",
-		"env.h": "c"
+		"env.h": "c",
+		"history.h": "c",
+		"unistd.h": "c",
+		"errno.h": "c",
+		"termcap.h": "c"
 	}
 }

@@ -58,6 +58,7 @@ int	set_key_value(char *str, t_env_list *env)
 		value_key_free(value, key, NULL);
 		return (ERROR_MALLOC);
 	}
+	value_key_free(value, key, NULL);
 	return (OUT);
 }
 
