@@ -1,6 +1,7 @@
 #include "../includes/ast.h"
 #include "../../libs/libft/srcs/libft.h"
 #include "../includes/types.h"
+#include "executor.h"
 
 void	clear_array(char **args, int index)
 {
@@ -23,6 +24,15 @@ void	clear_array(char **args, int index)
 	}
 }
 
+static void	bad_command(char *command)
+{
+	// printf("\ntest\n");
+	write(1, "\n", 1);
+	write(1, "bash: ", 6);
+	write(1, command, ft_strlen(command));
+	write(1, ": command not found", 19);
+}
+
 char	**create_args(t_ast *node)
 {
 	char	**args;
@@ -32,21 +42,28 @@ char	**create_args(t_ast *node)
 	if (args == NULL)
 		return (NULL);
 	args[node->argc + 1] = NULL;
-	args[0] = ft_strdup("/bin/bash");
+	// printf("\ntest\n");
+	// printf("\n%s\n", node->cmd_name);
+	args[0] = ft_strdup(search_bin(node->cmd_name));
 	if (args[0] == NULL)
 	{
+		// printf("\ntest\n");
 		free(args);
+		// printf("\ntest\n");
+		bad_command(node->cmd_name);
 		return (NULL);
 	}
-	i = 0;
-	while (i < node->argc)
+	i = 1;
+	while (i <= node->argc)
 	{
-		args[i + 1] = ft_strdup(node->argv[i]);
-		if (args[i + 1] == NULL)
+		args[i] = ft_strdup(node->argv[i - 1]);
+		// printf("\n%s\n", args[i]);
+		if (args[i] == NULL)
 		{
 			clear_array(args, i);
 			return (NULL);
 		}
+		i++;
 	}
 	return (args);
 }

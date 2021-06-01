@@ -20,8 +20,9 @@ int	outher_command(t_ast *node, t_env_list *env)
 		clear_array(args, ALL_ARRAY);
 		return(ERROR_MALLOC);
 	}
-	execve("/bin/bash", args, env_array);
-	perror("Error: ");
+	write(1, "\n", 1);
+	execve(args[0], args, env_array);
+	// perror("Error: ");
 	return (OUT);
 }
 
