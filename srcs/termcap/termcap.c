@@ -121,7 +121,7 @@ void	start_parsing(char *input, t_env_list *env)
 	free_parser(parser);
 	// free_nodes(root);
 	visitor_visit_nodes(root);
-	exit(1);
+	// exit(1);
 }
 
 static int	processing_button(t_data_processing *data_processing, int button)

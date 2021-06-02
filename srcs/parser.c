@@ -1,6 +1,7 @@
 #include "includes/parser.h"
 #include "includes/ast.h"
 #include "includes/env.h"
+#include "includes/errors.h"
 #include "includes/lexer.h"
 #include "includes/utils.h"
 #include <stdlib.h>
@@ -29,55 +30,63 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 	return (parser);
 }
 
+t_ast	*ast_error_handler(t_ast *node)
+{
+	node->err_handler = ERROR;
+	return (node);
+}
+
 t_ast	*parser_parse_commands(t_parser *parser)
 {
-	t_ast	*cmd;
-	t_ast	*scmd;
+	t_ast	*node;
+	t_ast	*simple_node;
 
-	cmd = init_node(NODE_ROOT);
-	if (cmd == NULL)
+	node = init_node(NODE_ROOT);
+	if (node == NULL)
 		return (NULL);
-	cmd->table_value = ft_calloc(1, sizeof(t_ast *));
-	if (cmd->table_value == NULL)
-		return (cmd);
-	cmd->table_size++;
-	cmd->table_value[cmd->table_size - 1] = parser_parse_command(parser);
-	if (cmd->table_value[cmd->table_size - 1] == NULL)
-		return (cmd);
+	node->table_value = ft_calloc(1, sizeof(t_ast *));
+	if (node->table_value == NULL)
+		return (ast_error_handler(node));
+	node->table_size++;
+	node->table_value[node->table_size - 1] = parser_parse_command(parser);
+	if (node->table_value[node->table_size - 1]->err_handler != OK)
+		return (ast_error_handler(node));
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
 		if (parser_next_token(parser) == ERROR)
-			return (cmd);
-		scmd = parser_parse_command(parser);
-		if (scmd)
+			return (ast_error_handler(node));
+		simple_node = parser_parse_command(parser);
+		if (simple_node)
 		{
-			cmd->table_size++;
-			cmd->table_value = ft_realloc(cmd->table_value,
-					cmd->table_size * sizeof(t_ast *),
-					(cmd->table_size - 1) * sizeof(t_ast *));
-			cmd->table_value[cmd->table_size - 1] = scmd;
+			node->table_size++;
+			node->table_value = ft_realloc(node->table_value,
+					node->table_size * sizeof(t_ast *),
+					(node->table_size - 1) * sizeof(t_ast *));
+			if (node->table_value == NULL)
+				return (ast_error_handler(node));
+			node->table_value[node->table_size - 1] = simple_node;
 		}
 		else
-			break ;
+			return (ast_error_handler(node));
 	}
-	return (cmd);
+	return (node);
 }
 
 t_ast	*parser_parse_command(t_parser *parser)
 {
-	t_ast	*command;
+	t_ast	*node;
 
-	command = NULL;
+	node = NULL;
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF)
 	{
 		if (parser->cur_tok->e_type == TOKEN_PIPE)
-			return (parser_parse_pipe(command, parser));
-		command = parser_parse_simple_command(parser);
-		if (command == NULL)
-			return (command);
+			return (parser_parse_pipe(node, parser));
+		node = parser_parse_simple_command(parser);
+		if (node->err_handler != OK)
+			return (ast_error_handler(node));
 	}
-	return (command);
+	return (node);
 }
 
 t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
@@ -85,11 +94,17 @@ t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 	t_ast	*pipe_node;
 
 	pipe_node = init_node(NODE_PIPE);
+	if (pipe_node == NULL)
+		return (ast_error_handler(pipe_node));
 	pipe_node->table_value = ft_calloc(2, sizeof(t_ast *));
+	if (pipe_node->table_value == NULL)
+		return (ast_error_handler(pipe_node));
 	pipe_node->table_value[0] = left_node;
 	if (parser_next_token(parser) == ERROR)
-		return (pipe_node);
+		return (ast_error_handler(pipe_node));
 	pipe_node->table_value[1] = parser_parse_command(parser);
+	if (pipe_node->table_value[1]->err_handler != OK)
+		return (ast_error_handler(pipe_node));
 	return (pipe_node);
 }
 
@@ -126,15 +141,20 @@ char	*parser_get_args(t_parser *parser)
 			|| type == TOKEN_PIPE || type == ERROR)
 			return (str);
 		str = make_argument(str, parser);
-		if (str == NULL)
-			return (NULL);
 		type = parser_next_token(parser);
+		if (str == NULL || type == ERROR)
+		{
+			free(str);
+			return (NULL);
+		}
 	}
 	// Зачем это? - Это нада
 	str = make_argument(str, parser);
-	if (str == NULL)
+	if (str == NULL || parser_next_token(parser) == ERROR)
+	{
+		free(str);
 		return (NULL);
-	parser_next_token(parser);
+	}
 	return (str);
 }
 
@@ -145,15 +165,19 @@ int	create_file(char *filename, int type, t_ast *node)
 	if (type == TOKEN_MORE || type == TOKEN_DMORE)
 	{
 		if (type == TOKEN_MORE)
-			fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+			fd = open(filename, O_CREAT | O_WRONLY);
 		else
 			fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
 		node->out_file = ft_strdup(filename);
+		if (node->out_file == NULL)
+			return (ERROR);
 	}
 	else
 	{
 		fd = open(filename, O_CREAT | O_RDONLY | O_TRUNC);
 		node->in_file = ft_strdup(filename);
+		if (node->in_file == NULL)
+			return (ERROR);
 	}
 	if (fd == -1)
 		return (ERROR);
@@ -161,22 +185,22 @@ int	create_file(char *filename, int type, t_ast *node)
 	return (OK);
 }
 
-int	parser_parser_redirect(t_parser *parser, t_ast *node)
+int	parser_parse_redirect(t_parser *parser, t_ast *node)
 {
-	int	type;
+	int	prev_type;
+	int	curr_type;
 
-	parser_next_token(parser);
-	type = parser->prev_token->e_type;
-	if (type == TOKEN_DOLLAR)
+	prev_type = parser->cur_tok->e_type;
+	while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
 	{
-		ft_putstr_fd("ERROR", STDERR_FILENO);
-		return (ERROR);
-	}
-	while (type == TOKEN_MORE || type == TOKEN_LESS || type == TOKEN_DMORE)
-	{
-		create_file(parser->cur_tok->value, type, node);
-		parser_next_token(parser);
-		type = parser->prev_token->e_type;
+		curr_type = parser_next_token(parser);
+		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
+			return (ERROR);
+		if (create_file(parser->cur_tok->value, prev_type, node) == ERROR)
+			return (ERROR);
+		prev_type = parser_next_token(parser);
+		if (prev_type == ERROR)
+			return (ERROR);
 	}
 	return (OK);
 }
@@ -187,7 +211,9 @@ t_ast	*parser_parse_agruments(t_ast *node, t_parser *parser)
 		|| parser->cur_tok->e_type == TOKEN_LESS
 		|| parser->cur_tok->e_type == TOKEN_DMORE)
 	{
-		parser_parser_redirect(parser, node);
+		node->err_handler = parser_parse_redirect(parser, node);
+		if (node->err_handler == ERROR)
+			return (ast_error_handler(node));
 	}
 	else
 	{
@@ -195,30 +221,33 @@ t_ast	*parser_parse_agruments(t_ast *node, t_parser *parser)
 		node->argv = ft_realloc(node->argv, node->argc * sizeof(*node->argv),
 				(node->argc - 1) * sizeof(*node->argv));
 		if (node->argv == NULL)
-			return (NULL);
+			return (ast_error_handler(node));
 		node->argv[node->argc - 1] = parser_get_args(parser);
+		if (node->argv[node->argc - 1] == NULL)
+			return (ast_error_handler(node));
 	}
 	return (node);
 }
 
 t_ast	*parser_parse_simple_command(t_parser *parser)
 {
-	t_ast	*scmd;
+	t_ast	*node;
 
-	scmd = init_node(NODE_SIMPLECOMMAND);
-	if (scmd == NULL)
+	node = init_node(NODE_SIMPLECOMMAND);
+	if (node == NULL)
 		return (NULL);
-	scmd->cmd_name = parser_get_args(parser);
-	if (scmd->cmd_name == NULL)
+	node->cmd_name = parser_get_args(parser);
+	if (node->cmd_name == NULL)
 		return (NULL);
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)
 	{
-		if (parser_parse_agruments(scmd, parser) == NULL)
-			return (NULL);
+		parser_parse_agruments(node, parser);
+		if (node->err_handler == ERROR)
+			return (node);
 	}
-	return (scmd);
+	return (node);
 }
 
 //Пока бесполезняк
