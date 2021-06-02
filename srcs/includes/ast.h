@@ -32,6 +32,8 @@ typedef struct s_ast
 	// Vardef
 	char			*var_name;
 	char			*var_value;
+	// Error handling
+	int				err_handler;
 }			t_ast;
 
 t_ast	*init_node(int type);

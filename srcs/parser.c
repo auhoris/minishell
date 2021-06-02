@@ -1,7 +1,6 @@
 #include "includes/parser.h"
 #include "includes/ast.h"
 #include "includes/env.h"
-#include "includes/errors.h"
 #include "includes/lexer.h"
 #include "includes/utils.h"
 #include <stdlib.h>
