@@ -136,12 +136,6 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	return (init_token(TOKEN_DQUOTE, string, FALSE));
 }
 
-		//	Зачем?
-		/* if (lexer->c == '\\')
-		{
-			string = connect_str(string, lexer_chtostr(lexer->c));
-			lexer_advance(lexer);
-		} */
 /*
 t_token	*lexer_collect_equals(t_lexer *lexer)
 {

@@ -22,3 +22,9 @@ t_ast	*init_node(int type)
 	ast->err_handler = OK;
 	return (ast);
 }
+
+t_ast	*ast_error_handler(t_ast *node)
+{
+	node->err_handler = ERROR;
+	return (node);
+}

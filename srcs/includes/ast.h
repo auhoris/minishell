@@ -38,5 +38,6 @@ typedef struct s_ast
 
 t_ast	*init_node(int type);
 void	free_nodes(t_ast *node);
+t_ast	*ast_error_handler(t_ast *node);
 
 #endif /* ifndef AST_H */
