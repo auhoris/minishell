@@ -67,6 +67,8 @@ void	visitor_visit_simplecommand(t_ast *node)
 		printf("%zu: argv[%zu] = %s\n", i, i, node->argv[i]);
 		i++;
 	}
+	printf("out_file='%s'\n", node->out_file);
+	printf("in_file='%s'\n", node->in_file);
 	printf("\n<========>\n");
 }
 

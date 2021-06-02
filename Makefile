@@ -44,7 +44,7 @@ lib:
 				@make -C $(libftdir)
 
 $(name):		$(objects) $(libs)
-				$(cc) $(dbgf) $(cflags) $(termcap) $^ -o $@
+				$(cc) $(cflags) $(termcap) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
 
 # $(name):		$(objects) $(libs)

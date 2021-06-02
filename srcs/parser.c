@@ -4,8 +4,12 @@
 #include "includes/errors.h"
 #include "includes/lexer.h"
 #include "includes/utils.h"
-#include "includes/visitor.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <sys/fcntl.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
@@ -90,19 +94,6 @@ t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 	return (pipe_node);
 }
 
-t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
-{
-	t_ast	*redirect;
-
-	redirect = init_node(type);
-	redirect->table_value = ft_calloc(2, sizeof(t_ast *));
-	redirect->table_value[0] = left_node;
-	if (parser_next_token(parser) == ERROR)
-		return (redirect);
-	redirect->table_value[1] = parser_parse_simple_command(parser);
-	return (redirect);
-}
-
 static char	*make_argument(char *str, t_parser *parser)
 {
 	int		type;
@@ -120,7 +111,7 @@ static char	*make_argument(char *str, t_parser *parser)
 	return (str);
 }
 
-char	*parser_get_cmd_name(t_parser *parser)
+char	*parser_get_args(t_parser *parser)
 {
 	char	*str;
 	int		type;
@@ -148,15 +139,67 @@ char	*parser_get_cmd_name(t_parser *parser)
 	return (str);
 }
 
-t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
+int	create_file(char *filename, int type, t_ast *node)
 {
-	scmd->argc++;
-	scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
-			(scmd->argc - 1) * sizeof(*scmd->argv));
-	if (scmd->argv == NULL)
-		return (NULL);
-	scmd->argv[scmd->argc - 1] = parser_get_cmd_name(parser);
-	return (scmd);
+	int		fd;
+
+	if (type == TOKEN_MORE || type == TOKEN_DMORE)
+	{
+		if (type == TOKEN_MORE)
+			fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+		else
+			fd = open(filename, O_CREAT | O_WRONLY | O_APPEND);
+		node->out_file = ft_strdup(filename);
+	}
+	else
+	{
+		fd = open(filename, O_CREAT | O_RDONLY | O_TRUNC);
+		node->in_file = ft_strdup(filename);
+	}
+	if (fd == -1)
+		return (ERROR);
+	close(fd);
+	return (OK);
+}
+
+int	parser_parser_redirect(t_parser *parser, t_ast *node)
+{
+	int	type;
+
+	parser_next_token(parser);
+	type = parser->prev_token->e_type;
+	if (type == TOKEN_DOLLAR)
+	{
+		ft_putstr_fd("ERROR", STDERR_FILENO);
+		return (ERROR);
+	}
+	while (type == TOKEN_MORE || type == TOKEN_LESS || type == TOKEN_DMORE)
+	{
+		create_file(parser->cur_tok->value, type, node);
+		parser_next_token(parser);
+		type = parser->prev_token->e_type;
+	}
+	return (OK);
+}
+
+t_ast	*parser_parse_agruments(t_ast *node, t_parser *parser)
+{
+	if (parser->cur_tok->e_type == TOKEN_MORE
+		|| parser->cur_tok->e_type == TOKEN_LESS
+		|| parser->cur_tok->e_type == TOKEN_DMORE)
+	{
+		parser_parser_redirect(parser, node);
+	}
+	else
+	{
+		node->argc++;
+		node->argv = ft_realloc(node->argv, node->argc * sizeof(*node->argv),
+				(node->argc - 1) * sizeof(*node->argv));
+		if (node->argv == NULL)
+			return (NULL);
+		node->argv[node->argc - 1] = parser_get_args(parser);
+	}
+	return (node);
 }
 
 t_ast	*parser_parse_simple_command(t_parser *parser)
@@ -166,19 +209,13 @@ t_ast	*parser_parse_simple_command(t_parser *parser)
 	scmd = init_node(NODE_SIMPLECOMMAND);
 	if (scmd == NULL)
 		return (NULL);
-	scmd->cmd_name = parser_get_cmd_name(parser);
+	scmd->cmd_name = parser_get_args(parser);
 	if (scmd->cmd_name == NULL)
 		return (NULL);
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)
 	{
-		if (parser->cur_tok->e_type == TOKEN_MORE)
-			return (parser_parse_redirect(scmd, parser, NODE_RREDIRECT));
-		else if (parser->cur_tok->e_type == TOKEN_LESS)
-			return (parser_parse_redirect(scmd, parser, NODE_LREDIRECT));
-		else if (parser->cur_tok->e_type == TOKEN_DMORE)
-			return (parser_parse_redirect(scmd, parser, NODE_DOUBLE_REDIRECT));
 		if (parser_parse_agruments(scmd, parser) == NULL)
 			return (NULL);
 	}

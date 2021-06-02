@@ -15,5 +15,8 @@ t_ast	*init_node(int type)
 	ast->flags = NULL;
 	ast->table_value = NULL;
 	ast->table_size = 0;
+	ast->in_file = NULL;
+	ast->out_file = NULL;
+	ast->err_file = NULL;
 	return (ast);
 }
