@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <term.h>
 #include <unistd.h>
+#include <stdio.h>
 #include "../includes/lexer.h"
 #include "termcap.h"
 #include "../includes/lexer.h"
@@ -103,6 +104,24 @@ void	free_parser(t_parser *parser)
 	free(parser);
 }
 
+int		check_parser(t_parser *paser)
+{
+	int	type;
+
+	type = paser->cur_tok->e_type;
+	if (type == TOKEN_SEMI)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `;'\n", STDERR_FILENO);
+		return (ERROR);
+	}
+	if (type == TOKEN_PIPE)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", STDERR_FILENO);
+		return (ERROR);
+	}
+	return (OK);
+}
+
 void	start_parsing(char *input, t_env_list *env)
 {
 	t_lexer		*lexer;
@@ -117,11 +136,15 @@ void	start_parsing(char *input, t_env_list *env)
 		token = lexer_get_next_token(lexer);
 	} */
 	parser = init_parser(lexer, env);
-	root = parser_parse_commands(parser);
+	if (check_parser(parser) == ERROR || parser == NULL)
+		;
+	else
+	{
+		root = parser_parse_commands(parser);
+		visitor_visit_nodes(root);
+	}
 	free_parser(parser);
-	// free_nodes(root);
-	visitor_visit_nodes(root);
-	// exit(1);
+	exit(1);
 }
 
 static int	processing_button(t_data_processing *data_processing, int button)

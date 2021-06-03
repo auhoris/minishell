@@ -3,6 +3,34 @@
 #include "includes/token.h"
 #include "includes/utils.h"
 #include <stdio.h>
+#include <unistd.h>
+
+void	handle_error_msg(char *msg, char *token)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putstr_fd("'", STDERR_FILENO);
+	ft_putstr_fd(token, STDERR_FILENO);
+	ft_putstr_fd("'\n", STDERR_FILENO);
+}
+
+t_token	*lexer_errors_handler(t_token *token)
+{
+	if (token->e_type == TOKEN_SQUOTE)
+	{
+		handle_error_msg("minishell: unexpected EOF while looking for matching ", "'");
+		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
+	}
+	else if (token->e_type == TOKEN_DQUOTE)
+	{
+		handle_error_msg("minishell: unexpected EOF while looking for matching ", "\"");
+		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
+	}
+	else
+	{
+		handle_error_msg("minishell: syntax error near unexpected token ", token->value);
+	}
+	return (init_token(BAD_TOKEN, ft_strdup(""), FALSE));
+}
 
 t_token	*lexer_collect_dollar(t_lexer *lexer)
 {
@@ -59,7 +87,7 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 
 	lexer_advance(lexer);
 	if (lexer_peek(lexer, 1) == '\0')
-		return (init_token(BAD_TOKEN, ft_strdup(""), FALSE));
+		return (lexer_errors_handler(init_token(TOKEN_BSLASH, ft_strdup(""), FALSE)));
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
@@ -95,9 +123,7 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\'')
-	{
-		return (init_token(BAD_TOKEN, string, FALSE));
-	}
+		return (lexer_errors_handler(init_token(TOKEN_SQUOTE, string, FALSE)));
 	lexer_advance(lexer);
 	if (lexer->c == SPACE)
 		return (init_token(TOKEN_SQUOTE, string, TRUE));
@@ -115,7 +141,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 		lexer_advance(lexer);
 	lexer->flag = FALSE;
 	if (seek_quote(&lexer->content[lexer->current]) == FALSE)
-		return (init_token(BAD_TOKEN, string, FALSE));
+		return (lexer_errors_handler(init_token(TOKEN_DQUOTE, string, FALSE)));
 	while (lexer->c != '\"' && lexer->c != '\0')
 	{
 		if (lexer->c == '$')

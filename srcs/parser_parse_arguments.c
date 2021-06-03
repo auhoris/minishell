@@ -40,7 +40,6 @@ char	*parser_get_args(t_parser *parser)
 			return (NULL);
 		}
 	}
-	// Зачем это? - Это нада
 	str = make_argument(str, parser);
 	if (str == NULL || parser_next_token(parser) == ERROR)
 	{
@@ -83,7 +82,8 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 	int	curr_type;
 
 	prev_type = parser->cur_tok->e_type;
-	while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
+	while (prev_type == TOKEN_MORE
+		|| prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
 	{
 		curr_type = parser_next_token(parser);
 		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)

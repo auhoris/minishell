@@ -6,14 +6,12 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/05/31 16:55:58 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/06/03 16:33:10 by auhoris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "includes/lexer.h"
 #include "includes/minishell.h"
-
 #include "includes/token_list.h"
 #include "../libs/get_next_line/srcs/includes/get_next_line.h"
 #include "includes/parser.h"
@@ -31,9 +29,6 @@ int	main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 	env_dict = init_env_list(env);
-	// show_dict(&env_dict);
-	// printf("hi\n");
-	// check_input_params(argc, argv);
 	termcap(env_dict);
 	return (0);
 }

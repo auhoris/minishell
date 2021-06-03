@@ -4,6 +4,7 @@
 # include <unistd.h>
 # include "../../libs/libft/srcs/libft.h"
 
+// Мб добавить fd для in_file & out_file
 typedef struct s_ast
 {
 	enum
