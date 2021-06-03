@@ -24,15 +24,15 @@ int	parser_next_token(t_parser *parser)
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 		i = 0;
-	if (prev_type == BAD_TOKEN && type == TOKEN_EOF)
+	if (prev_type == BAD_TOKEN)
+	{
+		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
+		return (send_error(parser));
+	}
+	else if (prev_type == BAD_TOKEN && type == TOKEN_EOF)
 	{
 		printf("minishell: unexpected EOF while looking for matching '\"'\n");
 		printf("minishell: syntax error: unexpected end of file\n");
-		return (send_error(parser));
-	}
-	else if (prev_type == BAD_TOKEN)
-	{
-		printf("minishell: syntax error near unexpected token '%s'\n", parser->prev_token->value);
 		return (send_error(parser));
 	}
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)

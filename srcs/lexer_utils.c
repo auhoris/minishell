@@ -1,3 +1,4 @@
+#include "includes/errors.h"
 #include "includes/lexer.h"
 #include "includes/minishell.h"
 #include <stdlib.h>
@@ -15,13 +16,15 @@ char	*lexer_chtostr(char c)
 	return (str);
 }
 
-void	lexer_advance(t_lexer *lexer)
+int	lexer_advance(t_lexer *lexer)
 {
 	if (lexer->c && lexer->current < lexer->length)
 	{
 		lexer->current++;
 		lexer->c = lexer->content[lexer->current];
+		return (OK);
 	}
+	return (ERROR);
 }
 
 char	lexer_peek(t_lexer *lexer, int offset)

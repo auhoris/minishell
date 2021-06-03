@@ -2,6 +2,7 @@
 #include "includes/minishell.h"
 #include "includes/token.h"
 #include "includes/utils.h"
+#include <stdio.h>
 
 t_token	*lexer_collect_dollar(t_lexer *lexer)
 {
@@ -57,6 +58,8 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 	int		spec_id;
 
 	lexer_advance(lexer);
+	if (lexer_peek(lexer, 1) == '\0')
+		return (init_token(BAD_TOKEN, ft_strdup(""), FALSE));
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);
