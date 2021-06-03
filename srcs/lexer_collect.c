@@ -5,13 +5,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	handle_error_msg(char *msg, char *token)
-{
-	ft_putstr_fd(msg, STDERR_FILENO);
-	ft_putstr_fd("'", STDERR_FILENO);
-	ft_putstr_fd(token, STDERR_FILENO);
-	ft_putstr_fd("'\n", STDERR_FILENO);
-}
 
 t_token	*lexer_errors_handler(t_token *token)
 {
@@ -86,7 +79,7 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 	int		spec_id;
 
 	lexer_advance(lexer);
-	if (lexer_peek(lexer, 1) == '\0')
+	if (lexer->c == '\0')
 		return (lexer_errors_handler(init_token(TOKEN_BSLASH, ft_strdup(""), FALSE)));
 	str = ft_strdup("");
 	if (str == NULL)

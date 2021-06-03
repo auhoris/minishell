@@ -1,4 +1,5 @@
 #include "includes/parser.h"
+#include "includes/token.h"
 
 static char	*make_argument(char *str, t_parser *parser)
 {

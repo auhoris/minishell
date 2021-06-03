@@ -127,6 +127,8 @@ void	start_parsing(char *input, t_env_list *env)
 	t_lexer		*lexer;
 	t_parser	*parser;
 	t_ast		*root;
+	/* t_token		*token;
+	(void)		env; */
 
 	lexer = init_lexer(input);
 	/* token = lexer_get_next_token(lexer);
