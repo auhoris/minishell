@@ -6,7 +6,12 @@
 #include <unistd.h>
 #include <string.h>
 
-int	outher_command(t_ast *node, t_env_list *env)
+// static int	call_execve(char **args, char **env_array)
+// {
+
+// }
+
+static int	outher_command(t_ast *node, t_env_list *env)
 {
 	char	**env_array;
 	char	**args;

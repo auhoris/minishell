@@ -8,7 +8,7 @@
 # include "errors.h"
 
 # define SPECIAL "\"'$\\;|><"
-# define OTHER "-!%+.,/?:@^_{}~"
+# define OTHER "-!%+.,/?:@^_{}~#"
 # define SPACE ' '
 
 typedef struct s_lexer
