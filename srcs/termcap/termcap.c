@@ -138,10 +138,12 @@ static int	start_parsing(t_data_processing *data_processing)
 	} */
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
+	{
+		printf("Something happend\n");
 		return (ERROR_PARSER);
+	}
 	else
 	{
-		// printf("Something happend\n");
 		root = parser_parse_commands(parser);
 		// visitor_visit_nodes(root);
 	}

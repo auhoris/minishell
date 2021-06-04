@@ -1,6 +1,7 @@
 #include "includes/parser.h"
 #include "includes/token.h"
 #include <stdlib.h>
+#include <sys/fcntl.h>
 #include <unistd.h>
 
 static char	*make_argument(char *str, t_parser *parser)
@@ -57,7 +58,7 @@ static int	create_file(char *filename, int type, t_ast *node)
 	if (type == TOKEN_MORE || type == TOKEN_DMORE)
 	{
 		if (type == TOKEN_MORE)
-			node->fd_out = open(filename, O_CREAT | O_WRONLY);
+			node->fd_out = open(filename, O_CREAT | O_WRONLY | O_EXCL);
 		else
 			node->fd_out = open(filename, O_CREAT | O_WRONLY | O_APPEND);
 		node->out_file = ft_strdup(filename);
@@ -66,7 +67,7 @@ static int	create_file(char *filename, int type, t_ast *node)
 	}
 	else
 	{
-		node->fd_in = open(filename, O_CREAT | O_RDONLY);
+		node->fd_in = open(filename, O_CREAT | O_RDONLY | O_EXCL);
 		node->in_file = ft_strdup(filename);
 		if (node->in_file == NULL)
 			return (ERROR);
@@ -85,17 +86,19 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 	while (prev_type == TOKEN_MORE
 		|| prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
 	{
-		curr_type = parser_next_token(parser);
-		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
-			return (ERROR);
 		if (prev_type == TOKEN_DMORE
 			|| prev_type == TOKEN_LESS || prev_type == TOKEN_MORE)
 		{
+			if (node->fd_out != STDOUT_FILENO)
+				close(node->fd_out);
 			free(node->out_file);
-			close(node->fd_out);
 			free(node->in_file);
-			close(node->fd_in);
+			if (node->fd_in != STDIN_FILENO)
+				close(node->fd_in);
 		}
+		curr_type = parser_next_token(parser);
+		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
+			return (ERROR);
 		if (create_file(parser->cur_tok->value, prev_type, node) == ERROR)
 			return (ERROR);
 		prev_type = parser_next_token(parser);
