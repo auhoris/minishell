@@ -73,8 +73,10 @@ void	visitor_visit_simplecommand(t_ast *node)
 		printf("%zu: argv[%zu] = %s\n", i, i, node->argv[i]);
 		i++;
 	}
-	printf("fd_out='%d'\tout_file='%s'\n", node->fd_out, node->out_file);
-	printf("fd_in='%d'\tin_file='%s'\n", node->fd_in, node->in_file);
+	if (node->out_file)
+		printf("fd_out='%d'\tout_file='%s'\n", node->fd_out, node->out_file);
+	if (node->in_file)
+		printf("fd_in='%d'\tin_file='%s'\n", node->fd_in, node->in_file);
 	if (node->fd_out != STDOUT_FILENO)
 		close(node->fd_out);
 	if (node->fd_in != STDIN_FILENO)
@@ -87,9 +89,9 @@ char	*print_node_type(int type)
 	switch (type) {
 		case NODE_ROOT: return ("NODE_ROOT");
 		case NODE_PIPE: return ("NODE_PIPE");
-		case NODE_LREDIRECT: return ("NODE_LREDIRECT");
+		/* case NODE_LREDIRECT: return ("NODE_LREDIRECT");
 		case NODE_RREDIRECT: return ("NODE_RREDIRECT");
-		case NODE_DOUBLE_REDIRECT: return ("NODE_DOUBLE_REDIRECT");
+		case NODE_DOUBLE_REDIRECT: return ("NODE_DOUBLE_REDIRECT"); */
 		case NODE_SIMPLECOMMAND: return ("NODE_SIMPLECOMMAND");
 		case NODE_VARDEF: return ("NODE_VARDEF");
 		default: return ("Undefined node type");

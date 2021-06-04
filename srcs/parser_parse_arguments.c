@@ -1,8 +1,11 @@
 #include "includes/errors.h"
 #include "includes/parser.h"
 #include "includes/token.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <sys/_types/_s_ifmt.h>
 #include <sys/fcntl.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 static char	*make_argument(char *str, t_parser *parser)
@@ -83,16 +86,18 @@ static int	make_node_fd(char *filename, int type, t_ast *node)
 	if (type == TOKEN_MORE || type == TOKEN_DMORE)
 	{
 		if (type == TOKEN_MORE)
-			node->fd_out = open(filename, O_RDWR | O_CREAT | O_TRUNC);
+			node->fd_out = open(filename, O_CREAT | O_TRUNC | O_RDWR, S_IRWXU);
 		else
-			node->fd_out = open(filename, O_RDWR | O_CREAT | O_APPEND);
+			node->fd_out = open(filename, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
 		node->out_file = ft_strdup(filename);
 		if (node->out_file == NULL)
 			return (ERROR);
 	}
 	else
 	{
-		node->fd_in = open(filename, O_RDWR | O_CREAT);
+		node->fd_in = open(filename, O_RDONLY);
+		if (node->fd_in == -1)
+			perror(filename);
 		node->in_file = ft_strdup(filename);
 		if (node->in_file == NULL)
 			return (ERROR);
@@ -100,6 +105,24 @@ static int	make_node_fd(char *filename, int type, t_ast *node)
 	if (node->fd_out == -1 || node->fd_in == -1)
 		return (ERROR);
 	return (OK);
+}
+
+void	check_fd(t_ast *node, int type)
+{
+	if (type == TOKEN_MORE || type == TOKEN_DMORE)
+	{
+		free(node->out_file);
+		if (node->fd_out != STDOUT_FILENO)
+		{
+			close(node->fd_out);
+		}
+	}
+	else
+	{
+		free(node->in_file);
+		if (node->fd_in != STDIN_FILENO)
+			close(node->fd_in);
+	}
 }
 
 static int	parser_parse_redirect(t_parser *parser, t_ast *node)
@@ -111,16 +134,6 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 	while (prev_type == TOKEN_MORE
 		|| prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
 	{
-		if (prev_type == TOKEN_DMORE
-			|| prev_type == TOKEN_LESS || prev_type == TOKEN_MORE)
-		{
-			if (node->fd_out != STDOUT_FILENO)
-				close(node->fd_out);
-			free(node->out_file);
-			free(node->in_file);
-			if (node->fd_in != STDIN_FILENO)
-				close(node->fd_in);
-		}
 		curr_type = parser_next_token(parser);
 		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
 			return (ERROR);
@@ -129,6 +142,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 		prev_type = parser_next_token(parser);
 		if (prev_type == ERROR)
 			return (ERROR);
+		check_fd(node, prev_type);
 	}
 	return (OK);
 }

@@ -11,9 +11,6 @@ typedef struct s_ast
 	{
 		NODE_ROOT,
 		NODE_PIPE,
-		NODE_LREDIRECT,
-		NODE_RREDIRECT,
-		NODE_DOUBLE_REDIRECT,
 		NODE_SIMPLECOMMAND,
 		NODE_VARDEF,
 		NODE_ERROR, // For bad nodes may be

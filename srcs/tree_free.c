@@ -60,8 +60,8 @@ void	free_nodes(t_ast *node)
 		free_simplecommand(node);
 	if (node->e_nodetype == NODE_PIPE)
 		free_pipe(node);
-	if (node->e_nodetype == NODE_LREDIRECT
+	/* if (node->e_nodetype == NODE_LREDIRECT
 		|| node->e_nodetype == NODE_RREDIRECT
 		|| node->e_nodetype == NODE_DOUBLE_REDIRECT)
-		free_redirect(node);
+		free_redirect(node); */
 }
