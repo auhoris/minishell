@@ -5,22 +5,26 @@
 #include <stdio.h>
 #include <unistd.h>
 
-
 t_token	*lexer_errors_handler(t_token *token)
 {
 	if (token->e_type == TOKEN_SQUOTE)
 	{
-		handle_error_msg("minishell: unexpected EOF while looking for matching ", "'");
-		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
+		handle_error_msg(
+			"minishell: unexpected EOF while looking for matching ", "'");
+		ft_putstr_fd(
+			"minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
 	}
 	else if (token->e_type == TOKEN_DQUOTE)
 	{
-		handle_error_msg("minishell: unexpected EOF while looking for matching ", "\"");
-		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
+		handle_error_msg(
+			"minishell: unexpected EOF while looking for matching ", "\"");
+		ft_putstr_fd(
+			"minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
 	}
 	else
 	{
-		handle_error_msg("minishell: syntax error near unexpected token ", token->value);
+		handle_error_msg(
+			"minishell: syntax error near unexpected token ", token->value);
 	}
 	return (init_token(BAD_TOKEN, ft_strdup(""), FALSE));
 }
@@ -80,7 +84,8 @@ t_token	*lexer_collect_bslash(t_lexer *lexer)
 
 	lexer_advance(lexer);
 	if (lexer->c == '\0')
-		return (lexer_errors_handler(init_token(TOKEN_BSLASH, ft_strdup(""), FALSE)));
+		return (lexer_errors_handler(init_token(TOKEN_BSLASH,
+					ft_strdup(""), FALSE)));
 	str = ft_strdup("");
 	if (str == NULL)
 		return (NULL);

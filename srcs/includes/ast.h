@@ -13,7 +13,7 @@ typedef struct s_ast
 		NODE_PIPE,
 		NODE_SIMPLECOMMAND,
 		NODE_VARDEF,
-		NODE_ERROR, // For bad nodes may be
+		NODE_ERROR,
 	}	e_nodetype;
 	char			*cmd_name;
 	// Arguments

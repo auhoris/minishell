@@ -57,30 +57,6 @@ char	*parser_get_args(t_parser *parser)
 	return (str);
 }
 
-/* static int	create_file(char *filename, int type)
-{
-	int	fd;
-
-	fd = open(filename, O_CREAT);
-	if (fd == -1)
-	{
-		if (type == TOKEN_MORE)
-		{
-			fd = open(filename, O_TRUNC);
-			if (fd == -1)
-			{
-				printf("\n\n\nCREATE_FILE\n\n\n");
-				return (ERROR);
-			}
-		}
-		else if (type == TOKEN_DMORE || type == TOKEN_LESS)
-		{
-			fd = open(filename, O_RDWR | O_APPEND);
-		}
-	}
-	return (fd);
-} */
-
 static int	make_node_fd(char *filename, int type, t_ast *node)
 {
 	if (type == TOKEN_MORE || type == TOKEN_DMORE)
@@ -107,7 +83,7 @@ static int	make_node_fd(char *filename, int type, t_ast *node)
 	return (OK);
 }
 
-void	check_fd(t_ast *node, int type)
+static void	check_fd(t_ast *node, int type)
 {
 	if (type == TOKEN_MORE || type == TOKEN_DMORE)
 	{

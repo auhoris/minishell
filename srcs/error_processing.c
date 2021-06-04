@@ -5,7 +5,7 @@
 
 static void	param_free(t_env_list *env, t_data_processing *data_processing)
 {
-	t_env_list *tmp;
+	t_env_list	*tmp;
 
 	tmp = NULL;
 	while (env != NULL)
@@ -27,7 +27,8 @@ static void	execution_exit(t_env_list *env, t_data_processing *data_processing)
 	exit(-1);
 }
 
-void	error_processing(t_env_list *env, t_data_processing *data_processing, int error_code)
+void	error_processing(t_env_list *env,
+		t_data_processing *data_processing, int error_code)
 {
 	// printf("\n%d\n", error_code);
 	if (error_code != OUT)
