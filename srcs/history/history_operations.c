@@ -40,13 +40,17 @@ int	create_empty_elem(t_history **start, t_history **actual)
 	new->prev = *actual;
 	(*actual)->next = new;
 	*actual = new;
+	// printf("\n1|%s|\n", (*start)->command);
+	// printf("\n1|%s|\n", (*actual)->command);
 	return (OUT);
 }
 
 int	update_command_list(t_history **start, t_history **actual,
 		char *command_line)
 {
+	// printf("\n|%s|\n", command_line);
 	free((*actual)->command);
+	// printf("\n|%s|\n", command_line);
 	(*actual)->command = ft_strdup(command_line);
 	if ((*actual)->command == NULL)
 	{

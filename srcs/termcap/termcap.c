@@ -145,10 +145,11 @@ static int	start_parsing(t_data_processing *data_processing)
 		root = parser_parse_commands(parser);
 		// visitor_visit_nodes(root);
 	}
+	// printf("\n3|%s|\n", data_processing->start_history->command);
 	free_parser(parser);
 	// exit(1);
-	out = detour_tree(root, data_processing->env);
-	// visitor_visit_nodes(root);
+	// out = detour_tree(root, data_processing->env);
+	visitor_visit_nodes(root);
 	return (out);
 }
 
@@ -169,6 +170,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		{
 			write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
 			out = start_parsing(data_processing);
+			// printf("\n3|%s|\n", data_processing->start_history->command);
 			if (out != OUT)
 				return (out);
 		}
@@ -181,7 +183,10 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		data_processing->num_symbol = 0;
 	}
 	else
+	{
+		// printf("\n%s\n", data_processing->command_line);
 		write_in_terminal(data_processing->command_line, &data_processing->num_symbol);
+	}
 	return (out);
 }
 

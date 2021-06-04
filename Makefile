@@ -49,7 +49,7 @@ lib:
 # 				@echo "\033[0;32m"$@" compiled"
 
 $(name):		$(objects) $(libs)
-				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
+				$(cc) $(cflags) $(termcap) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
 
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)

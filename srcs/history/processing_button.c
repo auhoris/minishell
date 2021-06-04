@@ -29,9 +29,11 @@ int	get_enter(t_history **start, t_history **actual,
 int	get_up(t_history **start, t_history **actual,
 		t_data_processing *data_processing)
 {
+	// printf("\n2|%s|\n", (*start)->command);
 	if ((*actual)->prev != NULL)
 	{
 		(*actual) = (*actual)->prev;
+		// printf("\n%s\n", (*actual)->command);
 		if (update_command_line(start, actual, data_processing) == ERROR_MALLOC)
 			return (ERROR_MALLOC);
 	}
