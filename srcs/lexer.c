@@ -10,7 +10,7 @@ t_lexer	*init_lexer(char *content)
 	if (lexer == NULL)
 		return (NULL);
 	lexer->length = ft_strlen(content);
-	lexer->content = content;
+	lexer->content = ft_strdup(content);
 	lexer->current = 0;
 	lexer->c = lexer->content[lexer->current];
 	lexer->flag = FALSE;

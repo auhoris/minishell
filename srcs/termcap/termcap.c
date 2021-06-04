@@ -139,17 +139,16 @@ static int	start_parsing(t_data_processing *data_processing)
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
 	{
-		printf("Something happend\n");
 		return (ERROR_PARSER);
 	}
 	else
 	{
 		root = parser_parse_commands(parser);
-		// visitor_visit_nodes(root);
+		visitor_visit_nodes(root);
 	}
 	free_parser(parser);
 	// exit(1);
-	out = detour_tree(root, data_processing->env);
+	// out = detour_tree(root, data_processing->env);
 	// visitor_visit_nodes(root);
 	return (out);
 }

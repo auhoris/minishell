@@ -1,5 +1,6 @@
 #include "includes/visitor.h"
 #include <sys/_types/_size_t.h>
+#include <unistd.h>
 
 void	visitor_visit_vardef(t_ast *node)
 {
@@ -74,6 +75,10 @@ void	visitor_visit_simplecommand(t_ast *node)
 	}
 	printf("fd_out='%d'\tout_file='%s'\n", node->fd_out, node->out_file);
 	printf("fd_in='%d'\tin_file='%s'\n", node->fd_in, node->in_file);
+	if (node->fd_out != STDOUT_FILENO)
+		close(node->fd_out);
+	if (node->fd_in != STDIN_FILENO)
+		close(node->fd_in);
 	printf("\n<========>\n");
 }
 

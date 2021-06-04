@@ -1,3 +1,4 @@
+#include "includes/errors.h"
 #include "includes/parser.h"
 #include "includes/token.h"
 #include <stdlib.h>
@@ -53,21 +54,45 @@ char	*parser_get_args(t_parser *parser)
 	return (str);
 }
 
-static int	create_file(char *filename, int type, t_ast *node)
+/* static int	create_file(char *filename, int type)
+{
+	int	fd;
+
+	fd = open(filename, O_CREAT);
+	if (fd == -1)
+	{
+		if (type == TOKEN_MORE)
+		{
+			fd = open(filename, O_TRUNC);
+			if (fd == -1)
+			{
+				printf("\n\n\nCREATE_FILE\n\n\n");
+				return (ERROR);
+			}
+		}
+		else if (type == TOKEN_DMORE || type == TOKEN_LESS)
+		{
+			fd = open(filename, O_RDWR | O_APPEND);
+		}
+	}
+	return (fd);
+} */
+
+static int	make_node_fd(char *filename, int type, t_ast *node)
 {
 	if (type == TOKEN_MORE || type == TOKEN_DMORE)
 	{
 		if (type == TOKEN_MORE)
-			node->fd_out = open(filename, O_CREAT | O_WRONLY | O_EXCL);
+			node->fd_out = open(filename, O_RDWR | O_CREAT | O_TRUNC);
 		else
-			node->fd_out = open(filename, O_CREAT | O_WRONLY | O_APPEND);
+			node->fd_out = open(filename, O_RDWR | O_CREAT | O_APPEND);
 		node->out_file = ft_strdup(filename);
 		if (node->out_file == NULL)
 			return (ERROR);
 	}
 	else
 	{
-		node->fd_in = open(filename, O_CREAT | O_RDONLY | O_EXCL);
+		node->fd_in = open(filename, O_RDWR | O_CREAT);
 		node->in_file = ft_strdup(filename);
 		if (node->in_file == NULL)
 			return (ERROR);
@@ -99,7 +124,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 		curr_type = parser_next_token(parser);
 		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
 			return (ERROR);
-		if (create_file(parser->cur_tok->value, prev_type, node) == ERROR)
+		if (make_node_fd(parser->cur_tok->value, prev_type, node) == ERROR)
 			return (ERROR);
 		prev_type = parser_next_token(parser);
 		if (prev_type == ERROR)

@@ -5,3 +5,4 @@ libs/get_next_line/objs/get_next_line.o libs/get_next_line/objs/get_next_line_bo
 objs libs/libft/objs libs/get_next_line/objs
 cycle.sh
 .vscode/settings.json
+test.c
