@@ -1,6 +1,12 @@
 #include "includes/parser.h"
+#include "includes/ast.h"
 #include "includes/env.h"
+#include "includes/errors.h"
+#include "includes/lexer.h"
+#include "includes/token.h"
 #include "includes/utils.h"
+
+#define MSG "minishell: syntax error near unexpected token "
 
 t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
@@ -10,77 +16,61 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 	if (!parser)
 		return (NULL);
 	parser->lexer = lexer;
-	parser->cur_tok = lexer_get_next_token(lexer);
+	parser->prev_token = NULL;
+	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok == NULL)
+	{
+		free(parser);
+		return (NULL);
+	}
 	parser->env = env;
 	return (parser);
 }
 
-t_ast	*parser_parse_commands(t_parser *parser)
+int	handle_error(t_parser *parser)
 {
-	t_ast	*cmd;
-	t_ast	*scmd;
+	destroy_token(parser->prev_token);
+	return (ERROR);
+}
 
-	cmd = init_node(NODE_ROOT);
-	cmd->table_value = ft_calloc(1, sizeof(t_ast *));
-	if (cmd->table_value == NULL)
-		return (NULL);
-	cmd->table_size++;
-	cmd->table_value[cmd->table_size - 1] = parser_parse_command(parser);
-	while (parser->cur_tok->e_type == TOKEN_SEMI)
+int	error_with_msg(t_parser *parser, char *msg, char *token)
+{
+	handle_error_msg(msg, token);
+	return (handle_error(parser));
+}
+
+// Разобраться с кейсом echo ; ; / echo | | и тому подобное
+int	parser_next_token(t_parser *parser)
+{
+	static int	i;
+	int			type;
+	int			prev_type;
+
+	parser->prev_token = parser->cur_tok;
+	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok == NULL || parser->cur_tok->e_type == BAD_TOKEN)
+		return (handle_error(parser));
+	prev_type = parser->prev_token->e_type;
+	type = parser->cur_tok->e_type;
+	/* printf("prev=%s\n", print_token_type(prev_type));
+	printf("curr=%s\n", print_token_type(type)); */
+	if (type == TOKEN_SEMI)
+		i = 0;
+	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
+		return (error_with_msg(parser, MSG, parser->prev_token->value));
+	else if ((prev_type == TOKEN_SEMI || prev_type == TOKEN_PIPE) && i == 0)
 	{
-		parser_next_token(parser);
-		scmd = parser_parse_command(parser);
-		if (scmd)
-		{
-			cmd->table_size++;
-			cmd->table_value = ft_realloc(cmd->table_value,
-					cmd->table_size * sizeof(t_ast *),
-					(cmd->table_size - 1) * sizeof(t_ast *));
-			cmd->table_value[cmd->table_size - 1] = scmd;
-		}
+		return (error_with_msg(parser, MSG, parser->prev_token->value));
 	}
-	return (cmd);
-}
-
-t_ast	*parser_parse_command(t_parser *parser)
-{
-	t_ast	*command;
-
-	command = init_node(NODE_SIMPLECOMMAND);
-	if (command == NULL)
-		return (NULL);
-	while (parser->cur_tok->e_type != TOKEN_SEMI
-		&& parser->cur_tok->e_type != TOKEN_EOF)
-	{
-		if (parser->cur_tok->e_type == TOKEN_PIPE)
-			return (parser_parse_pipe(command, parser));
-		command = parser_parse_simple_command(parser);
-	}
-	return (command);
-}
-
-t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
-{
-	t_ast	*pipe_node;
-
-	pipe_node = init_node(NODE_PIPE);
-	pipe_node->table_value = ft_calloc(2, sizeof(t_ast *));
-	pipe_node->table_value[0] = left_node;
-	parser_next_token(parser);
-	pipe_node->table_value[1] = parser_parse_command(parser);
-	return (pipe_node);
-}
-
-t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
-{
-	t_ast	*redirect;
-
-	redirect = init_node(type);
-	redirect->table_value = ft_calloc(2, sizeof(t_ast *));
-	redirect->table_value[0] = left_node;
-	parser_next_token(parser);
-	redirect->table_value[1] = parser_parse_simple_command(parser);
-	return (redirect);
+	else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
+		return (error_with_msg(parser, MSG, parser->prev_token->value));
+	else if ((prev_type == TOKEN_LESS
+			|| prev_type == TOKEN_MORE
+			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
+		return (error_with_msg(parser, MSG, "newline"));
+	i++;
+	destroy_token(parser->prev_token);
+	return (type);
 }
 
 //Пока бесполезняк
@@ -104,91 +94,3 @@ t_ast	*parser_parse_redirect(t_ast *left_node, t_parser *parser, int type)
 		return (NULL);
 	return (vardef);
 } */
-
-// static char	
-static char	*make_argument(char *str, t_parser *parser)
-{
-	int	type;
-
-	type = parser->cur_tok->e_type;
-	if (type == TOKEN_DOLLAR)
-	{
-		str = connect_str(str, get_value_by_key(parser->cur_tok, &parser->env));
-		if (str == NULL)
-			return (NULL);
-	}
-	else
-	{
-		str = connect_str(str, parser->cur_tok->value);
-		if (str == NULL)
-			return (NULL);
-	}
-	return (str);
-}
-
-char	*parser_get_cmd_name(t_parser *parser)
-{
-	char	*str;
-	int		type;
-
-	str = ft_strdup("");
-	if (str == NULL)
-		return (NULL);
-	type = parser->cur_tok->e_type;
-	while (!parser->cur_tok->f_space && type != TOKEN_EOF)
-	{
-		if (type == TOKEN_SEMI || type == TOKEN_MORE
-			|| type == TOKEN_LESS || type == TOKEN_DMORE
-			|| type == TOKEN_PIPE)
-			return (str);
-		str = make_argument(str, parser);
-		if (str == NULL)
-			return (NULL);
-		type = parser_next_token(parser);
-	}
-	// Зачем это? - Это нада
-	str = make_argument(str, parser);
-	if (str == NULL)
-		return (NULL);
-	parser_next_token(parser);
-	return (str);
-}
-
-t_ast	*parser_parse_agruments(t_ast *scmd, t_parser *parser)
-{
-	scmd->argc++;
-	scmd->argv = ft_realloc(scmd->argv, scmd->argc * sizeof(*scmd->argv),
-			(scmd->argc - 1) * sizeof(*scmd->argv));
-	if (scmd->argv == NULL)
-		return (NULL);
-	scmd->argv[scmd->argc - 1] = parser_get_cmd_name(parser);
-	if (scmd->argv[scmd->argc - 1] == NULL)
-		return (NULL);
-	return (scmd);
-}
-
-t_ast	*parser_parse_simple_command(t_parser *parser)
-{
-	t_ast	*scmd;
-
-	scmd = init_node(NODE_SIMPLECOMMAND);
-	if (scmd == NULL)
-		return (NULL);
-	scmd->cmd_name = parser_get_cmd_name(parser);
-	if (scmd->cmd_name == NULL)
-		return (NULL);
-	while (parser->cur_tok->e_type != TOKEN_SEMI
-		&& parser->cur_tok->e_type != TOKEN_EOF
-		&& parser->cur_tok->e_type != TOKEN_PIPE)
-	{
-		if (parser->cur_tok->e_type == TOKEN_MORE)
-			return (parser_parse_redirect(scmd, parser, NODE_RREDIRECT));
-		else if (parser->cur_tok->e_type == TOKEN_LESS)
-			return (parser_parse_redirect(scmd, parser, NODE_LREDIRECT));
-		else if (parser->cur_tok->e_type == TOKEN_DMORE)
-			return (parser_parse_redirect(scmd, parser, NODE_DOUBLE_REDIRECT));
-		if (parser_parse_agruments(scmd, parser) == NULL)
-			return (NULL);
-	}
-	return (scmd);
-}

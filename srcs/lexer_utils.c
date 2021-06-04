@@ -1,5 +1,7 @@
+#include "includes/errors.h"
 #include "includes/lexer.h"
 #include "includes/minishell.h"
+#include <stdlib.h>
 #include <sys/_types/_size_t.h>
 
 char	*lexer_chtostr(char c)
@@ -14,10 +16,15 @@ char	*lexer_chtostr(char c)
 	return (str);
 }
 
-void	lexer_advance(t_lexer *lexer)
+int	lexer_advance(t_lexer *lexer)
 {
-	lexer->current++;
-	lexer->c = lexer->content[lexer->current];
+	if (lexer->c && lexer->current < lexer->length)
+	{
+		lexer->current++;
+		lexer->c = lexer->content[lexer->current];
+		return (OK);
+	}
+	return (ERROR);
 }
 
 char	lexer_peek(t_lexer *lexer, int offset)
@@ -34,7 +41,7 @@ int	seek_quote(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '"')
+		if (str[i] == '"' && str[i - 1] != '\\')
 			return (TRUE);
 		i++;
 	}
@@ -50,5 +57,15 @@ char	*connect_str(char *s1, char *s2)
 	free(tmp);
 	if (s1 == NULL)
 		return (NULL);
+	free(s2);
+	s2 = NULL;
 	return (s1);
+}
+
+void	handle_error_msg(char *msg, char *token)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putstr_fd("'", STDERR_FILENO);
+	ft_putstr_fd(token, STDERR_FILENO);
+	ft_putstr_fd("'\n", STDERR_FILENO);
 }

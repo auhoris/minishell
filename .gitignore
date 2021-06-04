@@ -4,3 +4,4 @@ libs/libft/objs/ft_atoi.o libs/libft/objs/ft_bzero.o libs/libft/objs/ft_calloc.o
 libs/get_next_line/objs/get_next_line.o libs/get_next_line/objs/get_next_line_bonus.o libs/get_next_line/objs/get_next_line_utils.o libs/get_next_line/objs/get_next_line_utils_bonus.o
 objs libs/libft/objs libs/get_next_line/objs
 cycle.sh
+.vscode/settings.json

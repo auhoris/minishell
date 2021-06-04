@@ -87,6 +87,37 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (OUT);
 }
 
+void	free_lexer(t_lexer *lexer)
+{
+	free(lexer->content);
+	free(lexer);
+}
+
+void	free_parser(t_parser *parser)
+{
+	free_lexer(parser->lexer);
+	destroy_token(parser->cur_tok);
+	free(parser);
+}
+
+int		check_parser(t_parser *paser)
+{
+	int	type;
+
+	type = paser->cur_tok->e_type;
+	if (type == TOKEN_SEMI)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `;'\n", STDERR_FILENO);
+		return (ERROR);
+	}
+	if (type == TOKEN_PIPE)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", STDERR_FILENO);
+		return (ERROR);
+	}
+	return (OK);
+}
+
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
@@ -94,7 +125,7 @@ static int	start_parsing(t_data_processing *data_processing)
 	t_ast		*root;
 	int			out;
 	/* t_token		*token;
-	(void)env; */
+	(void)		env; */
 
 	// show_dict(&env);
 	out = OUT;
@@ -106,7 +137,16 @@ static int	start_parsing(t_data_processing *data_processing)
 		token = lexer_get_next_token(lexer);
 	} */
 	parser = init_parser(lexer, data_processing->env);
-	root = parser_parse_commands(parser);
+	if (check_parser(parser) == ERROR || parser == NULL)
+		return (ERROR_PARSER);
+	else
+	{
+		// printf("Something happend\n");
+		root = parser_parse_commands(parser);
+		// visitor_visit_nodes(root);
+	}
+	free_parser(parser);
+	// exit(1);
 	out = detour_tree(root, data_processing->env);
 	// visitor_visit_nodes(root);
 	return (out);

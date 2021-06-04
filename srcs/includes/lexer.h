@@ -21,7 +21,7 @@ typedef struct s_lexer
 }				t_lexer;
 
 t_lexer		*init_lexer(char *content);
-void		lexer_advance(t_lexer *lexer);
+int			lexer_advance(t_lexer *lexer);
 t_token		*lexer_get_next_token(t_lexer *lexer);
 void		lexer_skip_whitespace(t_lexer *lexer);
 t_token		*lexer_collect_squote(t_lexer *lexer);

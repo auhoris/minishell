@@ -19,10 +19,10 @@ void	visitor_visit_nodes(t_ast *node)
 		visitor_visit_pipe(node);
 	if (node->e_nodetype == NODE_VARDEF)
 		visitor_visit_vardef(node);
-	if (node->e_nodetype == NODE_LREDIRECT
+	/* if (node->e_nodetype == NODE_LREDIRECT
 		|| node->e_nodetype == NODE_RREDIRECT
 		|| node->e_nodetype == NODE_DOUBLE_REDIRECT)
-		visitor_visit_redirect(node);
+		visitor_visit_redirect(node); */
 }
 
 void	visitor_visit_root(t_ast *node)
@@ -31,6 +31,7 @@ void	visitor_visit_root(t_ast *node)
 
 	i = 0;
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("node->err_handler='%d'\n", node->err_handler);
 	while (i < node->table_size)
 	{
 		visitor_visit_nodes(node->table_value[i]);
@@ -38,19 +39,23 @@ void	visitor_visit_root(t_ast *node)
 	}
 }
 
-void	visitor_visit_redirect(t_ast *node)
+/* void	visitor_visit_redirect(t_ast *node)
 {
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("node->err_handler='%d'\n", node->err_handler);
 	visitor_visit_nodes(node->table_value[0]);
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("node->err_handler='%d'\n", node->err_handler);
 	visitor_visit_nodes(node->table_value[1]);
-}
+} */
 
 void	visitor_visit_pipe(t_ast *node)
 {
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("node->err_handler='%d'\n", node->err_handler);
 	visitor_visit_nodes(node->table_value[0]);
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("node->err_handler='%d'\n", node->err_handler);
 	visitor_visit_nodes(node->table_value[1]);
 }
 
@@ -59,6 +64,7 @@ void	visitor_visit_simplecommand(t_ast *node)
 	size_t	i;
 
 	printf("nodetype='%s'\n", print_node_type(node->e_nodetype));
+	printf("node->err_handler='%d'\n", node->err_handler);
 	printf("----command name = %s----\n", node->cmd_name);
 	i = 0;
 	while (i < node->argc)
@@ -66,6 +72,8 @@ void	visitor_visit_simplecommand(t_ast *node)
 		printf("%zu: argv[%zu] = %s\n", i, i, node->argv[i]);
 		i++;
 	}
+	printf("fd_out='%d'\tout_file='%s'\n", node->fd_out, node->out_file);
+	printf("fd_in='%d'\tin_file='%s'\n", node->fd_in, node->in_file);
 	printf("\n<========>\n");
 }
 

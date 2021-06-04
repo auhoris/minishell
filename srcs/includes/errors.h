@@ -7,5 +7,8 @@
 # define ERROR_EXIT -4
 # define ERROR_EXECVE -5
 # define ERROR_READDIR -6
+# define ERROR_PARSER -7
+# define ERROR -3
+# define OK 0
 
 #endif
