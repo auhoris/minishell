@@ -139,14 +139,15 @@ void	start_parsing(char *input, t_env_list *env)
 	} */
 	parser = init_parser(lexer, env);
 	if (check_parser(parser) == ERROR || parser == NULL)
-		;
+		printf("Something happend\n");
 	else
 	{
+		// printf("Something happend\n");
 		root = parser_parse_commands(parser);
 		visitor_visit_nodes(root);
 	}
 	free_parser(parser);
-	exit(1);
+	// exit(1);
 }
 
 static int	processing_button(t_data_processing *data_processing, int button)

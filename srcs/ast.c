@@ -1,5 +1,6 @@
 #include "includes/ast.h"
 #include <sys/_types/_size_t.h>
+#include <unistd.h>
 #include "includes/errors.h"
 
 t_ast	*init_node(int type)
@@ -19,6 +20,8 @@ t_ast	*init_node(int type)
 	ast->in_file = NULL;
 	ast->out_file = NULL;
 	ast->err_file = NULL;
+	ast->fd_out = STDOUT_FILENO;
+	ast->fd_in = STDIN_FILENO;
 	ast->err_handler = OK;
 	return (ast);
 }

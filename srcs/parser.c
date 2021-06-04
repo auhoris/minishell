@@ -50,10 +50,10 @@ int	parser_next_token(t_parser *parser)
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
 	if (parser->cur_tok == NULL || parser->cur_tok->e_type == BAD_TOKEN)
 		return (handle_error(parser));
-	printf("prev=%s\n", print_token_type(prev_type));
-	printf("curr=%s\n", print_token_type(type));
 	prev_type = parser->prev_token->e_type;
 	type = parser->cur_tok->e_type;
+	/* printf("prev=%s\n", print_token_type(prev_type));
+	printf("curr=%s\n", print_token_type(type)); */
 	if (type == TOKEN_SEMI)
 		i = 0;
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)

@@ -26,6 +26,8 @@ typedef struct s_ast
 	// Redirect
 	char			*out_file;
 	char			*in_file;
+	int				fd_in;
+	int				fd_out;
 	char			*err_file;
 	// Table
 	struct s_ast	**table_value;
