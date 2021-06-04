@@ -4,6 +4,22 @@
 		"term.h": "c",
 		"minishell.h": "c",
 		"lexer.h": "c",
-		"errors.h": "c"
+		"errors.h": "c",
+		"visitor.h": "c",
+		"ast.h": "c",
+		"libft.h": "c",
+		"executor.h": "c",
+		"env.h": "c",
+		"history.h": "c",
+		"unistd.h": "c",
+		"errno.h": "c",
+		"termcap.h": "c",
+		"stdio.h": "c",
+		"dirent.h": "c",
+		"string.h": "c",
+		"availability.h": "c",
+		"_size_t.h": "c",
+		"cdefs.h": "c",
+		"strings.h": "c"
 	}
 }

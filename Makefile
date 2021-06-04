@@ -13,11 +13,12 @@ gnldir			= $(libdir)/get_next_line
 libftdir		= $(libdir)/libft
 termcapdir		= $(srcdir)/termcap
 historydir		= $(srcdir)/history
+executordir		= $(srcdir)/executor
 
 # Files
-sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c) $(wildcard $(historydir)/*.c)
+sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c) $(wildcard $(historydir)/*.c) $(wildcard $(executordir)/*.c)
 inclds			= $(wildcard $(incdir)/*.h)
-objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(objdir)/%.o) $(sources:$(historydir)/.c=$(objdir)/%.o)
+objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(objdir)/%.o) $(sources:$(historydir)/.c=$(objdir)/%.o) $(sources:$(executordir)/.c=$(objdir)/%.o)
 
 # Flags and linkers
 cc				= gcc
@@ -67,7 +68,7 @@ fclean:			clean
 				$(rm) $(name)
 re:				fclean all
 
-shclean:		
+shclean:
 				$(rm) $(objdir)
 
 

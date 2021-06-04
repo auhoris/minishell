@@ -3,16 +3,18 @@
 void	clear_history(t_history **start)
 {
 	t_history	*tmp;
+	int	i = 0;
 
-	while (*start != NULL)
+	while ((*start)->next != NULL)
 	{
+		// printf("\ni = %d\n", i);
 		tmp = (*start)->next;
 		free((*start)->command);
+		// printf("\nfree (*start)->command\n");
 		(*start)->command = NULL;
-		free((*start)->prev);
-		(*start)->prev = NULL;
 		free(*start);
 		*start = tmp;
+		i++;
 	}
 }
 
