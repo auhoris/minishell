@@ -6,3 +6,4 @@ objs libs/libft/objs libs/get_next_line/objs
 cycle.sh
 .vscode/settings.json
 test.c
+testing/

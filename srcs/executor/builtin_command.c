@@ -86,7 +86,9 @@ int	execution_env(t_ast *node, t_env_list *env)
 		write(1, "\nenv must be without any options or arguments", 45);
 	else
 	{
-		while (env->next != NULL)
+		// твой код почему-то жалуется на оверфлоу
+		show_dict(&env);
+		/* while (env->next != NULL)
 		{
 			write(1, env->key, ft_strlen(env->key));
 			write(1, "=", 1);
@@ -96,7 +98,7 @@ int	execution_env(t_ast *node, t_env_list *env)
 		}
 		write(1, env->key, ft_strlen(env->key));
 		write(1, "=", 1);
-		write(1, env->value, ft_strlen(env->value));
+		write(1, env->value, ft_strlen(env->value)); */
 	}
 	return (OUT);
 }

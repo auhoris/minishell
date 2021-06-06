@@ -2,6 +2,21 @@
 #include "../includes/minishell.h"
 #include "../includes/env.h"
 #include "executor.h"
+#include <unistd.h>
+
+t_exec	*init_exec(t_ast *root, size_t pipes)
+{
+	t_exec	*exec;
+
+	exec = ft_calloc(1, sizeof(t_exec));
+	if (exec == NULL)
+		return (NULL);
+	exec->root = root;
+	exec->pipes = pipes;
+	exec->tempin = -1;
+	exec->tempout = -1;
+	return (exec);
+}
 
 static int	executor_root(t_ast *node, t_env_list *env)
 {
@@ -20,11 +35,45 @@ static int	executor_root(t_ast *node, t_env_list *env)
 	return (out);
 }
 
+int	check_redirection()
+{
+	return (OK);
+}
+
+int	restore_std()
+{
+	return (OK);
+}
+
 static int	executor_simplecommand(t_ast *node, t_env_list *env)
 {
 	int	out;
+	int	tempin;
+	int	tempout;
 
+	tempout = dup(STDOUT_FILENO);
+	tempin = dup(STDIN_FILENO);
+	if (node->fd_in != STDIN_FILENO)
+	{
+		dup2(node->fd_in, STDIN_FILENO);
+		close(node->fd_in);
+	}
+	if (node->fd_out != STDOUT_FILENO)
+	{
+		dup2(node->fd_out, STDOUT_FILENO);
+		close(node->fd_out);
+	}
 	out = check_builtin(node, env);
+	if (node->fd_in != STDIN_FILENO)
+	{
+		dup2(tempin, STDIN_FILENO);
+		close(tempin);
+	}
+	if (node->fd_out != STDOUT_FILENO)
+	{
+		dup2(tempout, STDOUT_FILENO);
+		close(tempout);
+	}
 	return (out);
 }
 

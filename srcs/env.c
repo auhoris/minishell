@@ -25,7 +25,10 @@ void	show_dict(t_env_list **env)
 	start = *env;
 	while (start)
 	{
-		printf("%s=%s\n", start->key, start->value);
+		ft_putstr(start->key);
+		ft_putstr("=");
+		ft_putstr(start->value);
+		ft_putstr("\n");
 		start = start->next;
 	}
 }

@@ -4,6 +4,16 @@
 # include "../includes/ast.h"
 # include "../includes/env.h"
 
+typedef struct s_exec
+{
+	t_ast	*root;
+	size_t	pipes;
+	int		tempin;
+	int		tempout;
+}		t_exec;
+
+t_exec	*init_exec(t_ast *root, size_t pipes);
+
 int		check_builtin(t_ast *node, t_env_list *env);
 int		get_pwd_dir(t_env_list *env, char **pwd_dir);
 int		set_pwd_dir(t_env_list *env, char *pwd_dir);

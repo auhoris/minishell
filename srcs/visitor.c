@@ -70,7 +70,7 @@ void	visitor_visit_simplecommand(t_ast *node)
 	printf("\n<========>\n");
 }
 
-/* char	*print_node_type(int type)
+char	*print_node_type(int type)
 {
 	switch (type) {
 		case NODE_ROOT: return ("NODE_ROOT");
@@ -79,4 +79,4 @@ void	visitor_visit_simplecommand(t_ast *node)
 		case NODE_VARDEF: return ("NODE_VARDEF");
 		default: return ("Undefined node type");
 	}
-} */
+}

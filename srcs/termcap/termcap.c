@@ -6,6 +6,7 @@
 #include "../includes/parser.h"
 #include "../includes/visitor.h"
 #include "../includes/env.h"
+#include "../executor/executor.h"
 
 static int		get_term_param(struct termios *term)
 {
@@ -124,6 +125,8 @@ static int	start_parsing(t_data_processing *data_processing)
 	t_parser	*parser;
 	t_ast		*root;
 	int			out;
+	size_t		pipes;
+	t_exec		*exec;
 	/* t_token		*token;
 	(void)		env; */
 
@@ -144,12 +147,12 @@ static int	start_parsing(t_data_processing *data_processing)
 	else
 	{
 		root = parser_parse_commands(parser);
-		visitor_visit_nodes(root);
+		// visitor_visit_nodes(root);
 	}
+	pipes = lexer->pipes;
 	free_parser(parser);
-	// exit(1);
-	// out = detour_tree(root, data_processing->env);
-	// visitor_visit_nodes(root);
+	exec = init_exec(root, pipes);
+	out = detour_tree(root, data_processing->env);
 	return (out);
 }
 
