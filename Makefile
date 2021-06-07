@@ -16,9 +16,15 @@ historydir		= $(srcdir)/history
 executordir		= $(srcdir)/executor
 
 # Files
-sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c) $(wildcard $(historydir)/*.c) $(wildcard $(executordir)/*.c)
-inclds			= $(wildcard $(incdir)/*.h)
-objects			= $(sources:$(srcdir)/.c=$(objdir)/%.o) $(sources:$(termcapdir)/.c=$(objdir)/%.o) $(sources:$(historydir)/.c=$(objdir)/%.o) $(sources:$(executordir)/.c=$(objdir)/%.o)
+sources			=	$(wildcard $(srcdir)/*.c) \
+					$(wildcard $(termcapdir)/*.c) \
+					$(wildcard $(historydir)/*.c) \
+					$(wildcard $(executordir)/*.c)
+inclds			=	$(wildcard $(incdir)/*.h)
+objects			=	$(sources:$(srcdir)/.c=$(objdir)/%.o) \
+					$(sources:$(termcapdir)/.c=$(objdir)/%.o) \
+					$(sources:$(historydir)/.c=$(objdir)/%.o) \
+					$(sources:$(executordir)/.c=$(objdir)/%.o)
 
 # Flags and linkers
 cc				= gcc
@@ -52,7 +58,7 @@ $(name):		$(objects) $(libs)
 				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
 
-$(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
+$(objdir)/%.o	: $(srcdir)/%.c $(inclds)
 				@mkdir -p $(objdir)
 				$(cc) $(cflags) -c $< -o $@
 				@echo "Compiled "$<" successfully!"
@@ -73,4 +79,4 @@ shclean:
 
 
 .PHONY:			clean fclean re all
-.SILENT:		$(name) $(objects)
+# .SILENT:		$(name) $(objects)
