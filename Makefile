@@ -16,12 +16,20 @@ historydir		= $(srcdir)/history
 executordir		= $(srcdir)/executor
 
 # Files
-sources			= $(wildcard $(srcdir)/*.c) $(wildcard $(termcapdir)/*.c) $(wildcard $(historydir)/*.c) $(wildcard $(executordir)/*.c)
+sources			= $(wildcard $(srcdir)/*.c) \
+				  $(wildcard $(termcapdir)/*.c) \
+				  $(wildcard $(historydir)/*.c) \
+				  $(wildcard $(executordir)/*.c)
+
 inclds			= $(wildcard $(incdir)/*.h)
+
 objects			= $(sources:$(srcdir)/%.c=$(objdir)/%.o) \
 					$(sources:$(srcdir)/%.c=$(objdir)/%.o) \
 					$(sources:$(srcdir)/%.c=$(objdir)/%.o) \
 					$(sources:$(srcdir)/%.c=$(objdir)/%.o)
+
+# Dependencies
+deps			= $(objects:.o=.d)
 
 # Flags and linkers
 cc				= gcc
@@ -55,6 +63,7 @@ $(name):		$(objects) $(libs)
 				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
 				@echo "\033[0;32m"$@" compiled"
 
+-include $(deps)
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
 				@mkdir -p $(dir $@)
 				$(cc) $(cflags) -c $< -o $@
@@ -76,4 +85,4 @@ shclean:
 
 
 .PHONY:			clean fclean re all
-.SILENT:		$(name) $(objects)
+# .SILENT:		$(name) $(objects)
