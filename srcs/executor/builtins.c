@@ -6,10 +6,16 @@
 #include <unistd.h>
 #include <string.h>
 
+int	execute_other_command(char **args, char **envp)
+{
+	return (OK);
+}
+
 int	outher_command(t_ast *node, t_env_list *env)
 {
 	char	**env_array;
 	char	**args;
+	int		test;
 
 	args = create_args(node);
 	if (args == NULL)
@@ -22,7 +28,6 @@ int	outher_command(t_ast *node, t_env_list *env)
 	}
 	write(1, "\n", 1);
 	execve(args[0], args, env_array);
-	// perror("Error: ");
 	return (OUT);
 }
 

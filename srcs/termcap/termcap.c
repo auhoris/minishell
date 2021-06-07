@@ -130,7 +130,6 @@ static int	start_parsing(t_data_processing *data_processing)
 	/* t_token		*token;
 	(void)		env; */
 
-	// show_dict(&env);
 	out = OUT;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	/* token = lexer_get_next_token(lexer);

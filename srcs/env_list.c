@@ -51,3 +51,18 @@ void	env_list_clear(t_env_list **head)
 	}
 	*head = NULL;
 }
+
+size_t	env_lstsize(t_env_list **head)
+{
+	t_env_list	*start;
+	size_t		len;
+
+	start = *head;
+	len = 0;
+	while (start)
+	{
+		len++;
+		start = start->next;
+	}
+	return (len);
+}

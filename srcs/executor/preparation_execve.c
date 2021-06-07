@@ -74,16 +74,11 @@ char	**create_env(t_env_list *env)
 	char	*tmp;
 	int		len;
 
-	len = 0;
-	while (env != NULL)
-	{
-		env = env->next;
-		len++;
-	}
+	len = env_lstsize(&env);
 	envp = (char **)malloc(sizeof(char *) * (len + 1));
 	if (envp == NULL)
 		return (NULL);
-	envp[len + 1] = NULL;
+	envp[len] = NULL;
 	len = 0;
 	while (env != NULL)
 	{
