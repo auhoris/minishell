@@ -108,12 +108,12 @@ int		check_parser(t_parser *paser)
 	type = paser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `;'\n", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'", STDERR_FILENO);
 		return (ERROR);
 	}
 	if (type == TOKEN_PIPE)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'", STDERR_FILENO);
 		return (ERROR);
 	}
 	return (OK);
@@ -123,7 +123,7 @@ static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
-	t_ast		*root;
+	t_ast		*root = NULL;
 	int			out;
 	size_t		pipes;
 	t_exec		*exec;
@@ -141,7 +141,7 @@ static int	start_parsing(t_data_processing *data_processing)
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
 	{
-		return (ERROR_PARSER);
+		return (out);
 	}
 	else
 	{
@@ -152,6 +152,8 @@ static int	start_parsing(t_data_processing *data_processing)
 	free_parser(parser);
 	exec = init_exec(root, pipes);
 	out = detour_tree(root, data_processing->env);
+	printf("out = %d\n", out);
+	// set_env_elem(out, &data_processing->env, "$?");
 	return (out);
 }
 

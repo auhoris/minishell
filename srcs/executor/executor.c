@@ -12,9 +12,12 @@ t_exec	*init_exec(t_ast *root, size_t pipes)
 	if (exec == NULL)
 		return (NULL);
 	exec->root = root;
+	exec->node = root;
+	exec->curr_node_type = root->e_nodetype;
 	exec->pipes = pipes;
 	exec->tempin = -1;
 	exec->tempout = -1;
+	exec->exit_status = OK;
 	return (exec);
 }
 

@@ -3,11 +3,33 @@
 #include "../includes/types.h"
 #include "executor.h"
 #include <errno.h>
+#include <stdio.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
 
 int	execute_other_command(char **args, char **envp)
 {
+	int	pid;
+	int	exit_status;
+	int	wating;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("Error: ");
+		return (ERROR);
+	}
+	if (pid == 0)
+		execve(args[0], args, envp);
+	wait(&wating);
+	if (WIFEXITED(wating))
+	{
+		exit_status = WEXITSTATUS(wating);
+		if (exit_status == OK)
+			return (OK);
+		return (ERROR);
+	}
 	return (OK);
 }
 
@@ -15,7 +37,6 @@ int	outher_command(t_ast *node, t_env_list *env)
 {
 	char	**env_array;
 	char	**args;
-	int		test;
 
 	args = create_args(node);
 	if (args == NULL)
@@ -27,7 +48,11 @@ int	outher_command(t_ast *node, t_env_list *env)
 		return(ERROR_MALLOC);
 	}
 	write(1, "\n", 1);
-	execve(args[0], args, env_array);
+	if (execute_other_command(args, env_array) == ERROR)
+	{
+		clear_array(args, ALL_ARRAY);
+		clear_array(env_array, ALL_ARRAY);
+	}
 	return (OUT);
 }
 

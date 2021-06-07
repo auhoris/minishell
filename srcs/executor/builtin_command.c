@@ -15,7 +15,7 @@ void	execution_echo(t_ast *node)
 	{
 		if (i != 0)
 			write (1, " ", 1);
-		write(1, node->argv[i], ft_strlen(node->argv[i]));
+		ft_putstr(node->argv[i]);
 		i++;
 	}
 }
@@ -30,6 +30,7 @@ int	execution_cd(t_ast *node, t_env_list *env)
 	if (set_old_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 		return (ERROR_MALLOC);
 	out = chdir(node->argv[0]);
+	// ft_putstr("\n");
 	ft_bzero(pwd_dir, 256);
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
@@ -58,8 +59,9 @@ int execution_pwd(t_env_list *env)
 	out = get_pwd_dir(env, &pwd_dir);
 	if (out == OUT)
 	{
-		write(1, "\n", 1);
-		write(1, pwd_dir, ft_strlen(pwd_dir));
+		ft_putstr("\n");
+		ft_putstr(pwd_dir);
+		// ft_putstr("\n");
 	}
 	return (out);
 }

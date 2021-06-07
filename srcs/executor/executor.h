@@ -7,9 +7,14 @@
 typedef struct s_exec
 {
 	t_ast	*root;
+	// Мб будет полезно
+	t_ast	*node;
+	int		curr_node_type;
+	//
 	size_t	pipes;
 	int		tempin;
 	int		tempout;
+	int		exit_status;
 }		t_exec;
 
 t_exec	*init_exec(t_ast *root, size_t pipes);
