@@ -2,6 +2,7 @@
 #include "../includes/minishell.h"
 #include "../includes/env.h"
 #include "executor.h"
+#include <stdio.h>
 #include <unistd.h>
 
 t_exec	*init_exec(t_ast *root, size_t pipes)
@@ -38,7 +39,7 @@ static int	executor_root(t_ast *node, t_env_list *env)
 	return (out);
 }
 
-int	check_redirection()
+/* int	check_redirection()
 {
 	return (OK);
 }
@@ -46,6 +47,21 @@ int	check_redirection()
 int	restore_std()
 {
 	return (OK);
+} */
+
+static int	executor_pipe(t_ast *node, t_env_list *env)
+{
+	int	out;
+	int	fd[2];
+
+	if (pipe(fd) == -1)
+	{
+		perror("");
+		return (ERROR_PIPE);
+	}
+	out = detour_tree(node->table_value[0], env);
+	out = detour_tree(node->table_value[0], env);
+	return (out);
 }
 
 static int	executor_simplecommand(t_ast *node, t_env_list *env)
@@ -88,5 +104,7 @@ int	detour_tree(t_ast *node, t_env_list *env)
 		out = executor_root(node, env);
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
 		out = executor_simplecommand(node, env);
+	if (node->e_nodetype == NODE_PIPE)
+		executor_pipe(node, env);
 	return (out);
 }
