@@ -35,6 +35,7 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 	while (i < node->table_size)
 	{
 		out = detour_tree(exec, node->table_value[i], env);
+		// printf("allo\n");
 		if (out != OUT)
 			return (out);
 		i++;
@@ -91,10 +92,13 @@ static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 	/* dup2(tempout, STDOUT_FILENO);
 	dup2(tempin, STDIN_FILENO); */
 	exec->r_or_w = 0;
+	// printf("executor_pipe\n");
 	out = detour_tree(exec, node->table_value[1], env);
 	/* dup2(tempout, STDOUT_FILENO);
 	dup2(tempin, STDIN_FILENO); */
-	// printf("%d\n", STDIN_FILENO);
+	// write(1, "Hello", 5);
+	/* close(exec->fd[1]);
+	close(exec->fd[0]); */
 	exec->r_or_w = -1;
 	return (out);
 }
@@ -105,10 +109,12 @@ static int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 
 	exec->tempout = dup(STDOUT_FILENO);
 	exec->tempin = dup(STDIN_FILENO);
-	// check_redirection(node);
+	check_redirection(node);
 	out = check_builtin(exec, node, env);
-	// restore_std(exec, node);
-	// printf("executor_simplecommand\n");
+	restore_std(exec, node);
+	/* printf("%d\n", STDOUT_FILENO);
+	printf("%d\n", STDIN_FILENO);
+	printf("executor_simplecommand\n"); */
 	return (out);
 }
 

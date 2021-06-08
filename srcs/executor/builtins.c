@@ -11,7 +11,7 @@
 static int	execute_other_command(t_exec *exec, char **args, char **envp)
 {
 	int	pid;
-	int	exit_status;
+	// int	exit_status;
 	int	wating;
 
 	pid = fork();
@@ -24,37 +24,39 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	{
 		if (exec->r_or_w == 1)
 		{
-			printf("exec->fd[0] = %d\n", exec->fd[0]);
-			printf("exec->fd[1] = %d\n", exec->fd[1]);
+			/* printf("exec->fd[0] = %d\n", exec->fd[0]);
+			printf("exec->fd[1] = %d\n", exec->fd[1]); */
 			dup2(exec->fd[1], STDOUT_FILENO);
-			/* close(exec->fd[1]);
-			close(exec->fd[0]); */
+			close(exec->fd[1]);
+			close(exec->fd[0]);
 		}
 		else if (exec->r_or_w == 0)
 		{
-			printf("exec->fd[0] = %d\n", exec->fd[0]);
-			printf("exec->fd[1] = %d\n", exec->fd[1]);
+			/* printf("exec->fd[0] = %d\n", exec->fd[0]);
+			printf("exec->fd[1] = %d\n", exec->fd[1]); */
 			dup2(exec->fd[0], STDIN_FILENO);
-			/* close(exec->fd[1]);
-			close(exec->fd[0]); */
+			close(exec->fd[1]);
+			close(exec->fd[0]);
 		}
-		printf("exec->fd[0] = %d\n", exec->fd[0]);
-		printf("exec->fd[1] = %d\n", exec->fd[1]);
-		printf("%d\n", STDOUT_FILENO);
-		printf("%d\n", STDIN_FILENO);
+		/* printf("exec->fd[0] = %d\n", exec->fd[0]);
+		printf("exec->fd[1] = %d\n", exec->fd[1]); */
+		/* printf("%d\n", STDOUT_FILENO);
+		printf("%d\n", STDIN_FILENO); */
 		execve(args[0], args, envp);
 	}
-	/* close(exec->fd[1]);
-	close(exec->fd[0]); */
-	// printf("HELLO2\n");
+	printf("%d\n", STDOUT_FILENO);
+	printf("%d\n", STDIN_FILENO);
+	printf("%s", args[0]);
 	wait(&wating);
-	if (WIFEXITED(wating))
+	/* if (WIFEXITED(wating))
 	{
 		exit_status = WEXITSTATUS(wating);
 		if (exit_status == OK)
+		{
 			return (OK);
+		}
 		return (ERROR);
-	}
+	} */
 	return (OK);
 }
 
