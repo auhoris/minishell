@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <string.h>
 
-static int	execute_other_command(char **args, char **envp)
+static int	execute_other_command(t_exec *exec, char **args, char **envp)
 {
 	int	pid;
 	int	exit_status;
@@ -17,11 +17,36 @@ static int	execute_other_command(char **args, char **envp)
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("Error: ");
+		perror("fork");
 		return (ERROR);
 	}
 	if (pid == 0)
+	{
+		if (exec->r_or_w == 1)
+		{
+			printf("exec->fd[0] = %d\n", exec->fd[0]);
+			printf("exec->fd[1] = %d\n", exec->fd[1]);
+			dup2(exec->fd[1], STDOUT_FILENO);
+			/* close(exec->fd[1]);
+			close(exec->fd[0]); */
+		}
+		else if (exec->r_or_w == 0)
+		{
+			printf("exec->fd[0] = %d\n", exec->fd[0]);
+			printf("exec->fd[1] = %d\n", exec->fd[1]);
+			dup2(exec->fd[0], STDIN_FILENO);
+			/* close(exec->fd[1]);
+			close(exec->fd[0]); */
+		}
+		printf("exec->fd[0] = %d\n", exec->fd[0]);
+		printf("exec->fd[1] = %d\n", exec->fd[1]);
+		printf("%d\n", STDOUT_FILENO);
+		printf("%d\n", STDIN_FILENO);
 		execve(args[0], args, envp);
+	}
+	/* close(exec->fd[1]);
+	close(exec->fd[0]); */
+	// printf("HELLO2\n");
 	wait(&wating);
 	if (WIFEXITED(wating))
 	{
@@ -33,7 +58,7 @@ static int	execute_other_command(char **args, char **envp)
 	return (OK);
 }
 
-int	other_command(t_ast *node, t_env_list *env)
+int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	char	**env_array;
 	char	**args;
@@ -48,7 +73,7 @@ int	other_command(t_ast *node, t_env_list *env)
 		return(ERROR_MALLOC);
 	}
 	write(1, "\n", 1);
-	if (execute_other_command(args, env_array) == ERROR)
+	if (execute_other_command(exec, args, env_array) == ERROR)
 	{
 		clear_array(args, ALL_ARRAY);
 		clear_array(env_array, ALL_ARRAY);
@@ -56,7 +81,7 @@ int	other_command(t_ast *node, t_env_list *env)
 	return (OUT);
 }
 
-int	check_builtin(t_ast *node, t_env_list *env)
+int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
 
@@ -74,6 +99,7 @@ int	check_builtin(t_ast *node, t_env_list *env)
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)
 		out = ERROR_EXIT;
 	else
-		out = other_command(node, env);
+		out = other_command(exec, node, env);
+	// printf("check_builtin\n");
 	return (out);
 }

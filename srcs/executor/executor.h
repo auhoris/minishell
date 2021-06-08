@@ -3,23 +3,9 @@
 
 # include "../includes/ast.h"
 # include "../includes/env.h"
+# include "../includes/minishell.h"
 
-typedef struct s_exec
-{
-	t_ast	*root;
-	// Мб будет полезно
-	t_ast	*node;
-	int		curr_node_type;
-	//
-	size_t	pipes;
-	int		tempin;
-	int		tempout;
-	int		exit_status;
-}		t_exec;
-
-t_exec	*init_exec(t_ast *root, size_t pipes);
-
-int		check_builtin(t_ast *node, t_env_list *env);
+int		check_builtin(t_exec *exec, t_ast *node, t_env_list *env);
 int		get_pwd_dir(t_env_list *env, char **pwd_dir);
 int		set_pwd_dir(t_env_list *env, char *pwd_dir);
 int		set_old_pwd_dir(t_env_list *env, char *old_pwd_dir);

@@ -151,7 +151,7 @@ static int	start_parsing(t_data_processing *data_processing)
 	pipes = lexer->pipes;
 	free_parser(parser);
 	exec = init_exec(root, pipes);
-	out = detour_tree(root, data_processing->env);
+	out = detour_tree(exec, root, data_processing->env);
 	// set_env_elem(out, &data_processing->env, "$?");
 	return (out);
 }
