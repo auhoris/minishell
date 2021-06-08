@@ -60,7 +60,7 @@ static int	executor_pipe(t_ast *node, t_env_list *env)
 		return (ERROR_PIPE);
 	}
 	out = detour_tree(node->table_value[0], env);
-	out = detour_tree(node->table_value[0], env);
+	out = detour_tree(node->table_value[1], env);
 	return (out);
 }
 

@@ -152,7 +152,6 @@ static int	start_parsing(t_data_processing *data_processing)
 	free_parser(parser);
 	exec = init_exec(root, pipes);
 	out = detour_tree(root, data_processing->env);
-	printf("out = %d\n", out);
 	// set_env_elem(out, &data_processing->env, "$?");
 	return (out);
 }

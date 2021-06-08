@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <string.h>
 
-int	execute_other_command(char **args, char **envp)
+static int	execute_other_command(char **args, char **envp)
 {
 	int	pid;
 	int	exit_status;
@@ -33,7 +33,7 @@ int	execute_other_command(char **args, char **envp)
 	return (OK);
 }
 
-int	outher_command(t_ast *node, t_env_list *env)
+int	other_command(t_ast *node, t_env_list *env)
 {
 	char	**env_array;
 	char	**args;
@@ -74,6 +74,6 @@ int	check_builtin(t_ast *node, t_env_list *env)
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)
 		out = ERROR_EXIT;
 	else
-		out = outher_command(node, env);
+		out = other_command(node, env);
 	return (out);
 }
