@@ -6,6 +6,7 @@
 # include "ast.h"
 # include <stdio.h>
 # include <stdlib.h>
+#include <sys/_types/_size_t.h>
 
 //	Дефайны
 # define TRUE 1
@@ -24,6 +25,8 @@ typedef struct s_exec
 	int		exit_status;
 	int		fd[2];
 	int		r_or_w;
+	int		*pids;
+	size_t	size_pids;
 }		t_exec;
 
 t_exec	*init_exec(t_ast *root, size_t pipes);

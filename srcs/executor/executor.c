@@ -22,6 +22,8 @@ t_exec	*init_exec(t_ast *root, size_t pipes)
 	exec->fd[0] = -1;
 	exec->fd[1] = -1;
 	exec->r_or_w = -1;
+	exec->pids = NULL;
+	exec->size_pids = 0;
 	return (exec);
 }
 
@@ -35,7 +37,6 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 	while (i < node->table_size)
 	{
 		out = detour_tree(exec, node->table_value[i], env);
-		// printf("allo\n");
 		if (out != OUT)
 			return (out);
 		i++;
@@ -76,29 +77,18 @@ int	restore_std(t_exec * exec, t_ast *node)
 static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
-	/* int	tempin = -1;
-	int	tempout = 1; */
 
 	if (pipe(exec->fd) == -1)
 	{
 		perror("");
 		return (ERROR_PIPE);
 	}
-	/* dup2(STDOUT_FILENO, tempout);
-	dup2(STDIN_FILENO, tempin); */
 	exec->r_or_w = 1;
 	out = detour_tree(exec, node->table_value[0], env);
-	// printf("%d\n", STDOUT_FILENO);
-	/* dup2(tempout, STDOUT_FILENO);
-	dup2(tempin, STDIN_FILENO); */
 	exec->r_or_w = 0;
-	// printf("executor_pipe\n");
 	out = detour_tree(exec, node->table_value[1], env);
-	/* dup2(tempout, STDOUT_FILENO);
-	dup2(tempin, STDIN_FILENO); */
-	// write(1, "Hello", 5);
-	/* close(exec->fd[1]);
-	close(exec->fd[0]); */
+	close(exec->fd[1]);
+	close(exec->fd[0]);
 	exec->r_or_w = -1;
 	return (out);
 }

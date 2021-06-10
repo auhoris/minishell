@@ -1,4 +1,7 @@
+#include <sys/_types/_size_t.h>
+#include <sys/wait.h>
 #include <term.h>
+#include <unistd.h>
 #include "termcap.h"
 #include "../includes/minishell.h"
 #include "../includes/types.h"
@@ -119,25 +122,32 @@ int		check_parser(t_parser *paser)
 	return (OK);
 }
 
+static int	wait_pids(t_exec *exec)
+{
+	size_t	i;
+
+	i = 0;
+	if (exec->size_pids == 0)
+		return (OK);
+	write(STDIN_FILENO, "\n", 1);
+	while (i < exec->size_pids)
+	{
+		waitpid(exec->pids[i], NULL, 0);
+		i++;
+	}
+	return (OK);
+}
+
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
 	t_ast		*root = NULL;
 	int			out;
-	size_t		pipes;
 	t_exec		*exec;
-	/* t_token		*token;
-	(void)		env; */
 
 	out = OUT;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
-	/* token = lexer_get_next_token(lexer);
-	while (token->e_type != TOKEN_EOF)
-	{
-		printf("type='%s'\tvalue='%s'\n", print_token_type(token->e_type), token->value);
-		token = lexer_get_next_token(lexer);
-	} */
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
 	{
@@ -148,10 +158,10 @@ static int	start_parsing(t_data_processing *data_processing)
 		root = parser_parse_commands(parser);
 		// visitor_visit_nodes(root);
 	}
-	pipes = lexer->pipes;
+	exec = init_exec(root, lexer->pipes);
 	free_parser(parser);
-	exec = init_exec(root, pipes);
 	out = detour_tree(exec, root, data_processing->env);
+	wait_pids(exec);
 	// set_env_elem(out, &data_processing->env, "$?");
 	return (out);
 }
@@ -176,7 +186,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			if (out != OUT)
 				return (out);
 		}
-		write(1, "\n<minishell>$ ", 14);
+		write(1, "<minishell>$ ", 13);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);

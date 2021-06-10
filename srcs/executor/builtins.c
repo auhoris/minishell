@@ -8,11 +8,30 @@
 #include <unistd.h>
 #include <string.h>
 
+static int	append_pid(t_exec *exec, int pid)
+{
+	if (exec->size_pids == 0)
+	{
+		exec->pids = ft_calloc(1, sizeof(int));
+		if (exec->pids == NULL)
+			return (ERROR_MALLOC);
+		exec->pids[exec->size_pids++] = pid;
+	}
+	else
+	{
+		exec->size_pids++;
+		exec->pids = ft_realloc(exec->pids, exec->size_pids * sizeof(int),
+				(exec->size_pids - 1) * sizeof(int));
+		if (exec->pids == NULL)
+			return (ERROR_MALLOC);
+		exec->pids[exec->size_pids - 1] = pid;
+	}
+	return (OK);
+}
+
 static int	execute_other_command(t_exec *exec, char **args, char **envp)
 {
 	int	pid;
-	// int	exit_status;
-	int	wating;
 
 	pid = fork();
 	if (pid == -1)
@@ -24,30 +43,20 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	{
 		if (exec->r_or_w == 1)
 		{
-			/* printf("exec->fd[0] = %d\n", exec->fd[0]);
-			printf("exec->fd[1] = %d\n", exec->fd[1]); */
 			dup2(exec->fd[1], STDOUT_FILENO);
 			close(exec->fd[1]);
 			close(exec->fd[0]);
 		}
 		else if (exec->r_or_w == 0)
 		{
-			/* printf("exec->fd[0] = %d\n", exec->fd[0]);
-			printf("exec->fd[1] = %d\n", exec->fd[1]); */
 			dup2(exec->fd[0], STDIN_FILENO);
 			close(exec->fd[1]);
 			close(exec->fd[0]);
 		}
-		/* printf("exec->fd[0] = %d\n", exec->fd[0]);
-		printf("exec->fd[1] = %d\n", exec->fd[1]); */
-		/* printf("%d\n", STDOUT_FILENO);
-		printf("%d\n", STDIN_FILENO); */
 		execve(args[0], args, envp);
 	}
-	printf("%d\n", STDOUT_FILENO);
-	printf("%d\n", STDIN_FILENO);
-	printf("%s", args[0]);
-	wait(&wating);
+	if (append_pid(exec, pid) != OK)
+			return (ERROR);
 	/* if (WIFEXITED(wating))
 	{
 		exit_status = WEXITSTATUS(wating);
@@ -74,7 +83,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 		clear_array(args, ALL_ARRAY);
 		return(ERROR_MALLOC);
 	}
-	write(1, "\n", 1);
+	// write(1, "\n", 1);
 	if (execute_other_command(exec, args, env_array) == ERROR)
 	{
 		clear_array(args, ALL_ARRAY);

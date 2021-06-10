@@ -18,6 +18,7 @@ void	execution_echo(t_ast *node)
 		ft_putstr(node->argv[i]);
 		i++;
 	}
+	write(1, "\n", 1);
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
@@ -47,6 +48,7 @@ int	execution_cd(t_ast *node, t_env_list *env)
 		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 			return (ERROR_MALLOC);
 	}
+	write(1, "\n", 1);
 	return (OUT);
 }
 
@@ -79,11 +81,13 @@ int	execution_export(t_ast *node, t_env_list *env)
 			return (ERROR_MALLOC);
 		i++;
 	}
+	write(1, "\n", 1);
 	return (OUT);
 }
 
 int	execution_env(t_ast *node, t_env_list *env)
 {
+	write(1, "\n", 1);
 	if (node->argc > 1)
 		write(1, "\nenv must be without any options or arguments", 45);
 	else
