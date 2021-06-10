@@ -26,11 +26,10 @@ void	clear_array(char **args, int index)
 
 static void	bad_command(char *command)
 {
-	// printf("\ntest\n");
 	write(1, "\n", 1);
-	write(1, "bash: ", 6);
-	write(1, command, ft_strlen(command));
-	write(1, ": command not found", 19);
+	ft_putstr("minishell: ");
+	ft_putstr(command);
+	ft_putstr(": command not found");
 }
 
 char	**create_args(t_ast *node)

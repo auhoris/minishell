@@ -44,8 +44,15 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 	return (out);
 }
 
-int	check_redirection(t_ast *node)
+int	check_redirection(t_exec *exec, t_ast *node)
 {
+	if (exec->fd[0] != -1)
+	{
+		if (exec->r_or_w == 1)
+			dup2(exec->fd[1], STDOUT_FILENO);
+		else if (exec->r_or_w == 0)
+			dup2(exec->fd[0], STDIN_FILENO);
+	}
 	if (node->fd_in != STDIN_FILENO)
 	{
 		dup2(node->fd_in, STDIN_FILENO);
@@ -59,8 +66,15 @@ int	check_redirection(t_ast *node)
 	return (OK);
 }
 
-int	restore_std(t_exec * exec, t_ast *node)
+int	restore_std(t_exec *exec, t_ast *node)
 {
+	if (exec->fd[0] != -1)
+	{
+		dup2(exec->tempin, STDIN_FILENO);
+		close(exec->tempin);
+		dup2(exec->tempout, STDOUT_FILENO);
+		close(exec->tempout);
+	}
 	if (node->fd_in != STDIN_FILENO)
 	{
 		dup2(exec->tempin, STDIN_FILENO);
@@ -99,12 +113,9 @@ static int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 
 	exec->tempout = dup(STDOUT_FILENO);
 	exec->tempin = dup(STDIN_FILENO);
-	check_redirection(node);
+	check_redirection(exec, node);
 	out = check_builtin(exec, node, env);
 	restore_std(exec, node);
-	/* printf("%d\n", STDOUT_FILENO);
-	printf("%d\n", STDIN_FILENO);
-	printf("executor_simplecommand\n"); */
 	return (out);
 }
 

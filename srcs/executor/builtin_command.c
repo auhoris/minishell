@@ -8,17 +8,25 @@
 void	execution_echo(t_ast *node)
 {
 	size_t	i;
+	int		n_flag;
 
+	n_flag = 0;
 	i = 0;
+	if (ft_strcmp(node->argv[0], "-n") == 0)
+	{
+		i++;
+		n_flag = 1;
+	}
 	write (1, "\n", 1);
 	while (i < node->argc)
 	{
-		if (i != 0)
+		if (i != (size_t)n_flag)
 			write (1, " ", 1);
 		ft_putstr(node->argv[i]);
 		i++;
 	}
-	write(1, "\n", 1);
+	if (n_flag == 0)
+		write(1, "\n", 1);
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
