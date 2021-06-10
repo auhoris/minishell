@@ -10,7 +10,7 @@ int		get_pwd_dir(t_env_list *env, char **pwd_dir);
 int		set_pwd_dir(t_env_list *env, char *pwd_dir);
 int		set_old_pwd_dir(t_env_list *env, char *old_pwd_dir);
 int		set_key_value(char *str, t_env_list *env);
-void	execution_echo(t_ast *node);
+void	execution_echo(t_exec *exec, t_ast *node);
 int		execution_cd(t_ast *node, t_env_list *env);
 int		execution_pwd(t_env_list *env);
 int		execution_export(t_ast *node, t_env_list *env);

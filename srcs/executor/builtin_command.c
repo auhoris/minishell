@@ -5,7 +5,7 @@
 #include <errno.h>
 #include <string.h>
 
-void	execution_echo(t_ast *node)
+void	execution_echo(t_exec *exec, t_ast *node)
 {
 	size_t	i;
 	int		n_flag;
@@ -22,7 +22,10 @@ void	execution_echo(t_ast *node)
 	{
 		if (i != (size_t)n_flag)
 			write (1, " ", 1);
-		ft_putstr(node->argv[i]);
+		if (ft_strcmp(node->argv[i], "$?") == 0)
+			ft_putstr(ft_itoa(exec->exit_status));
+		else
+			ft_putstr(node->argv[i]);
 		i++;
 	}
 	if (n_flag == 0)

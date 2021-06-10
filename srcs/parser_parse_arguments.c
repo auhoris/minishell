@@ -17,7 +17,10 @@ static char	*make_argument(char *str, t_parser *parser)
 	tmp = str;
 	if (type == TOKEN_DOLLAR)
 	{
-		str = ft_strjoin(str, get_value_by_key(parser->cur_tok->value, &parser->env));
+		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
+			str = ft_strjoin(str, "$?");
+		else
+			str = ft_strjoin(str, get_value_by_key(parser->cur_tok->value, &parser->env));
 	}
 	else
 		str = ft_strjoin(str, parser->cur_tok->value);

@@ -125,6 +125,8 @@ int		check_parser(t_parser *paser)
 static int	wait_pids(t_exec *exec)
 {
 	size_t	i;
+	int		waiting;
+	int		temp;
 
 	i = 0;
 	if (exec->size_pids == 0)
@@ -132,7 +134,11 @@ static int	wait_pids(t_exec *exec)
 	// write(STDIN_FILENO, "\n", 1);
 	while (i < exec->size_pids)
 	{
-		waitpid(exec->pids[i], NULL, 0);
+		temp = waitpid(exec->pids[i], &waiting, 0);
+		if ((temp = WIFEXITED(waiting)))
+		{
+			exec->exit_status = WEXITSTATUS(waiting);
+		}
 		i++;
 	}
 	return (OK);
@@ -162,6 +168,7 @@ static int	start_parsing(t_data_processing *data_processing)
 	out = detour_tree(exec, root, data_processing->env);
 	// printf("out = %d\n", out);
 	wait_pids(exec);
+	printf("exit_status = %d\n", exec->exit_status);
 	return (out);
 }
 

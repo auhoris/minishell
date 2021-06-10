@@ -99,7 +99,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 
 	out = OUT;
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
-		execution_echo(node);
+		execution_echo(exec, node);
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)
 		out = execution_cd(node, env);
 	else if (ft_strcmp(node->cmd_name, "pwd") == 0)
