@@ -53,6 +53,8 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 			close(exec->fd[1]);
 			close(exec->fd[0]);
 		}
+		close(exec->tempout);
+		close(exec->tempin);
 		execve(args[0], args, envp);
 	}
 	if (append_pid(exec, pid) != OK)
@@ -106,6 +108,8 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 		out = execution_export(node, env);
 	else if (ft_strcmp(node->cmd_name, "env") == 0)
 		out = execution_env(node, env);
+	else if (ft_strcmp(node->cmd_name, "unset") == 0)
+		out = execution_unset(node, &env);
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)
 		out = ERROR_EXIT;
 	else

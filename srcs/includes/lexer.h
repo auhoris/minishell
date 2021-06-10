@@ -18,7 +18,6 @@ typedef struct s_lexer
 	size_t	current;
 	size_t	length;
 	int		flag;
-	size_t	pipes;
 }				t_lexer;
 
 t_lexer		*init_lexer(char *content);

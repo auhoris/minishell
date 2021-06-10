@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <sys/_types/_size_t.h>
 
-char	*get_value_by_key(t_token *token, t_env_list **env_dict)
+char	*get_value_by_key(char *value, t_env_list **env_dict)
 {
 	t_env_list	*start;
 
 	start = *env_dict;
 	while (start)
 	{
-		if (ft_strcmp(start->key, token->value) == 0)
+		if (ft_strcmp(start->key, value) == 0)
 			return (start->value);
 		start = start->next;
 	}
@@ -52,12 +52,5 @@ t_env_list	*init_env_list(char **env)
 		env_addback(&env_list, temp);
 		i++;
 	}
-	temp = env_new(ft_strdup("?"), ft_strdup("0"));
-	if (temp == NULL)
-	{
-		env_list_clear(&env_list);
-		return (NULL);
-	}
-	env_addback(&env_list, temp);
 	return (env_list);
 }

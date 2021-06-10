@@ -129,7 +129,7 @@ static int	wait_pids(t_exec *exec)
 	i = 0;
 	if (exec->size_pids == 0)
 		return (OK);
-	write(STDIN_FILENO, "\n", 1);
+	// write(STDIN_FILENO, "\n", 1);
 	while (i < exec->size_pids)
 	{
 		waitpid(exec->pids[i], NULL, 0);
@@ -157,12 +157,11 @@ static int	start_parsing(t_data_processing *data_processing)
 	{
 		root = parser_parse_commands(parser);
 	}
-	exec = init_exec(root, lexer->pipes);
+	exec = init_exec(root);
 	free_parser(parser);
 	out = detour_tree(exec, root, data_processing->env);
 	// printf("out = %d\n", out);
 	wait_pids(exec);
-	// set_env_elem(out, &data_processing->env, "$?");
 	return (out);
 }
 
@@ -187,7 +186,8 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			if (out != OUT)
 				return (out);
 		}
-		write(1, "<minishell>$ ", 13);
+		// write(1, "<minishell>$ ", 13);
+		write(1, "\n<minishell>$ ", 14);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);
@@ -221,7 +221,6 @@ static int	input_processing(t_data_processing *data_processing)
 	}
 	else if (check_buf == ENTER)
 	{
-		// write(STDIN_FILENO, "\n", 1);
 		out = processing_button(data_processing, ENTER);
 		// printf("\nпосле processing_button |%d|\n", out);
 	}

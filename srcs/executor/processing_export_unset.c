@@ -10,6 +10,7 @@ static void	value_key_free(char *value, char *key, t_env_list *new)
 	free(new);
 }
 
+//Почему не сделать через env_addback?
 static int	create_new_env(char *key, char *value, t_env_list *env)
 {
 	t_env_list	*new;
@@ -74,6 +75,29 @@ char	*get_value(char *str)
 	return (key);
 }
 
+int	unset_env_elem(t_env_list **env, char *key)
+{
+	t_env_list	*tmp;
+	t_env_list	*prev;
+	t_env_list	*start;
+
+	if (!(*env))
+		return (OK);
+	start = *env;
+	while (start)
+	{
+		if (ft_strcmp((start)->key, key) == 0)
+		{
+			prev->next = start->next;
+			tmp = start;
+			env_list_delone(tmp);
+			return (OK);
+		}
+		prev = start;
+		start = start->next;
+	}
+	return (OK);
+}
 // int	set_export_variables(char *key, char *value, t_env_list *env)
 // {
 // 	t_env_list	*new;

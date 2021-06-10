@@ -19,7 +19,6 @@ typedef struct s_exec
 	t_ast	*node;
 	int		curr_node_type;
 	//
-	size_t	pipes; // ??
 	int		tempin;
 	int		tempout;
 	int		exit_status;
@@ -27,9 +26,9 @@ typedef struct s_exec
 	int		r_or_w;
 	int		*pids;
 	size_t	size_pids;
-}		t_exec;
+}			t_exec;
 
-t_exec	*init_exec(t_ast *root, size_t pipes);
+t_exec	*init_exec(t_ast *root);
 int		termcap(t_env_list *env);
 int		check_input_params(int argc, char **argv);
 int		detour_tree(t_exec *exec, t_ast *node, t_env_list *env);

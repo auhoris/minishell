@@ -16,7 +16,9 @@ static char	*make_argument(char *str, t_parser *parser)
 	type = parser->cur_tok->e_type;
 	tmp = str;
 	if (type == TOKEN_DOLLAR)
-		str = ft_strjoin(str, get_value_by_key(parser->cur_tok, &parser->env));
+	{
+		str = ft_strjoin(str, get_value_by_key(parser->cur_tok->value, &parser->env));
+	}
 	else
 		str = ft_strjoin(str, parser->cur_tok->value);
 	free(tmp);

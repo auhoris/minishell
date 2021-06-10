@@ -19,7 +19,7 @@ void		env_addback(t_env_list **head, t_env_list *env_new);
 void		env_list_delone(t_env_list *elem);
 void		env_list_clear(t_env_list **head);
 size_t		env_lstsize(t_env_list **head);
-char		*get_value_by_key(t_token *token, t_env_list **env_dict);
+char		*get_value_by_key(char *value, t_env_list **env_dict);
 // Utils
 int			set_env_elem(int code, t_env_list **env, char *key);
 t_env_list	*find_by_key(t_env_list **env, char *key);

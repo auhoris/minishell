@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-t_exec	*init_exec(t_ast *root, size_t pipes)
+t_exec	*init_exec(t_ast *root)
 {
 	t_exec	*exec;
 
@@ -15,7 +15,6 @@ t_exec	*init_exec(t_ast *root, size_t pipes)
 	exec->root = root;
 	exec->node = root;
 	exec->curr_node_type = root->e_nodetype;
-	exec->pipes = pipes;
 	exec->tempin = -1;
 	exec->tempout = -1;
 	exec->exit_status = OK;
@@ -116,6 +115,8 @@ static int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 	check_redirection(exec, node);
 	out = check_builtin(exec, node, env);
 	restore_std(exec, node);
+	close(exec->tempout);
+	close(exec->tempin);
 	return (out);
 }
 

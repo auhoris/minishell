@@ -11,5 +11,6 @@
 # define ERROR_PIPE -8
 # define ERROR -3
 # define OK 0
+# define ERROR_NOT_FOUND 127
 
 #endif

@@ -55,7 +55,7 @@ int	execution_cd(t_ast *node, t_env_list *env)
 		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 			return (ERROR_MALLOC);
 	}
-	write(1, "\n", 1);
+	// write(1, "\n", 1);
 	return (OUT);
 }
 
@@ -85,6 +85,22 @@ int	execution_export(t_ast *node, t_env_list *env)
 		out = set_key_value(node->argv[i], env);
 		if (out == ERROR_MALLOC)
 			return (ERROR_MALLOC);
+		i++;
+	}
+	write(1, "\n", 1);
+	return (OUT);
+}
+
+int execution_unset(t_ast *node, t_env_list **env)
+{
+	size_t		i;
+
+	if (!(*env))
+		return (OUT);
+	i = 0;
+	while (i < node->argc)
+	{
+		unset_env_elem(env, node->argv[i]);
 		i++;
 	}
 	write(1, "\n", 1);
