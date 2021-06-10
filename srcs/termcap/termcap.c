@@ -156,16 +156,17 @@ static int	start_parsing(t_data_processing *data_processing)
 	else
 	{
 		root = parser_parse_commands(parser);
-		// visitor_visit_nodes(root);
 	}
 	exec = init_exec(root, lexer->pipes);
 	free_parser(parser);
 	out = detour_tree(exec, root, data_processing->env);
+	// printf("out = %d\n", out);
 	wait_pids(exec);
 	// set_env_elem(out, &data_processing->env, "$?");
 	return (out);
 }
 
+// Пофиксить случай при постоянном нажатии ENTER
 static int	processing_button(t_data_processing *data_processing, int button)
 {
 	int	out;
@@ -220,6 +221,7 @@ static int	input_processing(t_data_processing *data_processing)
 	}
 	else if (check_buf == ENTER)
 	{
+		// write(STDIN_FILENO, "\n", 1);
 		out = processing_button(data_processing, ENTER);
 		// printf("\nпосле processing_button |%d|\n", out);
 	}

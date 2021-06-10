@@ -83,7 +83,6 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 		clear_array(args, ALL_ARRAY);
 		return(ERROR_MALLOC);
 	}
-	// write(1, "\n", 1);
 	if (execute_other_command(exec, args, env_array) == ERROR)
 	{
 		clear_array(args, ALL_ARRAY);
@@ -111,6 +110,5 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 		out = ERROR_EXIT;
 	else
 		out = other_command(exec, node, env);
-	// printf("check_builtin\n");
 	return (out);
 }
