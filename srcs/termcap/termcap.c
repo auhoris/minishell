@@ -162,7 +162,10 @@ static int	start_parsing(t_data_processing *data_processing)
 	else
 	{
 		root = parser_parse_commands(parser);
+		if (root->err_handler != OK)
+			return (out);
 	}
+	printf("root->err_handler = %d\n", root->err_handler);
 	exec = init_exec(root);
 	free_parser(parser);
 	out = detour_tree(exec, root, data_processing->env);

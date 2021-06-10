@@ -50,30 +50,3 @@ t_env_list	*find_by_key(t_env_list **env, char *key)
 	}
 	return (start);
 }
-
-//Хз надо ли вообще
-t_env_list	*find_by_value(t_env_list **env, char *value)
-{
-	t_env_list	*start;
-
-	start = *env;
-	while (start)
-	{
-		if (ft_strcmp(start->value, value) == 0)
-			break ;
-		start = start->next;
-	}
-	return (start);
-}
-
-int	set_env_elem(int code, t_env_list **env, char *key)
-{
-	t_env_list	*elem;
-
-	elem = find_by_key(env, key);
-	free(elem->value);
-	elem->value = ft_strdup(ft_itoa(code));
-	if (elem->value == NULL)
-		return (ERROR_MALLOC);
-	return (OK);
-}

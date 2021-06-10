@@ -1,4 +1,5 @@
 #include "includes/env.h"
+#include "includes/errors.h"
 
 t_env_list	*env_new(char *key, char *value)
 {
@@ -7,6 +8,11 @@ t_env_list	*env_new(char *key, char *value)
 	env = malloc(sizeof(*env));
 	if (env == NULL)
 		return (NULL);
+	if (key == NULL || value == NULL)
+	{
+		free(env);
+		return (NULL);
+	}
 	env->key = key;
 	env->value = value;
 	env->next = NULL;

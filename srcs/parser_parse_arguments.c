@@ -116,6 +116,8 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 		|| prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
 	{
 		curr_type = parser_next_token(parser);
+		if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
+			return (ERROR);
 		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
 			return (ERROR);
 		if (make_node_fd(parser->cur_tok->value, prev_type, node) == ERROR)

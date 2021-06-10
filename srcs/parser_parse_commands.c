@@ -101,6 +101,8 @@ t_ast	*parser_parse_commands(t_parser *parser)
 		if (parser_next_token(parser) == ERROR)
 			return (ast_error_handler(node));
 		simple_node = parser_parse_command(parser);
+		if (simple_node->err_handler != OK)
+			return (ast_error_handler(node));
 		if (make_table_value(node, simple_node) == ERROR)
 			return (ast_error_handler(node));
 	}

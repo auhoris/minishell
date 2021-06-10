@@ -59,15 +59,6 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	}
 	if (append_pid(exec, pid) != OK)
 			return (ERROR);
-	/* if (WIFEXITED(wating))
-	{
-		exit_status = WEXITSTATUS(wating);
-		if (exit_status == OK)
-		{
-			return (OK);
-		}
-		return (ERROR);
-	} */
 	return (OK);
 }
 

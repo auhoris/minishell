@@ -2,6 +2,7 @@
 #include "../includes/types.h"
 #include "../includes/errors.h"
 #include "../../libs/libft/srcs/libft.h"
+#include <unistd.h>
 
 static void	value_key_free(char *value, char *key, t_env_list *new)
 {
@@ -14,6 +15,12 @@ static void	value_key_free(char *value, char *key, t_env_list *new)
 static int	create_new_env(char *key, char *value, t_env_list *env)
 {
 	t_env_list	*new;
+
+	new = env_new(ft_strdup(key), ft_strdup(value));
+	if (new == NULL)
+		return (ERROR_MALLOC);
+	env_addback(&env, new);
+	/* t_env_list	*new;
 
 	new = (t_env_list *)malloc(sizeof(t_env_list));
 	if (new == NULL)
@@ -30,7 +37,7 @@ static int	create_new_env(char *key, char *value, t_env_list *env)
 	{
 		env = env->next;
 	}
-	env->next = new;
+	env->next = new; */
 	return (OUT);
 }
 
