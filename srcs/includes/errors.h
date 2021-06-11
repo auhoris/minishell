@@ -9,6 +9,7 @@
 # define ERROR_READDIR -6
 # define ERROR_PARSER -7
 # define ERROR_PIPE -8
+# define ERROR_BAD_COMMAND -9
 # define ERROR -3
 # define OK 0
 # define ERROR_NOT_FOUND 127

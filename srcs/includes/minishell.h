@@ -25,6 +25,7 @@ typedef struct s_exec
 	int		fd[2];
 	int		r_or_w;
 	int		*pids;
+	int		flag_echo;
 	size_t	size_pids;
 }			t_exec;
 

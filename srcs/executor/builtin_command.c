@@ -17,7 +17,7 @@ void	execution_echo(t_exec *exec, t_ast *node)
 		i++;
 		n_flag = 1;
 	}
-	write (1, "\n", 1);
+	write (exec->tempout, "\n", 1);
 	while (i < node->argc)
 	{
 		if (i != (size_t)n_flag)
@@ -28,8 +28,7 @@ void	execution_echo(t_exec *exec, t_ast *node)
 			ft_putstr(node->argv[i]);
 		i++;
 	}
-	if (n_flag == 0)
-		write(1, "\n", 1);
+	exec->flag_echo = n_flag;
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
@@ -41,12 +40,20 @@ int	execution_cd(t_ast *node, t_env_list *env)
 		return (ERROR_MALLOC);
 	if (set_old_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 		return (ERROR_MALLOC);
-	out = chdir(node->argv[0]);
+	if (node->argv == NULL)
+	{
+		out = chdir("/Users/skitsch");
+		// printf("\ntest %d\n", out);
+	}
+	else
+		out = chdir(node->argv[0]);
 	ft_bzero(pwd_dir, 256);
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
+	// printf("\n%s\n", pwd_dir);
 	if (out != 0)
 	{
+		// printf("\ntest\n");
 		write(1, "\nminishell: cd: ", 16);
 		write(1, node->argv[0], ft_strlen(node->argv[0]));
 		write(1, ": ", 2);

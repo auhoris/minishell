@@ -17,7 +17,7 @@ int		execution_export(t_ast *node, t_env_list *env);
 int 	execution_unset(t_ast *node, t_env_list **env);
 int		unset_env_elem(t_env_list **env, char *key);
 int		execution_env(t_ast *node, t_env_list *env);
-char	**create_args(t_ast *node);
+char	**create_args(t_ast *node, int *error);
 char	**create_env(t_env_list *env);
 void	clear_array(char **args, int index);
 char	*search_bin(char *command);

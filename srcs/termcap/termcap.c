@@ -185,6 +185,9 @@ static int	start_parsing(t_data_processing *data_processing)
 	if (exec == NULL)
 		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
+	// printf("out = %d\n", out);
+	data_processing->size_pids = exec->size_pids;
+	data_processing->flag_echo = exec->flag_echo;
 	wait_pids(exec);
 	free_exec(exec);
 	return (out);
@@ -208,11 +211,15 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		{
 			write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
 			out = start_parsing(data_processing);
-			if (out != OUT)
+			if (out != OUT && out != ERROR_BAD_COMMAND)
 				return (out);
 		}
-		// write(1, "<minishell>$ ", 13);
-		write(1, "\n<minishell>$ ", 14);
+		if (data_processing->size_pids != 0)
+			write(1, "<minishell>$ ", 13);
+		else if (data_processing->flag_echo == 0)
+			write(1, "\n<minishell>$ ", 14);
+		else
+			write(1, "<minishell>$ ", 14);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);
