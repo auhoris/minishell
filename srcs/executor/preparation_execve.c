@@ -1,6 +1,7 @@
 #include "../includes/ast.h"
 #include "../../libs/libft/srcs/libft.h"
 #include "../includes/types.h"
+#include "../includes/errors.h"
 #include "executor.h"
 
 void	clear_array(char **args, int index)
@@ -32,31 +33,36 @@ static void	bad_command(char *command)
 	ft_putstr(": command not found");
 }
 
-char	**create_args(t_ast *node)
+char	**create_args(t_ast *node, int *error)
 {
 	char	**args;
+	char	*bin;
 	size_t		i;
 
 	args = (char **)malloc(sizeof(char *) * (node->argc + 2));
 	if (args == NULL)
 		return (NULL);
 	args[node->argc + 1] = NULL;
-	// printf("\ntest\n");
-	// printf("\n%s\n", node->cmd_name);
-	args[0] = ft_strdup(search_bin(node->cmd_name));
+	bin = search_bin(node->cmd_name);
+	if (bin == NULL)
+	{
+		free(bin);
+		free(args);
+		bad_command(node->cmd_name);
+		*error = ERROR_BAD_COMMAND;
+		return (NULL);
+	}
+	args[0] = ft_strdup(bin);
+	free(bin);
 	if (args[0] == NULL)
 	{
-		// printf("\ntest\n");
 		free(args);
-		// printf("\ntest\n");
-		bad_command(node->cmd_name);
 		return (NULL);
 	}
 	i = 1;
 	while (i <= node->argc)
 	{
 		args[i] = ft_strdup(node->argv[i - 1]);
-		// printf("\n%s\n", args[i]);
 		if (args[i] == NULL)
 		{
 			clear_array(args, i);

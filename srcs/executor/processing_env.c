@@ -24,6 +24,7 @@ int	set_pwd_dir(t_env_list *env, char *pwd_dir)
 		env = env->next;
 	}
 	free(env->value);
+	// printf("\n%s\n", pwd_dir);
 	env->value = ft_strdup(pwd_dir);
 	if (env->value == NULL)
 		return (ERROR_MALLOC);
@@ -55,8 +56,10 @@ int	set_old_pwd_dir(t_env_list *env, char *old_pwd_dir)
 	t_env_list	*start;
 
 	start = env;
-	while (env != NULL && ft_strcmp(env->key, "OLDPWD") == 0)
+	while (env != NULL)
 	{
+		if (ft_strcmp(env->key, "OLDPWD") == 0)
+			break ;
 		env = env->next;
 	}
 	if (env == NULL)
