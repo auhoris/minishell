@@ -36,6 +36,19 @@ void	free_simplecommand(t_ast *node)
 		free(node->argv[i]);
 		i++;
 	}
+	free(node->argv);
+	free(node);
+}
+
+
+void	free_nodes(t_ast *node)
+{
+	if (node->e_nodetype == NODE_ROOT)
+		free_root(node);
+	if (node->e_nodetype == NODE_SIMPLECOMMAND)
+		free_simplecommand(node);
+	if (node->e_nodetype == NODE_PIPE)
+		free_pipe(node);
 }
 
 /* char	*print_node_type(int type)
@@ -51,13 +64,3 @@ void	free_simplecommand(t_ast *node)
 		default: return ("Undefined node type");
 	}
 } */
-
-void	free_nodes(t_ast *node)
-{
-	if (node->e_nodetype == NODE_ROOT)
-		free_root(node);
-	if (node->e_nodetype == NODE_SIMPLECOMMAND)
-		free_simplecommand(node);
-	if (node->e_nodetype == NODE_PIPE)
-		free_pipe(node);
-}
