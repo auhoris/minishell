@@ -92,19 +92,6 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (OUT);
 }
 
-void	free_lexer(t_lexer *lexer)
-{
-	free(lexer->content);
-	free(lexer);
-}
-
-void	free_parser(t_parser *parser)
-{
-	free_lexer(parser->lexer);
-	destroy_token(parser->cur_tok);
-	free(parser);
-}
-
 int		check_parser(t_parser *paser)
 {
 	int	type;
@@ -145,11 +132,35 @@ static int	wait_pids(t_exec *exec)
 	return (OK);
 }
 
-void	free_exec(t_exec *exec)
+void	free_lexer(t_lexer *lexer)
 {
-	free(exec->pids);
+	free(lexer->content);
+	free(lexer);
+}
+
+void	free_parser(void *parser)
+{
+	free_lexer(((t_parser *)parser)->lexer);
+	destroy_token(((t_parser *)parser)->cur_tok);
+	free(parser);
+}
+
+void	free_root_parser(void *root)
+{
+	free_nodes(((t_ast *)root));
+}
+
+void	free_exec(void *exec)
+{
+	free(((t_exec *)exec)->pids);
+	free_nodes(((t_exec *)exec)->root);
 	free(exec);
-	free_nodes(exec->root);
+}
+
+int	free_unique(int code, void *content, void(*del)(void *))
+{
+	(*del)(content);
+	return (code);
 }
 
 static int	start_parsing(t_data_processing *data_processing)
@@ -164,17 +175,17 @@ static int	start_parsing(t_data_processing *data_processing)
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
+		return (free_unique(ERROR_MALLOC, parser, free_parser));
+	root = parser_parse_commands(parser);
+	if (root->err_handler != OK)
 	{
-		return (out);
+		free_parser(parser);
+		free_nodes(root);
+		return (root->err_handler);
 	}
-	else
-	{
-		root = parser_parse_commands(parser);
-		if (root->err_handler != OK)
-			return (out);
-	}
-	// printf("root->err_handler = %d\n", root->err_handler);
 	exec = init_exec(root);
+	if (exec == NULL)
+		return (ERROR_MALLOC);
 	free_parser(parser);
 	out = detour_tree(exec, root, data_processing->env);
 	wait_pids(exec);

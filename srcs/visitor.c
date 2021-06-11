@@ -59,10 +59,6 @@ void	visitor_visit_simplecommand(t_ast *node)
 		printf("%zu: argv[%zu] = %s\n", i, i, node->argv[i]);
 		i++;
 	}
-	if (node->out_file)
-		printf("fd_out='%d'\tout_file='%s'\n", node->fd_out, node->out_file);
-	if (node->in_file)
-		printf("fd_in='%d'\tin_file='%s'\n", node->fd_in, node->in_file);
 	if (node->fd_out != STDOUT_FILENO)
 		close(node->fd_out);
 	if (node->fd_in != STDIN_FILENO)

@@ -6,11 +6,12 @@ void	free_root(t_ast *node)
 {
 	size_t	i;
 
+	if (node == NULL)
+		return ;
 	i = 0;
 	while (i < node->table_size)
 	{
 		free_nodes(node->table_value[i]);
-		// free(node->table_value[i]);
 		i++;
 	}
 	free(node->table_value);
@@ -19,14 +20,20 @@ void	free_root(t_ast *node)
 
 void	free_pipe(t_ast *node)
 {
+	if (node == NULL)
+		return ;
 	free_nodes(node->table_value[0]);
 	free_nodes(node->table_value[1]);
+	free(node->table_value);
+	free(node);
 }
 
 void	free_simplecommand(t_ast *node)
 {
 	size_t	i;
 
+	if (node == NULL)
+		return ;
 	i = 0;
 	while (i < node->argc)
 	{

@@ -11,15 +11,11 @@ t_ast	*init_node(int type)
 	if (!ast)
 		return (NULL);
 	ast->e_nodetype = type;
-	ast->cmd_name = NULL;
-	ast->argc = 0;
-	ast->argv = NULL;
-	ast->flags = NULL;
 	ast->table_value = NULL;
 	ast->table_size = 0;
-	ast->in_file = NULL;
-	ast->out_file = NULL;
-	ast->err_file = NULL;
+	ast->cmd_name = NULL;
+	ast->argv = NULL;
+	ast->argc = 0;
 	ast->fd_out = STDOUT_FILENO;
 	ast->fd_in = STDIN_FILENO;
 	ast->err_handler = OK;
