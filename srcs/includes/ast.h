@@ -19,13 +19,9 @@ typedef struct s_ast
 	// Arguments
 	size_t			argc;
 	char			**argv;
-	char			**flags;
 	// Redirect
-	char			*out_file;
-	char			*in_file;
 	int				fd_in;
 	int				fd_out;
-	char			*err_file;
 	// Table
 	struct s_ast	**table_value;
 	size_t			table_size;

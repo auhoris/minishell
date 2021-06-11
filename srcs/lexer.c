@@ -1,6 +1,7 @@
 #include "includes/lexer.h"
 #include "includes/minishell.h"
 #include "includes/token.h"
+#include <stdlib.h>
 
 t_lexer	*init_lexer(char *content)
 {
@@ -11,6 +12,11 @@ t_lexer	*init_lexer(char *content)
 		return (NULL);
 	lexer->length = ft_strlen(content);
 	lexer->content = ft_strdup(content);
+	if (lexer->content == NULL)
+	{
+		free(lexer);
+		return (NULL);
+	}
 	lexer->current = 0;
 	lexer->c = lexer->content[lexer->current];
 	lexer->flag = FALSE;

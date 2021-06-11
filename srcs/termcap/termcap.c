@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <sys/_types/_size_t.h>
 #include <sys/wait.h>
 #include <term.h>
@@ -91,19 +92,6 @@ static int	processing_del(char **command_line, int *num_symbol)
 	return (OUT);
 }
 
-void	free_lexer(t_lexer *lexer)
-{
-	free(lexer->content);
-	free(lexer);
-}
-
-void	free_parser(t_parser *parser)
-{
-	free_lexer(parser->lexer);
-	destroy_token(parser->cur_tok);
-	free(parser);
-}
-
 int		check_parser(t_parser *paser)
 {
 	int	type;
@@ -144,34 +132,61 @@ static int	wait_pids(t_exec *exec)
 	return (OK);
 }
 
+void	free_lexer(t_lexer *lexer)
+{
+	free(lexer->content);
+	free(lexer);
+}
+
+void	free_parser(void *parser)
+{
+	free_lexer(((t_parser *)parser)->lexer);
+	destroy_token(((t_parser *)parser)->cur_tok);
+	free(parser);
+}
+
+void	free_root_parser(void *root)
+{
+	free_nodes(((t_ast *)root));
+}
+
+void	free_exec(void *exec)
+{
+	free(((t_exec *)exec)->pids);
+	free_nodes(((t_exec *)exec)->root);
+	free(exec);
+}
+
+int	free_unique(int code, void *content, void(*del)(void *))
+{
+	(*del)(content);
+	return (code);
+}
+
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
-	t_ast		*root = NULL;
+	t_ast		*root;
 	int			out;
 	t_exec		*exec;
 
 	out = OUT;
+	root = NULL;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
-	{
-		return (out);
-	}
-	else
-	{
-		root = parser_parse_commands(parser);
-		if (root->err_handler != OK)
-			return (out);
-	}
-	// printf("root->err_handler = %d\n", root->err_handler);
-	exec = init_exec(root);
+		return (free_unique(ERROR_MALLOC, parser, free_parser));
+	root = parser_parse_commands(parser);
 	free_parser(parser);
+	if (root->err_handler != OK)
+		return (free_unique(root->err_handler, root, free_root_parser));
+	exec = init_exec(root);
+	if (exec == NULL)
+		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
-	// printf("out = %d\n", out);
 	wait_pids(exec);
-	// printf("exit_status = %d\n", exec->exit_status);
+	free_exec(exec);
 	return (out);
 }
 

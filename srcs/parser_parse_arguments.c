@@ -72,11 +72,7 @@ static int	make_node_fd(char *filename, int type, t_ast *node)
 			node->fd_out = open(filename, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
 	}
 	else
-	{
 		node->fd_in = open(filename, O_RDONLY);
-		/* if (node->fd_in == -1)
-			perror(filename); */
-	}
 	if (node->fd_out == -1 || node->fd_in == -1)
 	{
 		perror(filename);

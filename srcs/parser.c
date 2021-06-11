@@ -12,6 +12,8 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
 	t_parser	*parser;
 
+	if (lexer == NULL)
+		return (NULL);
 	parser = ft_calloc(1, sizeof(t_parser));
 	if (!parser)
 		return (NULL);
