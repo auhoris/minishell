@@ -131,7 +131,7 @@ static int	wait_pids(t_exec *exec)
 	i = 0;
 	if (exec->size_pids == 0)
 		return (OK);
-	// write(STDIN_FILENO, "\n", 1);
+	write(STDIN_FILENO, "\n", 1);
 	while (i < exec->size_pids)
 	{
 		temp = waitpid(exec->pids[i], &waiting, 0);
@@ -165,13 +165,13 @@ static int	start_parsing(t_data_processing *data_processing)
 		if (root->err_handler != OK)
 			return (out);
 	}
-	printf("root->err_handler = %d\n", root->err_handler);
+	// printf("root->err_handler = %d\n", root->err_handler);
 	exec = init_exec(root);
 	free_parser(parser);
 	out = detour_tree(exec, root, data_processing->env);
 	// printf("out = %d\n", out);
 	wait_pids(exec);
-	printf("exit_status = %d\n", exec->exit_status);
+	// printf("exit_status = %d\n", exec->exit_status);
 	return (out);
 }
 

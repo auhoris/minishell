@@ -55,7 +55,8 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 		}
 		close(exec->tempout);
 		close(exec->tempin);
-		execve(args[0], args, envp);
+		if (execve(args[0], args, envp) == -1)
+			perror("execve");
 	}
 	if (append_pid(exec, pid) != OK)
 			return (ERROR);
