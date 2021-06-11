@@ -167,26 +167,23 @@ static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
 	t_parser	*parser;
-	t_ast		*root = NULL;
+	t_ast		*root;
 	int			out;
 	t_exec		*exec;
 
 	out = OUT;
+	root = NULL;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	parser = init_parser(lexer, data_processing->env);
 	if (check_parser(parser) == ERROR || parser == NULL)
 		return (free_unique(ERROR_MALLOC, parser, free_parser));
 	root = parser_parse_commands(parser);
+	free_parser(parser);
 	if (root->err_handler != OK)
-	{
-		free_parser(parser);
-		free_nodes(root);
-		return (root->err_handler);
-	}
+		return (free_unique(root->err_handler, root, free_root_parser));
 	exec = init_exec(root);
 	if (exec == NULL)
-		return (ERROR_MALLOC);
-	free_parser(parser);
+		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
 	wait_pids(exec);
 	free_exec(exec);
