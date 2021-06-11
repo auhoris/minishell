@@ -185,11 +185,11 @@ static int	start_parsing(t_data_processing *data_processing)
 	if (exec == NULL)
 		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
-	// printf("out = %d\n", out);
 	data_processing->size_pids = exec->size_pids;
 	data_processing->flag_echo = exec->flag_echo;
 	wait_pids(exec);
 	free_exec(exec);
+	printf("out = %d\n", out);
 	return (out);
 }
 
