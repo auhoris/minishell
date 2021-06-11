@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <sys/_types/_size_t.h>
 #include <sys/wait.h>
 #include <term.h>
@@ -144,6 +145,13 @@ static int	wait_pids(t_exec *exec)
 	return (OK);
 }
 
+void	free_exec(t_exec *exec)
+{
+	free(exec->pids);
+	free(exec);
+	free_nodes(exec->root);
+}
+
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
@@ -169,9 +177,8 @@ static int	start_parsing(t_data_processing *data_processing)
 	exec = init_exec(root);
 	free_parser(parser);
 	out = detour_tree(exec, root, data_processing->env);
-	// printf("out = %d\n", out);
 	wait_pids(exec);
-	// printf("exit_status = %d\n", exec->exit_status);
+	free_exec(exec);
 	return (out);
 }
 

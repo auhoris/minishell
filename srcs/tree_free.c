@@ -10,14 +10,11 @@ void	free_root(t_ast *node)
 	while (i < node->table_size)
 	{
 		free_nodes(node->table_value[i]);
+		// free(node->table_value[i]);
 		i++;
 	}
-}
-
-void	free_redirect(t_ast *node)
-{
-	free_nodes(node->table_value[0]);
-	free_nodes(node->table_value[1]);
+	free(node->table_value);
+	free(node);
 }
 
 void	free_pipe(t_ast *node)
@@ -36,6 +33,19 @@ void	free_simplecommand(t_ast *node)
 		free(node->argv[i]);
 		i++;
 	}
+	free(node->argv);
+	free(node->cmd_name);
+	free(node);
+}
+
+void	free_nodes(t_ast *node)
+{
+	if (node->e_nodetype == NODE_ROOT)
+		free_root(node);
+	if (node->e_nodetype == NODE_SIMPLECOMMAND)
+		free_simplecommand(node);
+	if (node->e_nodetype == NODE_PIPE)
+		free_pipe(node);
 }
 
 /* char	*print_node_type(int type)
@@ -52,12 +62,3 @@ void	free_simplecommand(t_ast *node)
 	}
 } */
 
-void	free_nodes(t_ast *node)
-{
-	if (node->e_nodetype == NODE_ROOT)
-		free_root(node);
-	if (node->e_nodetype == NODE_SIMPLECOMMAND)
-		free_simplecommand(node);
-	if (node->e_nodetype == NODE_PIPE)
-		free_pipe(node);
-}
