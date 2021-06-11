@@ -13,6 +13,16 @@
 # include "token.h"
 # include "ast.h"
 
+//Erros
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+# define ERROR_BAD_TOKEN -10
+
 typedef struct s_parser
 {
 	t_lexer		*lexer;

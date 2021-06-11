@@ -36,7 +36,7 @@ void	error_processing(t_env_list *env,
 		if (error_code == ERROR_EXIT)
 			execution_exit(env, data_processing);
 		param_free(env, data_processing);
-		printf("\ntest\n");
+		// printf("\ntest\n");
 		exit(-1);
 		// return (ERROR_EXIT);
 	}

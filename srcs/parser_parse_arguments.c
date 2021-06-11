@@ -102,7 +102,8 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 
 	prev_type = parser->cur_tok->e_type;
 	while (prev_type == TOKEN_MORE
-		|| prev_type == TOKEN_LESS || prev_type == TOKEN_DMORE)
+		|| prev_type == TOKEN_LESS
+		|| prev_type == TOKEN_DMORE)
 	{
 		curr_type = parser_next_token(parser);
 		if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)

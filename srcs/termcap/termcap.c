@@ -189,7 +189,7 @@ static int	start_parsing(t_data_processing *data_processing)
 	data_processing->flag_echo = exec->flag_echo;
 	wait_pids(exec);
 	free_exec(exec);
-	printf("out = %d\n", out);
+	// printf("out = %d\n", out);
 	return (out);
 }
 

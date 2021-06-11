@@ -55,13 +55,13 @@ gnl:
 lib:
 				@make -C $(libftdir)
 
-$(name):		$(objects) $(libs)
-				$(cc) $(cflags) $(termcap) $^ -o $@
-				@echo "\033[0;32m"$@" compiled"
-
 # $(name):		$(objects) $(libs)
-# 				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
+# 				$(cc) $(cflags) $(termcap) $^ -o $@
 # 				@echo "\033[0;32m"$@" compiled"
+
+$(name):		$(objects) $(libs)
+				$(cc) $(sanitize) $(cflags) $(termcap) $^ -o $@
+				@echo "\033[0;32m"$@" compiled"
 
 -include $(deps)
 $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)

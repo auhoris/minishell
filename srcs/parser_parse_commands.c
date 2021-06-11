@@ -71,13 +71,11 @@ static int	make_table_value(t_ast *node, t_ast *simple_node)
 				node->table_size * sizeof(t_ast *),
 				(node->table_size - 1) * sizeof(t_ast *));
 		if (node->table_value == NULL)
-			return (ERROR);
+			return (ERROR_MALLOC);
 		node->table_value[node->table_size - 1] = simple_node;
 	}
 	else
-	{
-		return (ERROR);
-	}
+		return (ERROR_MALLOC);
 	return (OK);
 }
 
@@ -101,7 +99,7 @@ t_ast	*parser_parse_commands(t_parser *parser)
 		if (parser_next_token(parser) == ERROR)
 			return (ast_error_handler(node));
 		simple_node = parser_parse_command(parser);
-		if (simple_node->err_handler != OK)
+		if (simple_node == NULL || simple_node->err_handler != OK)
 			return (ast_error_handler(node));
 		if (make_table_value(node, simple_node) == ERROR)
 			return (ast_error_handler(node));
