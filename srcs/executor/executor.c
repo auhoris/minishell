@@ -127,8 +127,8 @@ static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 	out = detour_tree(exec, node->table_value[0], env);
 	exec->r_or_w = 0;
 	out = detour_tree(exec, node->table_value[1], env);
-	close(exec->fd[1]);
-	close(exec->fd[0]);
+	/* close(exec->fd[1]);
+	close(exec->fd[0]); */
 	// printf("\n------------------------------------------------\n");
 	exec->r_or_w = -1;
 	return (out);

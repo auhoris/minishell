@@ -113,19 +113,18 @@ int		check_parser(t_parser *paser)
 }
 
 
-void	show_fd_arr(t_exec *exec)
+void	clean_fd_array(t_exec *exec)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < exec->fd_size)
 	{
-		printf("\nexec->fd_arr[i].in = %d\n", exec->fd_arr[i].in);
-		printf("exec->fd_arr[i].out = %d\n", exec->fd_arr[i].out);
 		close(exec->fd_arr[i].in);
 		close(exec->fd_arr[i].out);
 		i++;
 	}
+	free(exec->fd_arr);
 }
 
 static int	wait_pids(t_exec *exec)
@@ -135,14 +134,10 @@ static int	wait_pids(t_exec *exec)
 	int		temp;
 
 	i = 0;
-	/* printf("stdout = %d\n", STDOUT_FILENO);
-	printf("stdin = %d\n", STDIN_FILENO); */
-	show_fd_arr(exec);
+	clean_fd_array(exec);
 	if (exec->size_pids == 0)
 		return (OK);
 	write(STDIN_FILENO, "\n", 1);
-	printf("exec->fd[0] = %d\n", exec->fd[0]);
-	printf("exec->fd[1] = %d\n", exec->fd[1]);
 	while (i < exec->size_pids)
 	{
 		temp = waitpid(exec->pids[i], &waiting, 0);
