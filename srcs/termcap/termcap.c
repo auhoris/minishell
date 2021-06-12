@@ -141,8 +141,8 @@ static int	wait_pids(t_exec *exec)
 	if (exec->size_pids == 0)
 		return (OK);
 	write(STDIN_FILENO, "\n", 1);
-	printf("exec->fd[0] = %d\n", exec->fd[0]);
-	printf("exec->fd[1] = %d\n", exec->fd[1]);
+	/* printf("exec->fd[0] = %d\n", exec->fd[0]);
+	printf("exec->fd[1] = %d\n", exec->fd[1]); */
 	while (i < exec->size_pids)
 	{
 		temp = waitpid(exec->pids[i], &waiting, 0);
