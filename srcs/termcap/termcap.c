@@ -96,16 +96,18 @@ int		check_parser(t_parser *paser)
 {
 	int	type;
 
+	if (paser == NULL)
+		return (ERROR_MALLOC);
 	type = paser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 	{
 		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'", STDERR_FILENO);
-		return (ERROR);
+		return (ERROR_PARSER);
 	}
 	if (type == TOKEN_PIPE)
 	{
 		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'", STDERR_FILENO);
-		return (ERROR);
+		return (ERROR_PARSER);
 	}
 	return (OK);
 }
@@ -122,9 +124,14 @@ static int	wait_pids(t_exec *exec)
 	write(STDIN_FILENO, "\n", 1);
 	while (i < exec->size_pids)
 	{
+		/* printf("\nsize_pids = %zu\n", exec->size_pids);
+		printf("\ni = %zu\n", i);
+		printf("exec->pids[i] = %d\n", exec->pids[i]); */
 		temp = waitpid(exec->pids[i], &waiting, 0);
+		// printf("temp = %d\n", temp);
 		if ((temp = WIFEXITED(waiting)))
 		{
+			printf("\nHERE\n");
 			exec->exit_status = WEXITSTATUS(waiting);
 		}
 		i++;
@@ -144,8 +151,8 @@ static int	start_parsing(t_data_processing *data_processing)
 	root = NULL;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	parser = init_parser(lexer, data_processing->env);
-	if (check_parser(parser) == ERROR || parser == NULL)
-		return (free_unique(ERROR_MALLOC, parser, free_parser));
+	if (check_parser(parser) != OK)
+		return (free_unique(check_parser(parser), parser, free_parser));
 	root = parser_parse_commands(parser);
 	free_parser(parser);
 	if (root->err_handler != OK)
@@ -154,13 +161,13 @@ static int	start_parsing(t_data_processing *data_processing)
 	if (exec == NULL)
 		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
+	// printf("\nHERE\n");
 	data_processing->size_pids = exec->size_pids;
 	data_processing->flag_echo = exec->flag_echo;
+	/* printf("\nout = %d\n", out);
+	printf("dsa = %d\n", root->err_handler); */
 	wait_pids(exec);
-	// printf("exec.exit_status = %d\n", exec->exit_status);
 	free_exec(exec);
-	// exit(1);
-	// printf("out = %d\n", out);
 	return (out);
 }
 
@@ -182,8 +189,11 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		{
 			write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
 			out = start_parsing(data_processing);
-			if (out != OUT && out != ERROR_BAD_COMMAND)
+			if (out != OUT && out != ERROR_BAD_COMMAND && out != ERROR_PARSER)
+			{
+				printf("ERRRERRRRRRRRRRRRRRr\n");
 				return (out);
+			}
 		}
 		if (data_processing->size_pids != 0)
 			write(1, "<minishell>$ ", 13);

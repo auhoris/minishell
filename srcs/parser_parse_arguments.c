@@ -46,11 +46,13 @@ char	*parser_get_args(t_parser *parser)
 			|| type == TOKEN_PIPE || type == ERROR)
 			return (str);
 		str = make_argument(str, parser);
+		if (str == NULL)
+			return (NULL);
 		type = parser_next_token(parser);
-		if (str == NULL || type == ERROR)
+		if (type == ERROR)
 		{
 			free(str);
-			return (NULL);
+			return (ft_strdup("error_parser"));
 		}
 	}
 	str = make_argument(str, parser);
@@ -107,14 +109,14 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 	{
 		curr_type = parser_next_token(parser);
 		if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
-			return (ERROR);
-		if (curr_type == ERROR || curr_type == TOKEN_DOLLAR)
-			return (ERROR);
-		if (make_node_fd(parser->cur_tok->value, prev_type, node) == ERROR)
+			return (ERROR_PARSER);
+		if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
+			return (ERROR_PARSER);
+		if (make_node_fd(parser->cur_tok->value, prev_type, node) != OK)
 			return (ERROR);
 		prev_type = parser_next_token(parser);
-		if (prev_type == ERROR)
-			return (ERROR);
+		if (prev_type == ERROR_PARSER)
+			return (ERROR_PARSER);
 		check_fd(node, prev_type);
 	}
 	return (OK);
@@ -127,8 +129,8 @@ t_ast	*parser_parse_agruments(t_ast *node, t_parser *parser)
 		|| parser->cur_tok->e_type == TOKEN_DMORE)
 	{
 		node->err_handler = parser_parse_redirect(parser, node);
-		if (node->err_handler == ERROR)
-			return (ast_error_handler(node));
+		if (node->err_handler != OK)
+			return (ast_error_handler(node, node->err_handler));
 	}
 	else
 	{
@@ -136,10 +138,12 @@ t_ast	*parser_parse_agruments(t_ast *node, t_parser *parser)
 		node->argv = ft_realloc(node->argv, node->argc * sizeof(*node->argv),
 				(node->argc - 1) * sizeof(*node->argv));
 		if (node->argv == NULL)
-			return (ast_error_handler(node));
+			return (ast_error_handler(node, ERROR_MALLOC));
 		node->argv[node->argc - 1] = parser_get_args(parser);
+		if (ft_strcmp(node->argv[node->argc - 1], "error_parser") == 0)
+			return (ast_error_handler(node, ERROR_PARSER));
 		if (node->argv[node->argc - 1] == NULL)
-			return (ast_error_handler(node));
+			return (ast_error_handler(node, ERROR_MALLOC));
 	}
 	return (node);
 }
