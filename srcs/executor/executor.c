@@ -94,7 +94,7 @@ static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 	if (pipe(exec->fd) == -1)
 	{
 		perror("");
-		return (ERROR_PIPE);
+		return (ERROR);
 	}
 	exec->r_or_w = 1;
 	out = detour_tree(exec, node->table_value[0], env);

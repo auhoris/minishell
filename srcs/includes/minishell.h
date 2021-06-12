@@ -33,5 +33,11 @@ t_exec	*init_exec(t_ast *root);
 int		termcap(t_env_list *env);
 int		check_input_params(int argc, char **argv);
 int		detour_tree(t_exec *exec, t_ast *node, t_env_list *env);
+//free_functions
+void	free_lexer(t_lexer *lexer);
+void	free_parser(void *parser);
+void	free_root_parser(void *root);
+void	free_exec(void *exec);
+int		free_unique(int code, void *content, void(*del)(void *));
 
 #endif /* ifndef MINISHELL_H */

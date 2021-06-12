@@ -14,14 +14,7 @@
 # include "ast.h"
 
 //Erros
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
-# define ERROR_BAD_TOKEN -10
+# define ERROR_PARSER 1
 
 typedef struct s_parser
 {

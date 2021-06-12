@@ -3,7 +3,23 @@
 #include "../includes/types.h"
 #include "../includes/errors.h"
 #include "executor.h"
+#include <stdlib.h>
+#include <sys/_types/_size_t.h>
 
+void	free_arr(char **arr)
+{
+	size_t	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
+//Я не разобрался почему, но твоя функция почему-то не чистила всё
 void	clear_array(char **args, int index)
 {
 	if (index == ALL_ARRAY)

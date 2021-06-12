@@ -58,11 +58,13 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 		if (execve(args[0], args, envp) == -1)
 			perror("execve");
 	}
+	// printf("parent pid() = %d\n", getpid());
 	if (append_pid(exec, pid) != OK)
 			return (ERROR);
 	return (OK);
 }
 
+// Чистить args и env_array надо всегда, вроде бы
 int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	char	**env_array;
@@ -80,11 +82,9 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 		clear_array(args, ALL_ARRAY);
 		return(ERROR_MALLOC);
 	}
-	if (execute_other_command(exec, args, env_array) == ERROR)
-	{
-		clear_array(args, ALL_ARRAY);
-		clear_array(env_array, ALL_ARRAY);
-	}
+	execute_other_command(exec, args, env_array);
+	free_arr(args);
+	free_arr(env_array);
 	return (OUT);
 }
 

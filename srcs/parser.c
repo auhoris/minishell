@@ -29,10 +29,10 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 	return (parser);
 }
 
-int	handle_error(t_parser *parser)
+static int	handle_error(t_parser *parser)
 {
 	destroy_token(parser->prev_token);
-	return (ERROR);
+	return (ERROR_PARSER);
 }
 
 int	error_with_msg(t_parser *parser, char *msg, char *token)

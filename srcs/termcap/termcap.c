@@ -132,37 +132,6 @@ static int	wait_pids(t_exec *exec)
 	return (OK);
 }
 
-void	free_lexer(t_lexer *lexer)
-{
-	free(lexer->content);
-	free(lexer);
-}
-
-void	free_parser(void *parser)
-{
-	free_lexer(((t_parser *)parser)->lexer);
-	destroy_token(((t_parser *)parser)->cur_tok);
-	free(parser);
-}
-
-void	free_root_parser(void *root)
-{
-	free_nodes(((t_ast *)root));
-}
-
-void	free_exec(void *exec)
-{
-	free(((t_exec *)exec)->pids);
-	free_nodes(((t_exec *)exec)->root);
-	free(exec);
-}
-
-int	free_unique(int code, void *content, void(*del)(void *))
-{
-	(*del)(content);
-	return (code);
-}
-
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
@@ -188,7 +157,9 @@ static int	start_parsing(t_data_processing *data_processing)
 	data_processing->size_pids = exec->size_pids;
 	data_processing->flag_echo = exec->flag_echo;
 	wait_pids(exec);
+	// printf("exec.exit_status = %d\n", exec->exit_status);
 	free_exec(exec);
+	// exit(1);
 	// printf("out = %d\n", out);
 	return (out);
 }
