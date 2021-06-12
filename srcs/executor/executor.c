@@ -3,6 +3,7 @@
 #include "../includes/env.h"
 #include "executor.h"
 #include <stdio.h>
+#include <sys/_types/_size_t.h>
 #include <unistd.h>
 
 t_exec	*init_exec(t_ast *root)
@@ -23,6 +24,8 @@ t_exec	*init_exec(t_ast *root)
 	exec->r_or_w = -1;
 	exec->pids = NULL;
 	exec->size_pids = 0;
+	exec->fd_arr = NULL;
+	exec->fd_size = 0;
 	return (exec);
 }
 
@@ -87,6 +90,29 @@ int	restore_std(t_exec *exec, t_ast *node)
 	return (OK);
 }
 
+static int	append_fd(t_exec *exec, int fd[])
+{
+	if (exec->fd_size == 0)
+	{
+		exec->fd_arr = ft_calloc(1, sizeof(t_fd));
+		if (exec->fd_arr == NULL)
+			return (ERROR_MALLOC);
+		exec->fd_arr[exec->fd_size].in = fd[0];
+		exec->fd_arr[exec->fd_size].out = fd[1];
+		exec->fd_size++;
+	}
+	else
+	{
+		exec->fd_size++;
+		exec->fd_arr = ft_realloc(exec->fd_arr, exec->fd_size * sizeof(t_fd), (exec->fd_size - 1) * sizeof(t_fd));
+		if (exec->fd_arr == NULL)
+			return (ERROR_MALLOC);
+		exec->fd_arr[exec->fd_size - 1].in = fd[0];
+		exec->fd_arr[exec->fd_size - 1].out = fd[1];
+	}
+	return (OK);
+}
+
 static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
@@ -96,12 +122,14 @@ static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 		perror("");
 		return (ERROR);
 	}
+	append_fd(exec, exec->fd);
 	exec->r_or_w = 1;
 	out = detour_tree(exec, node->table_value[0], env);
 	exec->r_or_w = 0;
 	out = detour_tree(exec, node->table_value[1], env);
 	close(exec->fd[1]);
 	close(exec->fd[0]);
+	// printf("\n------------------------------------------------\n");
 	exec->r_or_w = -1;
 	return (out);
 }
