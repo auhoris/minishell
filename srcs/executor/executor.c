@@ -49,18 +49,11 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 int	check_redirection(t_exec *exec, t_ast *node)
 {
 	if (exec->r_or_w == 1)
-	{
-		exec->tempout = dup(STDOUT_FILENO);
 		dup2(exec->fd[1], STDOUT_FILENO);
-	}
 	if (exec->r_or_w == 0)
-	{
-		exec->tempin = dup(STDIN_FILENO);
 		dup2(exec->fd[0], STDIN_FILENO);
-	}
 	if (node->fd_in != STDIN_FILENO)
 	{
-		printf("asd a dsljas djasnd ajndl j\n");
 		exec->tempin = dup(STDIN_FILENO);
 		dup2(node->fd_in, STDIN_FILENO);
 		close(node->fd_in);
@@ -76,7 +69,7 @@ int	check_redirection(t_exec *exec, t_ast *node)
 
 int	restore_std(t_exec *exec, t_ast *node)
 {
-	(void)node;
+	/* (void)node;
 	if (exec->tempin != -1)
 	{
 		dup2(exec->tempin, STDIN_FILENO);
@@ -86,8 +79,8 @@ int	restore_std(t_exec *exec, t_ast *node)
 	{
 		dup2(exec->tempout, STDOUT_FILENO);
 		close(exec->tempout);
-	}
-	/* if (exec->fd[0] != -1)
+	} */
+	if (exec->fd[0] != -1)
 	{
 		if (exec->r_or_w == 0)
 			dup2(exec->tempin, STDIN_FILENO);
@@ -105,7 +98,7 @@ int	restore_std(t_exec *exec, t_ast *node)
 	{
 		dup2(exec->tempout, STDOUT_FILENO);
 		close(exec->tempout);
-	} */
+	}
 	return (OK);
 }
 

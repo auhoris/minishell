@@ -51,6 +51,8 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 		else if (exec->r_or_w == 0)
 		{
 			dup2(exec->fd[0], STDIN_FILENO);
+			printf("exec->fd[0] = %d\n", exec->fd[0]);
+			printf("STDIN_FILENO = %d\n", STDIN_FILENO);
 			close(exec->fd[1]);
 			close(exec->fd[0]);
 		}

@@ -58,11 +58,6 @@ int	parser_next_token(t_parser *parser)
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 		i = 0;
-	/* if (type == TOKEN_SEMI && i == 0)
-	{
-		printf("here1\n");
-		return (error_with_msg(parser, MSG, parser->cur_tok->value));
-	} */
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
 		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
@@ -77,25 +72,3 @@ int	parser_next_token(t_parser *parser)
 	destroy_token(parser->prev_token);
 	return (type);
 }
-
-//Пока бесполезняк
-/* t_ast	*parser_parse_variable_definition(t_parser *parser)
-{
-	t_ast	*vardef;
-
-	vardef = init_node(NODE_VARDEF);
-	if (vardef == NULL)
-		return (NULL);
-	printf("prev %s\n", parser->prev_token->value);
-	printf("curr %s\n", parser->cur_tok->value);
-	vardef->var_name = ft_strdup(parser->prev_token->value);
-	if (vardef->var_name == NULL)
-		return (NULL);
-	printf("%s\n", vardef->var_name);
-	printf("%s\n", vardef->var_value);
-	parser_next_token(parser);
-	vardef->var_value = ft_strdup(parser->cur_tok->value);
-	if (vardef->var_value == NULL)
-		return (NULL);
-	return (vardef);
-} */
