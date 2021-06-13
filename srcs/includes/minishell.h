@@ -12,6 +12,12 @@
 # define TRUE 1
 # define FALSE 0
 
+typedef struct s_fd
+{
+	int	in;
+	int	out;
+}		t_fd;
+
 typedef struct s_exec
 {
 	t_ast	*root;
@@ -27,6 +33,8 @@ typedef struct s_exec
 	int		*pids;
 	int		flag_echo;
 	size_t	size_pids;
+	t_fd	*fd_arr;
+	size_t	fd_size;
 }			t_exec;
 
 t_exec	*init_exec(t_ast *root);

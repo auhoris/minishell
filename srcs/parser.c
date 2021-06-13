@@ -56,8 +56,11 @@ int	parser_next_token(t_parser *parser)
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 		i = 0;
-	if (type == TOKEN_PIPE && i == 0)
+	/* if (type == TOKEN_SEMI && i == 0)
+	{
+		printf("here1\n");
 		return (error_with_msg(parser, MSG, parser->cur_tok->value));
+	} */
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
 		return (error_with_msg(parser, MSG, parser->prev_token->value));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
