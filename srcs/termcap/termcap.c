@@ -101,12 +101,12 @@ int		check_parser(t_parser *paser)
 	type = paser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 	{
-		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'\n", STDERR_FILENO);
 		return (ERROR_PARSER);
 	}
 	if (type == TOKEN_PIPE)
 	{
-		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'\n", STDERR_FILENO);
 		return (ERROR_PARSER);
 	}
 	return (OK);
@@ -135,14 +135,10 @@ static int	wait_pids(t_exec *exec)
 	int		temp;
 
 	i = 0;
-	/* printf("stdout = %d\n", STDOUT_FILENO);
-	printf("stdin = %d\n", STDIN_FILENO); */
 	show_fd_arr(exec);
 	if (exec->size_pids == 0)
 		return (OK);
 	write(STDIN_FILENO, "\n", 1);
-	/* printf("exec->fd[0] = %d\n", exec->fd[0]);
-	printf("exec->fd[1] = %d\n", exec->fd[1]); */
 	while (i < exec->size_pids)
 	{
 		temp = waitpid(exec->pids[i], &waiting, 0);
@@ -162,13 +158,15 @@ static int	start_parsing(t_data_processing *data_processing)
 	t_ast		*root;
 	int			out;
 	t_exec		*exec;
+	int			check;
 
 	out = OUT;
 	root = NULL;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	parser = init_parser(lexer, data_processing->env);
-	if (check_parser(parser) != OK)
-		return (free_unique(check_parser(parser), parser, free_parser));
+	check = check_parser(parser);
+	if (check != OK)
+		return (free_unique(check, parser, free_parser));
 	root = parser_parse_commands(parser);
 	free_parser(parser);
 	if (root->err_handler != OK)

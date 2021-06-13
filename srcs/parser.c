@@ -62,27 +62,15 @@ int	parser_next_token(t_parser *parser)
 		return (error_with_msg(parser, MSG, parser->cur_tok->value));
 	} */
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
-	{
-		printf("here2\n");
 		return (error_with_msg(parser, MSG, parser->prev_token->value));
-	}
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
-	{
-		printf("here3\n");
 		return (error_with_msg(parser, MSG, parser->prev_token->value));
-	}
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
-	{
-		printf("here4\n");
 		return (error_with_msg(parser, MSG, parser->prev_token->value));
-	}
 	else if ((prev_type == TOKEN_LESS
 			|| prev_type == TOKEN_MORE
 			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
-	{
-		printf("here5\n");
 		return (error_with_msg(parser, MSG, "newline"));
-	}
 	i++;
 	destroy_token(parser->prev_token);
 	return (type);
