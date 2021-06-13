@@ -31,7 +31,7 @@ void	error_processing(t_env_list *env,
 		t_data_processing *data_processing, int error_code)
 {
 	// printf("\n%d\n", error_code);
-	if (error_code != OUT && error_code != ERROR_BAD_COMMAND)
+	if (error_code != OUT && error_code != ERROR_BAD_COMMAND && error_code != ERROR_PARSER)
 	{
 		if (error_code == ERROR_EXIT)
 			execution_exit(env, data_processing);

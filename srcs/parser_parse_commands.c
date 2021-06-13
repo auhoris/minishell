@@ -11,17 +11,17 @@ static t_ast	*parser_parse_simple_command(t_parser *parser)
 
 	node = init_node(NODE_SIMPLECOMMAND);
 	if (node == NULL)
-		return (ast_error_handler(node));
+		return (ast_error_handler(node, ERROR_MALLOC));
 	node->cmd_name = parser_get_args(parser);
 	if (node->cmd_name == NULL)
-		return (ast_error_handler(node));
+		return (ast_error_handler(node, ERROR_MALLOC));
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)
 	{
 		parser_parse_agruments(node, parser);
-		if (node->err_handler == ERROR)
-			return (ast_error_handler(node));
+		if (node->err_handler != OK)
+			return (ast_error_handler(node, node->err_handler));
 	}
 	return (node);
 }
@@ -32,16 +32,16 @@ t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 
 	pipe_node = init_node(NODE_PIPE);
 	if (pipe_node == NULL)
-		return (ast_error_handler(pipe_node));
+		return (ast_error_handler(pipe_node, ERROR_MALLOC));
 	pipe_node->table_value = ft_calloc(2, sizeof(t_ast *));
 	if (pipe_node->table_value == NULL)
-		return (ast_error_handler(pipe_node));
+		return (ast_error_handler(pipe_node, ERROR_MALLOC));
 	pipe_node->table_value[0] = left_node;
-	if (parser_next_token(parser) == ERROR)
-		return (ast_error_handler(pipe_node));
+	if (parser_next_token(parser) == ERROR_PARSER)
+		return (ast_error_handler(pipe_node, ERROR_PARSER));
 	pipe_node->table_value[1] = parser_parse_command(parser);
 	if (pipe_node->table_value[1]->err_handler != OK)
-		return (ast_error_handler(pipe_node));
+		return (ast_error_handler(pipe_node, pipe_node->table_value[1]->err_handler));
 	return (pipe_node);
 }
 
@@ -57,7 +57,7 @@ t_ast	*parser_parse_command(t_parser *parser)
 			return (parser_parse_pipe(node, parser));
 		node = parser_parse_simple_command(parser);
 		if (node->err_handler != OK)
-			return (ast_error_handler(node));
+			return (ast_error_handler(node, node->err_handler));
 	}
 	return (node);
 }
@@ -89,20 +89,24 @@ t_ast	*parser_parse_commands(t_parser *parser)
 		return (NULL);
 	node->table_value = ft_calloc(1, sizeof(t_ast *));
 	if (node->table_value == NULL)
-		return (ast_error_handler(node));
+		return (ast_error_handler(node, ERROR_MALLOC));
 	node->table_size++;
 	node->table_value[node->table_size - 1] = parser_parse_command(parser);
 	if (node->table_value[node->table_size - 1]->err_handler != OK)
-		return (ast_error_handler(node));
+		return (ast_error_handler(node, node->table_value[node->table_size - 1]->err_handler));
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
-		if (parser_next_token(parser) == ERROR)
-			return (ast_error_handler(node));
+		if (parser_next_token(parser) == ERROR_PARSER)
+			return (ast_error_handler(node, ERROR_PARSER));
+		if (parser->cur_tok->e_type == TOKEN_EOF)
+			break;
 		simple_node = parser_parse_command(parser);
-		if (simple_node == NULL || simple_node->err_handler != OK)
-			return (ast_error_handler(node));
-		if (make_table_value(node, simple_node) == ERROR)
-			return (ast_error_handler(node));
+		if (simple_node == NULL)
+			return (ast_error_handler(node, ERROR_MALLOC));
+		if (simple_node->err_handler != OK)
+			return (ast_error_handler(node, node->err_handler));
+		if (make_table_value(node, simple_node) != OK)
+			return (ast_error_handler(node, ERROR_MALLOC));
 	}
 	return (node);
 }

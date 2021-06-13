@@ -14,7 +14,6 @@
 # include "ast.h"
 
 //Erros
-# define ERROR_PARSER 1
 
 typedef struct s_parser
 {

@@ -13,5 +13,6 @@
 # define ERROR -3
 # define OK 0
 # define ERROR_NOT_FOUND 127
+# define ERROR_PARSER -7
 
 #endif
