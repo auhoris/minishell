@@ -49,6 +49,8 @@ void	free_simplecommand(t_ast *node)
 
 void	free_nodes(t_ast *node)
 {
+	if (node == NULL)
+		return ;
 	if (node->e_nodetype == NODE_ROOT)
 		free_root(node);
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
