@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 
 static int	append_pid(t_exec *exec, int pid)
 {
@@ -70,7 +71,9 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	char	**env_array;
 	char	**args;
 	int		error;
+	// int		fd;
 
+	// fd = open(node->cmd_name, )
 	args = create_args(node, &error);
 	if (args == NULL && error == ERROR_BAD_COMMAND)
 		return (ERROR_BAD_COMMAND);
