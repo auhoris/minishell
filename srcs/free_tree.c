@@ -22,8 +22,10 @@ void	free_pipe(t_ast *node)
 {
 	if (node == NULL)
 		return ;
-	free_nodes(node->table_value[0]);
-	free_nodes(node->table_value[1]);
+	if (node->table_value[0])
+		free_nodes(node->table_value[0]);
+	if (node->table_value[1])
+		free_nodes(node->table_value[1]);
 	free(node->table_value);
 	free(node);
 }
@@ -47,6 +49,8 @@ void	free_simplecommand(t_ast *node)
 
 void	free_nodes(t_ast *node)
 {
+	if (node == NULL)
+		return;
 	if (node->e_nodetype == NODE_ROOT)
 		free_root(node);
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
