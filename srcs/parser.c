@@ -29,16 +29,16 @@ t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 	return (parser);
 }
 
-static int	handle_error(t_parser *parser)
+static int	handle_error(t_parser *parser, int code)
 {
 	destroy_token(parser->prev_token);
-	return (ERROR_PARSER);
+	return (code);
 }
 
-int	error_with_msg(t_parser *parser, char *msg, char *token)
+int	error_with_msg(t_parser *parser, char *msg, char *token, int code)
 {
 	handle_error_msg(msg, token);
-	return (handle_error(parser));
+	return (handle_error(parser, code));
 }
 
 // Разобраться с кейсом echo ; ; / echo | | и тому подобное
@@ -50,8 +50,10 @@ int	parser_next_token(t_parser *parser)
 
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
-	if (parser->cur_tok == NULL || parser->cur_tok->e_type == BAD_TOKEN)
-		return (handle_error(parser));
+	if (parser->cur_tok == NULL)
+		return (handle_error(parser, ERROR_MALLOC));
+	if (parser->cur_tok->e_type == BAD_TOKEN)
+		return (handle_error(parser, ERROR_PARSER));
 	prev_type = parser->prev_token->e_type;
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
@@ -62,15 +64,15 @@ int	parser_next_token(t_parser *parser)
 		return (error_with_msg(parser, MSG, parser->cur_tok->value));
 	} */
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
-		return (error_with_msg(parser, MSG, parser->prev_token->value));
+		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
-		return (error_with_msg(parser, MSG, parser->prev_token->value));
+		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
-		return (error_with_msg(parser, MSG, parser->prev_token->value));
+		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	else if ((prev_type == TOKEN_LESS
 			|| prev_type == TOKEN_MORE
 			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
-		return (error_with_msg(parser, MSG, "newline"));
+		return (error_with_msg(parser, MSG, "newline", ERROR_PARSER));
 	i++;
 	destroy_token(parser->prev_token);
 	return (type);

@@ -4,6 +4,7 @@
 #include "executor.h"
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 
 void	execution_echo(t_exec *exec, t_ast *node)
 {
@@ -12,6 +13,11 @@ void	execution_echo(t_exec *exec, t_ast *node)
 
 	n_flag = 0;
 	i = 0;
+	if (node->argv == NULL)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		return ;
+	}
 	if (ft_strcmp(node->argv[0], "-n") == 0)
 	{
 		i++;

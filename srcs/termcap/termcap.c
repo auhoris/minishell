@@ -135,7 +135,7 @@ static int	wait_pids(t_exec *exec)
 	int		temp;
 
 	i = 0;
-	show_fd_arr(exec);
+	// show_fd_arr(exec);
 	if (exec->size_pids == 0)
 		return (OK);
 	write(STDIN_FILENO, "\n", 1);
@@ -175,11 +175,8 @@ static int	start_parsing(t_data_processing *data_processing)
 	if (exec == NULL)
 		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
-	// printf("\nHERE\n");
 	data_processing->size_pids = exec->size_pids;
 	data_processing->flag_echo = exec->flag_echo;
-	/* printf("\nout = %d\n", out);
-	printf("dsa = %d\n", root->err_handler); */
 	wait_pids(exec);
 	free_exec(exec);
 	return (out);

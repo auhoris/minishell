@@ -150,6 +150,7 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 		else if (lexer->c == '\\'
 			&& lexer_peek(lexer, 1) != '\''
 			&& lexer_peek(lexer, 1) != ';'
+			&& lexer_peek(lexer, 1) != '|'
 			&& ft_inset(SPECIAL, lexer_peek(lexer, 1)))
 			lexer_advance(lexer);
 		string = connect_str(string, lexer_chtostr(lexer->c));
