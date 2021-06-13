@@ -44,20 +44,12 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	{
 		if (exec->r_or_w == 1)
 		{
-			// printf("first\n");
-			/* dup2(exec->fd_arr[i].out, STDOUT_FILENO);
-			close(exec->fd_arr[i].out);
-			close(exec->fd_arr[i].in); */
 			dup2(exec->fd[1], STDOUT_FILENO);
 			close(exec->fd[1]);
 			close(exec->fd[0]);
 		}
 		else if (exec->r_or_w == 0)
 		{
-			// printf("second\n");
-			/* dup2(exec->fd_arr[i].in, STDIN_FILENO);
-			close(exec->fd_arr[i].out);
-			close(exec->fd_arr[i].in); */
 			dup2(exec->fd[0], STDIN_FILENO);
 			close(exec->fd[1]);
 			close(exec->fd[0]);

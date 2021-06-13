@@ -51,15 +51,16 @@ int	check_redirection(t_exec *exec, t_ast *node)
 	if (exec->r_or_w == 1)
 	{
 		exec->tempout = dup(STDOUT_FILENO);
-		// dup2(exec->fd[1], STDOUT_FILENO);
+		dup2(exec->fd[1], STDOUT_FILENO);
 	}
 	if (exec->r_or_w == 0)
 	{
 		exec->tempin = dup(STDIN_FILENO);
-		// dup2(exec->fd[0], STDIN_FILENO);
+		dup2(exec->fd[0], STDIN_FILENO);
 	}
 	if (node->fd_in != STDIN_FILENO)
 	{
+		printf("asd a dsljas djasnd ajndl j\n");
 		exec->tempin = dup(STDIN_FILENO);
 		dup2(node->fd_in, STDIN_FILENO);
 		close(node->fd_in);
@@ -129,8 +130,8 @@ int	restore_std(t_exec *exec, t_ast *node)
 		exec->fd_arr[exec->fd_size - 1].out = fd[1];
 	}
 	return (OK);
-} */
-
+}
+ */
 static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
@@ -158,8 +159,8 @@ static int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 	check_redirection(exec, node);
 	out = check_builtin(exec, node, env);
 	restore_std(exec, node);
-	/* close(exec->tempout);
-	close(exec->tempin); */
+	close(exec->tempout);
+	close(exec->tempin);
 	return (out);
 }
 
