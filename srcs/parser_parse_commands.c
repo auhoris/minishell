@@ -38,7 +38,10 @@ t_ast	*parser_parse_pipe(t_ast *left_node, t_parser *parser)
 		return (ast_error_handler(pipe_node));
 	pipe_node->table_value[0] = left_node;
 	if (parser_next_token(parser) == ERROR)
+	{
+		printf("HERE!!!!!!!!!!\n");
 		return (ast_error_handler(pipe_node));
+	}
 	pipe_node->table_value[1] = parser_parse_command(parser);
 	if (pipe_node->table_value[1]->err_handler != OK)
 		return (ast_error_handler(pipe_node));

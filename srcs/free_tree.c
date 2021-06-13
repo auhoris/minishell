@@ -22,8 +22,10 @@ void	free_pipe(t_ast *node)
 {
 	if (node == NULL)
 		return ;
-	free_nodes(node->table_value[0]);
-	free_nodes(node->table_value[1]);
+	if (node->table_value[0])
+		free_nodes(node->table_value[0]);
+	if (node->table_value[1])
+		free_nodes(node->table_value[1]);
 	free(node->table_value);
 	free(node);
 }
