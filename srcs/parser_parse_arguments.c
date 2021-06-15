@@ -90,7 +90,7 @@ static void	check_fd(t_ast *node, int type)
 		if (node->fd_out != STDOUT_FILENO)
 			close(node->fd_out);
 	}
-	else
+	else if (type == TOKEN_LESS)
 	{
 		if (node->fd_in != STDIN_FILENO)
 			close(node->fd_in);
