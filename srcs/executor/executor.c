@@ -46,15 +46,54 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 	return (out);
 }
 
+int	check_redirection(t_exec *exec, t_ast *node)
+{
+	exec->tempin = dup(STDIN_FILENO);
+	exec->tempout = dup(STDOUT_FILENO);
+	if (exec->piperead != STDIN_FILENO)
+		dup2(exec->piperead, STDIN_FILENO);
+	if (exec->pipewrite != STDOUT_FILENO)
+		dup2(exec->pipewrite, STDOUT_FILENO);
+	if (node->fd_in != STDIN_FILENO)
+	{
+		dup2(node->fd_in, STDIN_FILENO);
+		close(node->fd_in);
+	}
+	if (node->fd_out != STDOUT_FILENO)
+	{
+		dup2(node->fd_out, STDOUT_FILENO);
+		close(node->fd_out);
+	}
+	return (OK);
+}
+
+int	restore_std(t_exec *exec, t_ast *node)
+{
+	if (exec->piperead != STDIN_FILENO)
+		dup2(exec->tempin, STDIN_FILENO);
+	if (exec->pipewrite != STDOUT_FILENO)
+		dup2(exec->tempout, STDOUT_FILENO);
+	if (node->fd_in != STDIN_FILENO)
+	{
+		dup2(exec->tempin, STDIN_FILENO);
+		close(exec->tempin);
+	}
+	if (node->fd_out != STDOUT_FILENO)
+	{
+		dup2(exec->tempout, STDOUT_FILENO);
+		close(exec->tempout);
+	}
+	return (OK);
+}
 static int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
 
-	// check_redirection(exec, node);
+	check_redirection(exec, node);
 	out = check_builtin(exec, node, env);
-	/* restore_std(exec, node);
+	restore_std(exec, node);
 	close(exec->tempout);
-	close(exec->tempin); */
+	close(exec->tempin);
 	return (out);
 }
 
@@ -104,47 +143,3 @@ int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 	return (out);
 }
 
-int	check_redirection(t_exec *exec, t_ast *node)
-{
-	exec->tempin = dup(STDIN_FILENO);
-	exec->tempout = dup(STDOUT_FILENO);
-	/* if (exec->r_or_w == 1)
-		dup2(exec->fd[1], STDOUT_FILENO);
-	if (exec->r_or_w == 0)
-		dup2(exec->fd[0], STDIN_FILENO); */
-	if (node->fd_in != STDIN_FILENO)
-	{
-		dup2(node->fd_in, STDIN_FILENO);
-		close(node->fd_in);
-	}
-	if (node->fd_out != STDOUT_FILENO)
-	{
-		dup2(node->fd_out, STDOUT_FILENO);
-		close(node->fd_out);
-	}
-	return (OK);
-}
-
-int	restore_std(t_exec *exec, t_ast *node)
-{
-	/* if (exec->fd[0] != -1)
-	{
-		if (exec->r_or_w == 0)
-			dup2(exec->tempin, STDIN_FILENO);
-		close(exec->tempin);
-		if (exec->r_or_w == 1)
-			dup2(exec->tempout, STDOUT_FILENO);
-		close(exec->tempout);
-	} */
-	if (node->fd_in != STDIN_FILENO)
-	{
-		dup2(exec->tempin, STDIN_FILENO);
-		close(exec->tempin);
-	}
-	if (node->fd_out != STDOUT_FILENO)
-	{
-		dup2(exec->tempout, STDOUT_FILENO);
-		close(exec->tempout);
-	}
-	return (OK);
-}
