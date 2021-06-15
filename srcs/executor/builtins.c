@@ -31,8 +31,7 @@ static int	append_pid(t_exec *exec, int pid)
 
 static int	execute_other_command(t_exec *exec, char **args, char **envp)
 {
-	int	pid;
-	static int	i;
+	int			pid;
 
 	pid = fork();
 	if (pid == -1)
@@ -42,26 +41,15 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	}
 	if (pid == 0)
 	{
-		if (exec->r_or_w == 1)
-		{
-			dup2(exec->fd[1], STDOUT_FILENO);
-			close(exec->fd[1]);
-			close(exec->fd[0]);
-		}
-		else if (exec->r_or_w == 0)
-		{
-			dup2(exec->fd[0], STDIN_FILENO);
-			printf("exec->fd[0] = %d\n", exec->fd[0]);
-			printf("STDIN_FILENO = %d\n", STDIN_FILENO);
-			close(exec->fd[1]);
-			close(exec->fd[0]);
-		}
-		close(exec->tempout);
-		close(exec->tempin);
+		dup2(exec->piperead, STDIN_FILENO);
+		dup2(exec->pipewrite, STDOUT_FILENO);
+		if (exec->piperead != STDIN_FILENO)
+			close(exec->piperead);
+		if (exec->pipewrite != STDOUT_FILENO)
+			close(exec->pipewrite);
 		if (execve(args[0], args, envp) == -1)
 			perror("execve");
 	}
-	i++;
 	if (append_pid(exec, pid) != OK)
 			return (ERROR);
 	return (OK);
@@ -96,6 +84,8 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
+	if (node->cmd_name == NULL)
+		return out;
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
 		execution_echo(exec, node);
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)

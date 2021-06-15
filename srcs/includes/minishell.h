@@ -12,12 +12,6 @@
 # define TRUE 1
 # define FALSE 0
 
-typedef struct s_fd
-{
-	int	in;
-	int	out;
-}		t_fd;
-
 typedef struct s_exec
 {
 	t_ast	*root;
@@ -28,16 +22,19 @@ typedef struct s_exec
 	int		tempin;
 	int		tempout;
 	int		exit_status;
-	int		fd[2];
 	int		r_or_w;
 	int		*pids;
-	int		flag_echo;
 	size_t	size_pids;
-	t_fd	*fd_arr;
-	size_t	fd_size;
+	int		flag_echo;
+	int		piperead;
+	int		pipewrite;
+	/* int		*fds;
+	size_t	fd_curr_size;
+	size_t	fd_iter;
+	size_t	itfd; */
 }			t_exec;
 
-t_exec	*init_exec(t_ast *root);
+t_exec	*init_exec(t_ast *root, size_t pipes);
 int		termcap(t_env_list *env);
 int		check_input_params(int argc, char **argv);
 int		detour_tree(t_exec *exec, t_ast *node, t_env_list *env);

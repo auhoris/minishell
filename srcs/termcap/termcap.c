@@ -113,20 +113,19 @@ int		check_parser(t_parser *paser)
 }
 
 
-void	show_fd_arr(t_exec *exec)
+/* void	show_fd_arr(t_exec *exec)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < exec->fd_size)
+	ft_putchar('\n');
+	while (i < exec->fd_curr_size)
 	{
-		printf("\nexec->fd_arr[i].in = %d\n", exec->fd_arr[i].in);
-		printf("exec->fd_arr[i].out = %d\n", exec->fd_arr[i].out);
-		close(exec->fd_arr[i].in);
-		close(exec->fd_arr[i].out);
+		// printf("exec->fds[%zu] = %d\n", i, exec->fds[i]);
+		close(exec->fds[i]);
 		i++;
 	}
-}
+} */
 
 static int	wait_pids(t_exec *exec)
 {
@@ -159,6 +158,7 @@ static int	start_parsing(t_data_processing *data_processing)
 	int			out;
 	t_exec		*exec;
 	int			check;
+	int			pipes;
 
 	out = OUT;
 	root = NULL;
@@ -168,10 +168,11 @@ static int	start_parsing(t_data_processing *data_processing)
 	if (check != OK)
 		return (free_unique(check, parser, free_parser));
 	root = parser_parse_commands(parser);
+	pipes = lexer->pipes;
 	free_parser(parser);
 	if (root->err_handler != OK)
 		return (free_unique(root->err_handler, root, free_root_parser));
-	exec = init_exec(root);
+	exec = init_exec(root, pipes);
 	if (exec == NULL)
 		return (free_unique(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
