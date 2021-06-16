@@ -20,7 +20,6 @@ t_lexer	*init_lexer(char *content)
 	lexer->current = 0;
 	lexer->c = lexer->content[lexer->current];
 	lexer->flag = FALSE;
-	lexer->pipes = 0;
 	return (lexer);
 }
 
@@ -60,7 +59,6 @@ t_token	*lexer_special_tokens(t_lexer *lexer)
 		return (lexer_advance_with(lexer,
 				init_token(TOKEN_EQUALS, lexer_chtostr(lexer->c), FALSE)));
 	}
-	lexer->pipes++;
 	return (lexer_advance_with(lexer,
 			init_token(TOKEN_PIPE, lexer_chtostr(lexer->c), FALSE)));
 }

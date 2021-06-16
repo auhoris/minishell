@@ -22,19 +22,15 @@ typedef struct s_exec
 	int		tempin;
 	int		tempout;
 	int		exit_status;
-	int		r_or_w;
+	int		is_redir;
 	int		*pids;
 	size_t	size_pids;
 	int		flag_echo;
 	int		piperead;
 	int		pipewrite;
-	/* int		*fds;
-	size_t	fd_curr_size;
-	size_t	fd_iter;
-	size_t	itfd; */
 }			t_exec;
 
-t_exec	*init_exec(t_ast *root, size_t pipes);
+t_exec	*init_exec(t_ast *root);
 int		termcap(t_env_list *env);
 int		check_input_params(int argc, char **argv);
 int		detour_tree(t_exec *exec, t_ast *node, t_env_list *env);
@@ -43,6 +39,6 @@ void	free_lexer(t_lexer *lexer);
 void	free_parser(void *parser);
 void	free_root_parser(void *root);
 void	free_exec(void *exec);
-int		free_unique(int code, void *content, void(*del)(void *));
+int		free_any(int code, void *content, void(*del)(void *));
 
 #endif /* ifndef MINISHELL_H */

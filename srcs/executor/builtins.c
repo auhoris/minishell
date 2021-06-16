@@ -41,12 +41,17 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	}
 	if (pid == 0)
 	{
-		dup2(exec->piperead, STDIN_FILENO);
-		dup2(exec->pipewrite, STDOUT_FILENO);
-		if (exec->piperead != STDIN_FILENO)
-			close(exec->piperead);
-		if (exec->pipewrite != STDOUT_FILENO)
-			close(exec->pipewrite);
+		if (!exec->is_redir)
+		{
+			dup2(exec->piperead, STDIN_FILENO);
+			dup2(exec->pipewrite, STDOUT_FILENO);
+			if (exec->piperead != STDIN_FILENO)
+				close(exec->piperead);
+			if (exec->pipewrite != STDOUT_FILENO)
+				close(exec->pipewrite);
+		}
+		close(exec->tempin);
+		close(exec->tempout);
 		if (execve(args[0], args, envp) == -1)
 			perror("execve");
 	}

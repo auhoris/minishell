@@ -26,7 +26,7 @@ void	free_exec(void *exec)
 	free(exec);
 }
 
-int	free_unique(int code, void *content, void(*del)(void *))
+int	free_any(int code, void *content, void(*del)(void *))
 {
 	(*del)(content);
 	return (code);
