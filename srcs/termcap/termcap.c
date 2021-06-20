@@ -12,7 +12,7 @@
 #include "../includes/env.h"
 #include "../executor/executor.h"
 
-static int		get_term_param(struct termios *term)
+static int	get_term_param(struct termios *term)
 {
 	char	*term_name;
 	int		out;
@@ -36,7 +36,6 @@ static int		get_term_param(struct termios *term)
 	term->c_lflag &= ~(ECHO);
 	term->c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, term);
-
 /*
 	tgetent
 	Вернет строку с описанием используемого терминала

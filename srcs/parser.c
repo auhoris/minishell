@@ -59,11 +59,14 @@ int	parser_next_token(t_parser *parser)
 	if (type == TOKEN_SEMI)
 		i = 0;
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
-		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+		return (error_with_msg(parser, MSG,
+				parser->prev_token->value, ERROR_PARSER));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
-		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+		return (error_with_msg(parser, MSG,
+				parser->prev_token->value, ERROR_PARSER));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
-		return (error_with_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+		return (error_with_msg(parser, MSG,
+				parser->prev_token->value, ERROR_PARSER));
 	else if ((prev_type == TOKEN_LESS
 			|| prev_type == TOKEN_MORE
 			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)

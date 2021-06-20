@@ -14,7 +14,9 @@ void	execution_echo(t_exec *exec, t_ast *node);
 int		execution_cd(t_ast *node, t_env_list *env);
 int		execution_pwd(t_env_list *env);
 int		execution_export(t_ast *node, t_env_list *env);
-int 	execution_unset(t_ast *node, t_env_list **env);
+int		execution_unset(t_ast *node, t_env_list **env);
+int		executor_pipe(t_exec *exec, t_ast *node, t_env_list *env);
+int		executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env);
 int		unset_env_elem(t_env_list **env, char *key);
 int		execution_env(t_ast *node, t_env_list *env);
 char	**create_args(t_ast *node, int *error);
@@ -22,5 +24,7 @@ char	**create_env(t_env_list *env);
 void	free_arr(char **arr);
 void	clear_array(char **args, int index);
 char	*search_bin(char *command);
+int		set_redirection(t_exec *exec, t_ast *node);
+int		restore_std(t_exec *exec, t_ast *node);
 
 #endif

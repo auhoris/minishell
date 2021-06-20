@@ -35,10 +35,7 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
 		return (ERROR);
-	}
 	if (pid == 0)
 	{
 		if (!exec->is_redir)
@@ -56,7 +53,7 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 			perror("execve");
 	}
 	if (append_pid(exec, pid) != OK)
-			return (ERROR);
+		return (ERROR);
 	return (OK);
 }
 
@@ -76,7 +73,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	if (env_array == NULL)
 	{
 		clear_array(args, ALL_ARRAY);
-		return(ERROR_MALLOC);
+		return (ERROR_MALLOC);
 	}
 	execute_other_command(exec, args, env_array);
 	free_arr(args);
@@ -90,7 +87,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 
 	out = OUT;
 	if (node->cmd_name == NULL)
-		return out;
+		return (out);
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
 		execution_echo(exec, node);
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)

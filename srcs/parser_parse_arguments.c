@@ -20,7 +20,8 @@ static char	*make_argument(char *str, t_parser *parser)
 		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
 			str = ft_strjoin(str, "$?");
 		else
-			str = ft_strjoin(str, get_value_by_key(parser->cur_tok->value, &parser->env));
+			str = ft_strjoin(str,
+					get_value_by_key(parser->cur_tok->value, &parser->env));
 	}
 	else
 		str = ft_strjoin(str, parser->cur_tok->value);
@@ -62,39 +63,6 @@ char	*parser_get_args(t_parser *parser)
 		return (NULL);
 	}
 	return (str);
-}
-
-static int	make_node_fd(char *filename, int type, t_ast *node)
-{
-	if (type == TOKEN_MORE || type == TOKEN_DMORE)
-	{
-		if (type == TOKEN_MORE)
-			node->fd_out = open(filename, O_CREAT | O_TRUNC | O_RDWR, S_IRWXU);
-		else
-			node->fd_out = open(filename, O_RDWR | O_CREAT | O_APPEND, S_IRWXU);
-	}
-	else
-		node->fd_in = open(filename, O_RDONLY);
-	if (node->fd_out == -1 || node->fd_in == -1)
-	{
-		perror(filename);
-		return (ERROR);
-	}
-	return (OK);
-}
-
-static void	check_fd(t_ast *node, int type)
-{
-	if (type == TOKEN_MORE || type == TOKEN_DMORE)
-	{
-		if (node->fd_out != STDOUT_FILENO)
-			close(node->fd_out);
-	}
-	else if (type == TOKEN_LESS)
-	{
-		if (node->fd_in != STDIN_FILENO)
-			close(node->fd_in);
-	}
 }
 
 static int	parser_parse_redirect(t_parser *parser, t_ast *node)

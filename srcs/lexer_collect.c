@@ -175,19 +175,3 @@ t_token	*lexer_collect_equals(t_lexer *lexer)
 	lexer_advance(lexer);
 	return (init_token(TOKEN_EQUALS, "="));
 } */
-
-/* t_token		*lexer_collect_flags(t_lexer *lexer)
-{
-	char	*value;
-
-	value = ft_strdup("");
-	if (value == NULL)
-		return (NULL);
-	lexer_advance(lexer);
-	while (lexer->c != SPACE && lexer->c != '\0')
-	{
-		value = connect_str(value, lexer_chtostr(lexer->c));
-		lexer_advance(lexer);
-	}
-	return (init_token(TOKEN_FLAG, value));
-} */

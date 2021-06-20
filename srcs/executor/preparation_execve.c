@@ -51,8 +51,8 @@ static void	bad_command(char *command)
 
 char	**create_args(t_ast *node, int *error)
 {
-	char	**args;
-	char	*bin;
+	char		**args;
+	char		*bin;
 	size_t		i;
 
 	args = (char **)malloc(sizeof(char *) * (node->argc + 2));
@@ -109,7 +109,7 @@ char	**create_env(t_env_list *env)
 		if (envp[len] == NULL)
 		{
 			clear_array(envp, len);
-			return(NULL);
+			return (NULL);
 		}
 		env = env->next;
 		len++;

@@ -6,7 +6,7 @@
 # include "ast.h"
 # include <stdio.h>
 # include <stdlib.h>
-#include <sys/_types/_size_t.h>
+# include <sys/_types/_size_t.h>
 
 //	Дефайны
 # define TRUE 1
@@ -15,10 +15,8 @@
 typedef struct s_exec
 {
 	t_ast	*root;
-	// Мб будет полезно
 	t_ast	*node;
 	int		curr_node_type;
-	//
 	int		tempin;
 	int		tempout;
 	int		exit_status;

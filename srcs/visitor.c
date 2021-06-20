@@ -1,4 +1,4 @@
-#include "includes/visitor.h"
+/* #include "includes/visitor.h"
 #include <sys/_types/_size_t.h>
 #include <unistd.h>
 
@@ -75,4 +75,4 @@ char	*print_node_type(int type)
 		case NODE_VARDEF: return ("NODE_VARDEF");
 		default: return ("Undefined node type");
 	}
-}
+} */
