@@ -13,12 +13,16 @@ void	execution_echo(t_exec *exec, t_ast *node)
 
 	n_flag = 0;
 	i = 0;
-	if (node->argv == NULL)
-		return ;
-	if (ft_strcmp(node->argv[i], "-n") == 0)
-		n_flag = ++i;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		write (exec->tempout, "\n", 1);
+	if (node->argv == NULL)
+	{
+		exec->flag_echo = 1;
+		ft_putchar('\n');
+		return ;
+	}
+	if (ft_strcmp(node->argv[i], "-n") == 0)
+		n_flag = ++i;
 	while (i < node->argc)
 	{
 		if (i != (size_t)n_flag)

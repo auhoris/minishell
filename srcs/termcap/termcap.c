@@ -190,7 +190,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		}
 		if (data_processing->size_pids != 0)
 			write(1, "<minishell>$ ", 13);
-		else if (data_processing->flag_echo == 0)
+		else if (out == OUT && data_processing->flag_echo == 0)
 			write(1, "\n<minishell>$ ", 14);
 		else
 			write(1, "<minishell>$ ", 14);
