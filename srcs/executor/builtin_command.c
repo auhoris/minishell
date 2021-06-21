@@ -13,15 +13,12 @@ void	execution_echo(t_exec *exec, t_ast *node)
 
 	n_flag = 0;
 	i = 0;
-	write(STDOUT_FILENO, "\n", 1);
 	if (node->argv == NULL)
 		return ;
-	if (ft_strcmp(node->argv[0], "-n") == 0)
-	{
-		i++;
-		n_flag = 1;
-	}
-	write (exec->tempout, "\n", 1);
+	if (ft_strcmp(node->argv[i], "-n") == 0)
+		n_flag = ++i;
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		write (exec->tempout, "\n", 1);
 	while (i < node->argc)
 	{
 		if (i != (size_t)n_flag)
@@ -32,7 +29,8 @@ void	execution_echo(t_exec *exec, t_ast *node)
 			ft_putstr(node->argv[i]);
 		i++;
 	}
-	exec->flag_echo = n_flag;
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		exec->flag_echo = n_flag;
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
