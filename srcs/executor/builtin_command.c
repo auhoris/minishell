@@ -43,13 +43,13 @@ int	execution_cd(t_ast *node, t_env_list *env)
 	if (set_old_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 		return (ERROR_MALLOC);
 	if (node->argv == NULL)
-		out = chdir("/Users/skitsch");
+		out = chdir(get_value_by_key("HOME", &env));
 	else
 		out = chdir(node->argv[0]);
 	ft_bzero(pwd_dir, 256);
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
-	if (out != 0)
+	if (out != 0 && node->argv != NULL)
 	{
 		write(1, "\nminishell: cd: ", 16);
 		write(1, node->argv[0], ft_strlen(node->argv[0]));
