@@ -36,5 +36,6 @@ size_t		lexer_count_quotes(char *str, char qt);
 t_token		*lexer_collect_equals(t_lexer *lexer);
 t_token		*lexer_collect_flags(t_lexer *lexer);
 int			seek_quote(char *str);
+t_token		*lexer_errors_handler(t_token *token);
 
 #endif /* ifndef LEXER_H */
