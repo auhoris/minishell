@@ -111,28 +111,6 @@ int		check_parser(t_parser *paser)
 	return (OK);
 }
 
-static int	wait_pids(t_exec *exec)
-{
-	size_t	i;
-	int		waiting;
-	int		temp;
-
-	i = 0;
-	if (exec->size_pids == 0)
-		return (OK);
-	write(STDIN_FILENO, "\n", 1);
-	while (i < exec->size_pids)
-	{
-		temp = waitpid(exec->pids[i], &waiting, 0);
-		if ((temp = WIFEXITED(waiting)))
-		{
-			exec->exit_status = WEXITSTATUS(waiting);
-		}
-		i++;
-	}
-	return (OK);
-}
-
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
@@ -159,7 +137,6 @@ static int	start_parsing(t_data_processing *data_processing)
 	out = detour_tree(exec, root, data_processing->env);
 	data_processing->size_pids = exec->size_pids;
 	data_processing->flag_echo = exec->flag_echo;
-	wait_pids(exec);
 	free_exec(exec);
 	return (out);
 }
@@ -184,7 +161,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			out = start_parsing(data_processing);
 			if (out != OUT && out != ERROR_BAD_COMMAND && out != ERROR_PARSER)
 			{
-				printf("ERRRERRRRRRRRRRRRRRr\n");
+				printf("\nERROR = %d\n", out);
 				return (out);
 			}
 		}

@@ -7,3 +7,4 @@ cycle.sh
 .vscode/settings.json
 test.c
 testing/
+tests/

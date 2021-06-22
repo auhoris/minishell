@@ -64,7 +64,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	char	**args;
 	int		error;
 
-	args = create_args(node, &error);
+	args = create_args(exec, node, &error);
 	if (args == NULL && error == ERROR_BAD_COMMAND)
 		return (ERROR_BAD_COMMAND);
 	else if (args == NULL && error == ERROR_MALLOC)

@@ -35,7 +35,7 @@ static int	handle_error(t_parser *parser, int code)
 	return (code);
 }
 
-int	error_with_msg(t_parser *parser, char *msg, char *token, int code)
+int	err_msg(t_parser *parser, char *msg, char *token, int code)
 {
 	handle_error_msg(msg, token);
 	return (handle_error(parser, code));
@@ -56,22 +56,24 @@ int	parser_next_token(t_parser *parser)
 		return (handle_error(parser, ERROR_PARSER));
 	prev_type = parser->prev_token->e_type;
 	type = parser->cur_tok->e_type;
+	if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
+		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	if (type == TOKEN_SEMI)
 		i = 0;
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
-		return (error_with_msg(parser, MSG,
-				parser->prev_token->value, ERROR_PARSER));
+		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
-		return (error_with_msg(parser, MSG,
-				parser->prev_token->value, ERROR_PARSER));
-	else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
-		return (error_with_msg(parser, MSG,
-				parser->prev_token->value, ERROR_PARSER));
-	else if ((prev_type == TOKEN_LESS
-			|| prev_type == TOKEN_MORE
+		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+	else if ((prev_type == TOKEN_LESS || prev_type == TOKEN_MORE
 			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
-		return (error_with_msg(parser, MSG, "newline", ERROR_PARSER));
+		return (err_msg(parser, MSG, "newline", ERROR_PARSER));
 	i++;
 	destroy_token(parser->prev_token);
 	return (type);
 }
+/* else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
+{
+	printf("here\n");
+	return (error_with_msg(parser, MSG,
+			parser->prev_token->value, ERROR_PARSER));
+} */

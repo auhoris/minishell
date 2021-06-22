@@ -6,6 +6,16 @@
 #include <string.h>
 #include <unistd.h>
 
+void	handle_echo_output(t_exec *exec, t_ast *node, size_t pos, size_t n_flag)
+{
+	if (pos != (size_t)n_flag)
+		ft_putchar(' ');
+	if (ft_strcmp(node->argv[pos], "$?") == 0)
+		ft_putstr(ft_itoa(exec->exit_status));
+	else
+		ft_putstr(node->argv[pos]);
+}
+
 void	execution_echo(t_exec *exec, t_ast *node)
 {
 	size_t	i;
@@ -17,22 +27,19 @@ void	execution_echo(t_exec *exec, t_ast *node)
 		write (exec->tempout, "\n", 1);
 	if (node->argv == NULL)
 	{
-		exec->flag_echo = 1;
-		ft_putchar('\n');
+		if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+			ft_putchar('\n');
 		return ;
 	}
-	if (ft_strcmp(node->argv[i], "-n") == 0)
+	else if (ft_strcmp(node->argv[i], "-n") == 0)
 		n_flag = ++i;
 	while (i < node->argc)
 	{
-		if (i != (size_t)n_flag)
-			write (1, " ", 1);
-		if (ft_strcmp(node->argv[i], "$?") == 0)
-			ft_putstr(ft_itoa(exec->exit_status));
-		else
-			ft_putstr(node->argv[i]);
+		handle_echo_output(exec, node, i, n_flag);
 		i++;
 	}
+	if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
+		ft_putchar('\n');
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		exec->flag_echo = n_flag;
 }

@@ -28,6 +28,30 @@ t_exec	*init_exec(t_ast *root)
 	return (exec);
 }
 
+static int	wait_pids(t_exec *exec, int cnt)
+{
+	size_t	i;
+	int		waiting;
+	int		temp;
+
+	i = 0;
+	if (exec->size_pids == 0)
+		return (OK);
+	// printf("exec.size_pids = %zu\n", exec->size_pids);
+	if (cnt == 0)
+		ft_putchar('\n');
+	while (i < exec->size_pids)
+	{
+		temp = waitpid(exec->pids[i], &waiting, 0);
+		if ((temp = WIFEXITED(waiting)))
+		{
+			exec->exit_status = WEXITSTATUS(waiting);
+		}
+		i++;
+	}
+	return (OK);
+}
+
 static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	size_t	i;
@@ -38,8 +62,7 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 	while (i < node->table_size)
 	{
 		out = detour_tree(exec, node->table_value[i], env);
-		if (out != OUT)
-			return (out);
+		wait_pids(exec, i);
 		i++;
 	}
 	return (out);
