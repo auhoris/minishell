@@ -14,8 +14,9 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 		node->fd_in = open(filename, O_RDONLY);
 	if (node->fd_out == -1 || node->fd_in == -1)
 	{
+		ft_putchar('\n');
 		perror(filename);
-		return (ERROR);
+		return (ERROR_PARSER);
 	}
 	return (OK);
 }

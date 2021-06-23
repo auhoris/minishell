@@ -10,7 +10,7 @@
 /* # define ERROR_PARSER -7
 # define ERROR_PIPE -8 */
 # define ERROR_BAD_COMMAND -9
-# define ERROR -3
+# define ERROR -10
 # define OK 0
 # define ERROR_NOT_FOUND 127
 # define ERROR_PARSER -7

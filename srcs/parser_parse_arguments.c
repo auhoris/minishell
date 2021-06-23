@@ -81,7 +81,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 		if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
 			return (ERROR_PARSER);
 		if (make_node_fd(parser->cur_tok->value, prev_type, node) != OK)
-			return (ERROR);
+			return (ERROR_PARSER);
 		prev_type = parser_next_token(parser);
 		if (prev_type == ERROR_PARSER)
 			return (ERROR_PARSER);
