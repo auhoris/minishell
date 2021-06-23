@@ -3,17 +3,14 @@
 #include "includes/utils.h"
 
 // Не понимаю зачем это нужно
-/* static int	handle_checking(t_lexer *lexer)
+static int	handle_checking(t_lexer *lexer)
 {
 	if (lexer->c == '\\' && lexer_peek(lexer, 1) != '\''
 		&& lexer_peek(lexer, 1) != ';' && lexer_peek(lexer, 1) != '|'
 		&& ft_inset(SPECIAL, lexer_peek(lexer, 1)))
-	{
-		printf("here\n");
 		return (1);
-	}
 	return (0);
-} */
+}
 
 static t_token	*handle_dollar_state(t_lexer *lexer, char *string)
 {
@@ -21,8 +18,6 @@ static t_token	*handle_dollar_state(t_lexer *lexer, char *string)
 	return (init_token(TOKEN_DQUOTE, string, FALSE));
 }
 
-/* else if (handle_checking(lexer))
-	lexer_advance(lexer); */
 t_token	*lexer_collect_dquote(t_lexer *lexer)
 {
 	char	*string;
@@ -39,6 +34,8 @@ t_token	*lexer_collect_dquote(t_lexer *lexer)
 	{
 		if (lexer->c == '$')
 			return (handle_dollar_state(lexer, string));
+		else if (handle_checking(lexer))
+			lexer_advance(lexer);
 		string = connect_str(string, lexer_chtostr(lexer->c));
 		if (string == NULL)
 			return (NULL);
