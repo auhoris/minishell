@@ -23,7 +23,7 @@ void	show_dict(t_env_list **env)
 	t_env_list	*start;
 
 	start = *env;
-	while (start)
+	while (start->next != NULL)
 	{
 		ft_putstr(start->key);
 		ft_putstr("=");
@@ -31,6 +31,9 @@ void	show_dict(t_env_list **env)
 		ft_putstr("\n");
 		start = start->next;
 	}
+	ft_putstr(start->key);
+	ft_putstr("=");
+	ft_putstr(start->value);
 }
 
 t_env_list	*init_env_list(char **env)

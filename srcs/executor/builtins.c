@@ -70,7 +70,6 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	char	**env_array;
 	char	**args;
 	int		error;
-	// int		fd;
 
 	args = create_args(exec, node, &error);
 	if (args == NULL && error == ERROR_BAD_COMMAND)
