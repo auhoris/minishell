@@ -46,7 +46,10 @@ static void	bad_command(t_exec *exec, char *command)
 	ft_putchar_fd('\n', exec->tempout);
 	ft_putstr_fd("minishell: ", exec->tempout);
 	ft_putstr_fd(command, exec->tempout);
-	ft_putstr_fd(": command not found\n", exec->tempout);
+	if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
+		ft_putstr_fd(": command not found", exec->tempout);
+	else
+		ft_putstr_fd(": command not found\n", exec->tempout);
 }
 
 char	**create_args(t_exec *exec, t_ast *node, int *error)

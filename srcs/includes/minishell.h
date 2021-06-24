@@ -27,6 +27,7 @@ typedef struct s_exec
 	int		flag_echo;
 	int		piperead;
 	int		pipewrite;
+	size_t	i;
 }			t_exec;
 
 t_data_processing	*data_processing;

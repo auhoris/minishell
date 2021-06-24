@@ -54,16 +54,16 @@ static int	wait_pids(t_exec *exec, int cnt)
 
 static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 {
-	size_t	i;
+	// size_t	i;
 	int		out;
 
-	i = 0;
+	exec->i = 0;
 	out = OUT;
-	while (i < node->table_size)
+	while (exec->i < node->table_size)
 	{
-		out = detour_tree(exec, node->table_value[i], env);
-		wait_pids(exec, i);
-		i++;
+		out = detour_tree(exec, node->table_value[exec->i], env);
+		wait_pids(exec, exec->i);
+		exec->i++;
 	}
 	return (out);
 }
