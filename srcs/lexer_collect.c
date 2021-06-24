@@ -37,7 +37,7 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 	if (str == NULL)
 		return (NULL);
 	lexer_advance(lexer);
-	if (lexer->c == '\0' || lexer->c == ' ')
+	if (lexer->c == '\0' || lexer->c == ' ' || lexer->c == '=')
 		return (init_token(TOKEN_ID, ft_strdup("$"), FALSE));
 	while ((!ft_inset(SPECIAL, lexer->c)
 			&& lexer->c != SPACE) && lexer->c != '\0')
