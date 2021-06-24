@@ -204,6 +204,7 @@ static int	input_processing(t_data_processing *data_processing)
 	}
 	else if (check_buf == ENTER)
 	{
+		data_processing->flag_echo = 0;
 		out = processing_button(data_processing, ENTER);
 		// printf("\nпосле processing_button |%d|\n", out);
 	}
