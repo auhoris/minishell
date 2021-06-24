@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include "../includes/errors.h"
 #include "../../libs/libft/srcs/libft.h"
 
@@ -59,10 +61,29 @@ static char	*get_bin(char *command, char *path)
 	return (NULL);
 }
 
+static char	*chek_executable(char *command)
+{
+	struct stat	st;
+	char	*bin_command;
+	int	out;
+
+	bin_command = NULL;
+	out = stat(command, &st);
+	if (out == 0 && st.st_mode & S_IXUSR)
+	{
+		bin_command = ft_strdup(command);
+		return (bin_command);
+	}
+	return (bin_command);
+}
+
 char	*search_bin(char *command)
 {
 	char	*bin_command;
 
+	bin_command = chek_executable(command);
+	if (bin_command != NULL)
+		return (bin_command);
 	bin_command = get_bin(command, "/Users/skitsch/.brew/bin/");
 	if (bin_command != NULL)
 		return (bin_command);
