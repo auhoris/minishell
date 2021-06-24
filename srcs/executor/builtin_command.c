@@ -94,6 +94,11 @@ int	execution_export(t_ast *node, t_env_list *env)
 	int		out;
 
 	i = 0;
+	if (node->argc == 0)
+	{
+		write_export(env);
+		return (OUT);
+	}
 	while (i < node->argc)
 	{
 		out = set_key_value(node->argv[i], env);

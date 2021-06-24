@@ -12,7 +12,7 @@
 #include "../includes/env.h"
 #include "../executor/executor.h"
 
-static int	get_term_param(struct termios *term)
+static int	get_term_param(struct termios *term, struct termios *term_default)
 {
 	char	*term_name;
 	int		out;
@@ -24,6 +24,7 @@ static int	get_term_param(struct termios *term)
 	tcgetattr заполнит структуру term в соответствии с параметрами нашего терминала
 */
 	out = tcgetattr(0, term);
+	tcgetattr(0, term_default);
 	if (out != 0)
 	{
 		// ERROR (есть errno)
@@ -33,6 +34,7 @@ static int	get_term_param(struct termios *term)
 	~(ICANON) выкл канонический режим (теперь мы видим то, что вводим)
 	tcsetattr(0, TCSANOW, term) - If optional_actions is TCSANOW, the change shall occur immediately (изменения произойдут немедленно).
 */
+	// printf("\n%lu\n", term->c_lflag);
 	term->c_lflag &= ~(ECHO);
 	term->c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, term);
@@ -166,11 +168,11 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			}
 		}
 		if (data_processing->size_pids != 0)
-			write(1, "<minishell>$ ", 13);
+			write(1, "<minishell>$1 ", 13);
 		else if (out == OUT && data_processing->flag_echo == 0)
-			write(1, "\n<minishell>$ ", 14);
+			write(1, "\n<minishell>$2 ", 14);
 		else
-			write(1, "<minishell>$ ", 14);
+			write(1, "<minishell>$3 ", 13);
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);
@@ -215,20 +217,24 @@ static int	input_processing(t_data_processing *data_processing)
 	return (out);
 }
 
-static int		infinite_round(t_env_list *env)
+static int		infinite_round(t_env_list *env, struct termios *term, struct termios *term_default)
 {
-	t_data_processing	*data_processing;
 	int		l;
 	int		out;
 
 	out = OUT;
 	data_processing = init_data_processing(env);
 	if (data_processing == NULL)
-	{
 		return (ERROR_MALLOC);
-	}
+	data_processing->term = term;
+	data_processing->term_default = term_default;
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, &handler);
+		data_processing->term->c_lflag &= ~(ECHO);
+		data_processing->term->c_lflag &= ~(ICANON);
+		tcsetattr(0, TCSANOW, data_processing->term);
 		l = read(0, data_processing->buf_read, BUFFER_SIZE);
 		if (l != 0)
 		{
@@ -242,8 +248,9 @@ static int		infinite_round(t_env_list *env)
 int		termcap(t_env_list *env)
 {
 	struct termios	term;
+	struct termios	term_default;
 
-	if (get_term_param(&term) != 1)
+	if (get_term_param(&term, &term_default) != 1)
 	{
 		// ERROR
 	}
@@ -252,6 +259,6 @@ int		termcap(t_env_list *env)
 	sc сохранение позиции каретки
 */
 	tputs(tgetstr("sc", 0), 1, ft_putint);
-	infinite_round(env);
+	infinite_round(env, &term, &term_default);
 	return (1);
 }

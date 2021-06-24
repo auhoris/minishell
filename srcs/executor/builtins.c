@@ -1,6 +1,7 @@
 #include "../includes/ast.h"
 #include "../../libs/libft/srcs/libft.h"
 #include "../includes/types.h"
+#include "../includes/minishell.h"
 #include "executor.h"
 #include <errno.h>
 #include <stdio.h>
@@ -35,6 +36,8 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 	int			pid;
 
 	pid = fork();
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 	if (pid == -1)
 		return (ERROR);
 	if (pid == 0)
@@ -50,6 +53,9 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 		}
 		close(exec->tempin);
 		close(exec->tempout);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+		tcsetattr(0, TCSANOW, data_processing->term_default);
 		if (execve(args[0], args, envp) == -1)
 			perror("execve");
 	}
@@ -64,7 +70,6 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	char	**env_array;
 	char	**args;
 	int		error;
-	// int		fd;
 
 	args = create_args(exec, node, &error);
 	if (args == NULL && error == ERROR_BAD_COMMAND)

@@ -20,6 +20,7 @@
 		"availability.h": "c",
 		"_size_t.h": "c",
 		"cdefs.h": "c",
-		"strings.h": "c"
+		"strings.h": "c",
+		"token_list.h": "c"
 	}
 }
