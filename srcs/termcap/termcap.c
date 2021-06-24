@@ -173,6 +173,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			write(1, "\n<minishell>$2 ", 14);
 		else
 			write(1, "<minishell>$3 ", 13);
+		data_processing->size_pids = 0;
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
 		data_processing->command_line = (char *)ft_calloc(1, 1);
