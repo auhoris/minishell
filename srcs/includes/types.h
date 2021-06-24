@@ -12,6 +12,7 @@
 # define ALL_ARRAY -1
 # define BUFFER_SIZE 10
 
+# include <term.h>
 # include "env.h"
 
 typedef struct s_history
@@ -30,6 +31,8 @@ typedef struct s_data_processing
 	int					num_symbol;
 	int					permission_create;
 	int					flag_echo;
+	struct termios		*term;
+	struct termios		*term_default;
 	size_t				size_pids;
 	t_env_list			*env;
 	t_history			*start_history;

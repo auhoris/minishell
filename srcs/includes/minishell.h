@@ -4,6 +4,7 @@
 //	Инклюды
 # include "env.h"
 # include "ast.h"
+# include "types.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/_types/_size_t.h>
@@ -28,8 +29,10 @@ typedef struct s_exec
 	int		pipewrite;
 }			t_exec;
 
+t_data_processing	*data_processing;
 t_exec	*init_exec(t_ast *root);
 int		termcap(t_env_list *env);
+void	handler(int s);
 int		check_input_params(int argc, char **argv);
 int		detour_tree(t_exec *exec, t_ast *node, t_env_list *env);
 //free_functions

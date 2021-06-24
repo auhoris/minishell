@@ -30,6 +30,11 @@ t_data_processing	*init_data_processing(t_env_list *env)
 	return (data_processing);
 }
 
+// int	check_signal()
+// {
+
+// }
+
 int	check_buf_read(char *buf_read)
 {
 	if (!ft_strncmp(buf_read, ARROW_UP, ft_strlen(buf_read)))
