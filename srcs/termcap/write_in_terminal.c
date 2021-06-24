@@ -7,7 +7,7 @@
 int	write_in_terminal_isprint(t_data_processing *data_processing)
 {
 	char	*temp;
-	int	out;
+	int		out;
 
 	out = make_history(data_processing);
 	if (out != OUT)
@@ -22,7 +22,6 @@ int	write_in_terminal_isprint(t_data_processing *data_processing)
 
 void	write_in_terminal(char *command, int *num_symbol)
 {
-
 	if (command == NULL)
 	{
 		write(1, "\0", 1);

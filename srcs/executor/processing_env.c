@@ -24,7 +24,6 @@ int	set_pwd_dir(t_env_list *env, char *pwd_dir)
 		env = env->next;
 	}
 	free(env->value);
-	// printf("\n%s\n", pwd_dir);
 	env->value = ft_strdup(pwd_dir);
 	if (env->value == NULL)
 		return (ERROR_MALLOC);

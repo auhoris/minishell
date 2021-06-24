@@ -11,4 +11,3 @@ void	cout_array(char **arr)
 		i++;
 	}
 }
-

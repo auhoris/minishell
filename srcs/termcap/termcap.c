@@ -12,7 +12,7 @@
 #include "../includes/env.h"
 #include "../executor/executor.h"
 
-static int		get_term_param(struct termios *term)
+static int	get_term_param(struct termios *term)
 {
 	char	*term_name;
 	int		out;
@@ -36,7 +36,6 @@ static int		get_term_param(struct termios *term)
 	term->c_lflag &= ~(ECHO);
 	term->c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, term);
-
 /*
 	tgetent
 	Вернет строку с описанием используемого терминала
@@ -112,45 +111,6 @@ int		check_parser(t_parser *paser)
 	return (OK);
 }
 
-
-void	show_fd_arr(t_exec *exec)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < exec->fd_size)
-	{
-		printf("\nexec->fd_arr[i].in = %d\n", exec->fd_arr[i].in);
-		printf("exec->fd_arr[i].out = %d\n", exec->fd_arr[i].out);
-		close(exec->fd_arr[i].in);
-		close(exec->fd_arr[i].out);
-		i++;
-	}
-}
-
-static int	wait_pids(t_exec *exec)
-{
-	size_t	i;
-	int		waiting;
-	int		temp;
-
-	i = 0;
-	show_fd_arr(exec);
-	if (exec->size_pids == 0)
-		return (OK);
-	write(STDIN_FILENO, "\n", 1);
-	while (i < exec->size_pids)
-	{
-		temp = waitpid(exec->pids[i], &waiting, 0);
-		if ((temp = WIFEXITED(waiting)))
-		{
-			exec->exit_status = WEXITSTATUS(waiting);
-		}
-		i++;
-	}
-	return (OK);
-}
-
 static int	start_parsing(t_data_processing *data_processing)
 {
 	t_lexer		*lexer;
@@ -166,21 +126,17 @@ static int	start_parsing(t_data_processing *data_processing)
 	parser = init_parser(lexer, data_processing->env);
 	check = check_parser(parser);
 	if (check != OK)
-		return (free_unique(check, parser, free_parser));
+		return (free_any(check, parser, free_parser));
 	root = parser_parse_commands(parser);
 	free_parser(parser);
 	if (root->err_handler != OK)
-		return (free_unique(root->err_handler, root, free_root_parser));
+		return (free_any(root->err_handler, root, free_root_parser));
 	exec = init_exec(root);
 	if (exec == NULL)
-		return (free_unique(ERROR_MALLOC, exec, free_exec));
+		return (free_any(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, root, data_processing->env);
-	// printf("\nHERE\n");
 	data_processing->size_pids = exec->size_pids;
 	data_processing->flag_echo = exec->flag_echo;
-	/* printf("\nout = %d\n", out);
-	printf("dsa = %d\n", root->err_handler); */
-	wait_pids(exec);
 	free_exec(exec);
 	return (out);
 }
@@ -205,13 +161,13 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			out = start_parsing(data_processing);
 			if (out != OUT && out != ERROR_BAD_COMMAND && out != ERROR_PARSER)
 			{
-				printf("ERRRERRRRRRRRRRRRRRr\n");
+				printf("\nERROR = %d\n", out);
 				return (out);
 			}
 		}
 		if (data_processing->size_pids != 0)
 			write(1, "<minishell>$ ", 13);
-		else if (data_processing->flag_echo == 0)
+		else if (out == OUT && data_processing->flag_echo == 0)
 			write(1, "\n<minishell>$ ", 14);
 		else
 			write(1, "<minishell>$ ", 14);

@@ -4,6 +4,17 @@
 #include "executor.h"
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
+
+void	handle_echo_output(t_exec *exec, t_ast *node, size_t pos, size_t n_flag)
+{
+	if (pos != (size_t)n_flag)
+		ft_putchar(' ');
+	if (ft_strcmp(node->argv[pos], "$?") == 0)
+		ft_putstr(ft_itoa(exec->exit_status));
+	else
+		ft_putstr(node->argv[pos]);
+}
 
 void	execution_echo(t_exec *exec, t_ast *node)
 {
@@ -12,28 +23,30 @@ void	execution_echo(t_exec *exec, t_ast *node)
 
 	n_flag = 0;
 	i = 0;
-	if (ft_strcmp(node->argv[0], "-n") == 0)
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		write (exec->tempout, "\n", 1);
+	if (node->argv == NULL)
 	{
-		i++;
-		n_flag = 1;
+		if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+			ft_putchar('\n');
+		return ;
 	}
-	write (exec->tempout, "\n", 1);
+	else if (ft_strcmp(node->argv[i], "-n") == 0)
+		n_flag = ++i;
 	while (i < node->argc)
 	{
-		if (i != (size_t)n_flag)
-			write (1, " ", 1);
-		if (ft_strcmp(node->argv[i], "$?") == 0)
-			ft_putstr(ft_itoa(exec->exit_status));
-		else
-			ft_putstr(node->argv[i]);
+		handle_echo_output(exec, node, i, n_flag);
 		i++;
 	}
-	exec->flag_echo = n_flag;
+	if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
+		ft_putchar('\n');
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		exec->flag_echo = n_flag;
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
 {
-	int	out;
+	int		out;
 	char	pwd_dir[256];
 
 	if (getcwd(pwd_dir, 256) == NULL)
@@ -41,37 +54,28 @@ int	execution_cd(t_ast *node, t_env_list *env)
 	if (set_old_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 		return (ERROR_MALLOC);
 	if (node->argv == NULL)
-	{
-		out = chdir("/Users/skitsch");
-		// printf("\ntest %d\n", out);
-	}
+		out = chdir(get_value_by_key("HOME", &env));
 	else
 		out = chdir(node->argv[0]);
 	ft_bzero(pwd_dir, 256);
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
-	// printf("\n%s\n", pwd_dir);
-	if (out != 0)
+	if (out != 0 && node->argv != NULL)
 	{
-		// printf("\ntest\n");
 		write(1, "\nminishell: cd: ", 16);
 		write(1, node->argv[0], ft_strlen(node->argv[0]));
 		write(1, ": ", 2);
 		write(1, strerror(errno), ft_strlen(strerror(errno)));
-		// printf("\nminishell: cd: %s: %s", node->argv[0], strerror(errno));
 	}
 	else
-	{
 		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
 			return (ERROR_MALLOC);
-	}
-	// write(1, "\n", 1);
 	return (OUT);
 }
 
-int execution_pwd(t_env_list *env)
+int	execution_pwd(t_env_list *env)
 {
-	int	out;
+	int		out;
 	char	*pwd_dir;
 
 	pwd_dir = NULL;
@@ -101,7 +105,7 @@ int	execution_export(t_ast *node, t_env_list *env)
 	return (OUT);
 }
 
-int execution_unset(t_ast *node, t_env_list **env)
+int	execution_unset(t_ast *node, t_env_list **env)
 {
 	size_t		i;
 
@@ -123,20 +127,6 @@ int	execution_env(t_ast *node, t_env_list *env)
 	if (node->argc > 1)
 		write(1, "\nenv must be without any options or arguments", 45);
 	else
-	{
-		// твой код почему-то жалуется на оверфлоу
 		show_dict(&env);
-		/* while (env->next != NULL)
-		{
-			write(1, env->key, ft_strlen(env->key));
-			write(1, "=", 1);
-			write(1, env->key, ft_strlen(env->value));
-			write(1, "\n", 1);
-			env = env->next;
-		}
-		write(1, env->key, ft_strlen(env->key));
-		write(1, "=", 1);
-		write(1, env->value, ft_strlen(env->value)); */
-	}
 	return (OUT);
 }

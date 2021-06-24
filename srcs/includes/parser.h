@@ -33,5 +33,7 @@ char		*parser_get_cmd_name(t_parser *parser);
 char		*parser_get_dollar_value(t_token *token);
 t_ast		*parser_parse_agruments(t_ast *node, t_parser *parser);
 char		*parser_get_args(t_parser *parser);
+int			make_node_fd(char *filename, int type, t_ast *node);
+void		check_fd(t_ast *node, int type);
 
 #endif /* ifndef PARSER_H */

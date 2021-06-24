@@ -20,6 +20,9 @@ static int	create_new_env(char *key, char *value, t_env_list *env)
 	if (new == NULL)
 		return (ERROR_MALLOC);
 	env_addback(&env, new);
+	return (OUT);
+}
+
 	/* t_env_list	*new;
 
 	new = (t_env_list *)malloc(sizeof(t_env_list));
@@ -38,8 +41,6 @@ static int	create_new_env(char *key, char *value, t_env_list *env)
 		env = env->next;
 	}
 	env->next = new; */
-	return (OUT);
-}
 
 int	set_key_value(char *str, t_env_list *env)
 {
@@ -74,7 +75,7 @@ char	*get_value(char *str)
 {
 	char	*chr;
 	char	*key;
-	int	len;
+	int		len;
 
 	chr = ft_strchr(str, '=');
 	len = chr - str;

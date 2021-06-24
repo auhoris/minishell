@@ -40,13 +40,10 @@ static char	*cucle_read(DIR *dir, struct dirent **dp, char *command, char *bin)
 
 static char	*get_bin(char *command, char *path)
 {
-	DIR	*dir;
+	DIR				*dir;
 	struct dirent	*dp;
-	char	*bin_command;
+	char			*bin_command;
 
-	// printf("\ntest\n");
-	// printf("\n%s    %s\n\n\n", command, path);
-	// printf("\n%s   %s\n", command, path);
 	dir = opendir(path);
 	if (dir == NULL)
 		return (NULL);
@@ -66,8 +63,6 @@ char	*search_bin(char *command)
 {
 	char	*bin_command;
 
-	// printf("\ntest\n");
-	// printf("\n%s\n", command);
 	bin_command = get_bin(command, "/Users/skitsch/.brew/bin/");
 	if (bin_command != NULL)
 		return (bin_command);

@@ -16,19 +16,14 @@ typedef struct s_ast
 		NODE_ERROR,
 	}	e_nodetype;
 	char			*cmd_name;
-	// Arguments
 	size_t			argc;
 	char			**argv;
-	// Redirect
 	int				fd_in;
 	int				fd_out;
-	// Table
 	struct s_ast	**table_value;
 	size_t			table_size;
-	// Vardef
 	char			*var_name;
 	char			*var_value;
-	// Error handling
 	int				err_handler;
 }			t_ast;
 

@@ -3,6 +3,7 @@
 #include "../includes/env.h"
 #include "executor.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/_types/_size_t.h>
 #include <unistd.h>
 
@@ -19,138 +20,68 @@ t_exec	*init_exec(t_ast *root)
 	exec->tempin = -1;
 	exec->tempout = -1;
 	exec->exit_status = OK;
-	exec->fd[0] = -1;
-	exec->fd[1] = -1;
-	exec->r_or_w = -1;
+	exec->is_redir = 0;
 	exec->pids = NULL;
 	exec->size_pids = 0;
-	exec->fd_arr = NULL;
-	exec->fd_size = 0;
+	exec->piperead = STDIN_FILENO;
+	exec->pipewrite = STDOUT_FILENO;
 	return (exec);
+}
+
+static int	wait_pids(t_exec *exec, int cnt)
+{
+	size_t	i;
+	int		waiting;
+	int		temp;
+
+	i = 0;
+	if (exec->size_pids == 0)
+		return (OK);
+	// printf("exec.size_pids = %zu\n", exec->size_pids);
+	if (cnt == 0)
+		ft_putchar('\n');
+	while (i < exec->size_pids)
+	{
+		temp = waitpid(exec->pids[i], &waiting, 0);
+		if ((temp = WIFEXITED(waiting)))
+		{
+			exec->exit_status = WEXITSTATUS(waiting);
+		}
+		i++;
+	}
+	return (OK);
 }
 
 static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	size_t	i;
-	int	out;
+	int		out;
 
 	i = 0;
 	out = OUT;
 	while (i < node->table_size)
 	{
 		out = detour_tree(exec, node->table_value[i], env);
-		if (out != OUT)
-			return (out);
+		wait_pids(exec, i);
 		i++;
 	}
 	return (out);
 }
 
-int	check_redirection(t_exec *exec, t_ast *node)
-{
-	if (exec->fd[0] != -1)
-	{
-		if (exec->r_or_w == 1)
-			dup2(exec->fd[1], STDOUT_FILENO);
-		else if (exec->r_or_w == 0)
-			dup2(exec->fd[0], STDIN_FILENO);
-	}
-	if (node->fd_in != STDIN_FILENO)
-	{
-		dup2(node->fd_in, STDIN_FILENO);
-		close(node->fd_in);
-	}
-	if (node->fd_out != STDOUT_FILENO)
-	{
-		dup2(node->fd_out, STDOUT_FILENO);
-		close(node->fd_out);
-	}
-	return (OK);
-}
-
-int	restore_std(t_exec *exec, t_ast *node)
-{
-	if (exec->fd[0] != -1)
-	{
-		dup2(exec->tempin, STDIN_FILENO);
-		close(exec->tempin);
-		dup2(exec->tempout, STDOUT_FILENO);
-		close(exec->tempout);
-	}
-	if (node->fd_in != STDIN_FILENO)
-	{
-		dup2(exec->tempin, STDIN_FILENO);
-		close(exec->tempin);
-	}
-	if (node->fd_out != STDOUT_FILENO)
-	{
-		dup2(exec->tempout, STDOUT_FILENO);
-		close(exec->tempout);
-	}
-	return (OK);
-}
-
-static int	append_fd(t_exec *exec, int fd[])
-{
-	if (exec->fd_size == 0)
-	{
-		exec->fd_arr = ft_calloc(1, sizeof(t_fd));
-		if (exec->fd_arr == NULL)
-			return (ERROR_MALLOC);
-		exec->fd_arr[exec->fd_size].in = fd[0];
-		exec->fd_arr[exec->fd_size].out = fd[1];
-		exec->fd_size++;
-	}
-	else
-	{
-		exec->fd_size++;
-		exec->fd_arr = ft_realloc(exec->fd_arr, exec->fd_size * sizeof(t_fd), (exec->fd_size - 1) * sizeof(t_fd));
-		if (exec->fd_arr == NULL)
-			return (ERROR_MALLOC);
-		exec->fd_arr[exec->fd_size - 1].in = fd[0];
-		exec->fd_arr[exec->fd_size - 1].out = fd[1];
-	}
-	return (OK);
-}
-
-static int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
+int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
 
-	if (pipe(exec->fd) == -1)
-	{
-		perror("");
-		return (ERROR);
-	}
-	append_fd(exec, exec->fd);
-	exec->r_or_w = 1;
-	out = detour_tree(exec, node->table_value[0], env);
-	exec->r_or_w = 0;
-	out = detour_tree(exec, node->table_value[1], env);
-	/* close(exec->fd[1]);
-	close(exec->fd[0]); */
-	// printf("\n------------------------------------------------\n");
-	exec->r_or_w = -1;
-	return (out);
-}
-
-static int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
-{
-	int	out;
-
-	exec->tempout = dup(STDOUT_FILENO);
-	exec->tempin = dup(STDIN_FILENO);
-	check_redirection(exec, node);
+	set_redirection(exec, node);
 	out = check_builtin(exec, node, env);
 	restore_std(exec, node);
-	close(exec->tempout);
-	close(exec->tempin);
 	return (out);
 }
 
 int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
+
 	out = OUT;
 	if (node->e_nodetype == NODE_ROOT)
 		return (executor_root(exec, node, env));

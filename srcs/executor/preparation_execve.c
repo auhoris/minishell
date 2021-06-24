@@ -41,18 +41,18 @@ void	clear_array(char **args, int index)
 	}
 }
 
-static void	bad_command(char *command)
+static void	bad_command(t_exec *exec, char *command)
 {
-	write(1, "\n", 1);
-	ft_putstr("minishell: ");
-	ft_putstr(command);
-	ft_putstr(": command not found");
+	ft_putchar_fd('\n', exec->tempout);
+	ft_putstr_fd("minishell: ", exec->tempout);
+	ft_putstr_fd(command, exec->tempout);
+	ft_putstr_fd(": command not found\n", exec->tempout);
 }
 
-char	**create_args(t_ast *node, int *error)
+char	**create_args(t_exec *exec, t_ast *node, int *error)
 {
-	char	**args;
-	char	*bin;
+	char		**args;
+	char		*bin;
 	size_t		i;
 
 	args = (char **)malloc(sizeof(char *) * (node->argc + 2));
@@ -64,7 +64,7 @@ char	**create_args(t_ast *node, int *error)
 	{
 		free(bin);
 		free(args);
-		bad_command(node->cmd_name);
+		bad_command(exec, node->cmd_name);
 		*error = ERROR_BAD_COMMAND;
 		return (NULL);
 	}
@@ -109,7 +109,7 @@ char	**create_env(t_env_list *env)
 		if (envp[len] == NULL)
 		{
 			clear_array(envp, len);
-			return(NULL);
+			return (NULL);
 		}
 		env = env->next;
 		len++;

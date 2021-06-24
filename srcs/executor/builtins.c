@@ -32,41 +32,29 @@ static int	append_pid(t_exec *exec, int pid)
 
 static int	execute_other_command(t_exec *exec, char **args, char **envp)
 {
-	int	pid;
-	static int	i;
+	int			pid;
 
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
 		return (ERROR);
-	}
 	if (pid == 0)
 	{
-		if (exec->r_or_w == 1)
+		if (!exec->is_redir)
 		{
-			dup2(exec->fd_arr[i].out, STDOUT_FILENO);
-			close(exec->fd_arr[i].out);
-			close(exec->fd_arr[i].in);
-			// close(exec->fd[0]);
+			dup2(exec->piperead, STDIN_FILENO);
+			dup2(exec->pipewrite, STDOUT_FILENO);
+			if (exec->piperead != STDIN_FILENO)
+				close(exec->piperead);
+			if (exec->pipewrite != STDOUT_FILENO)
+				close(exec->pipewrite);
 		}
-		else if (exec->r_or_w == 0)
-		{
-			dup2(exec->fd_arr[i].in, STDIN_FILENO);
-			close(exec->fd_arr[i].out);
-			close(exec->fd_arr[i].in);
-			/* dup2(exec->fd[0], STDIN_FILENO);
-			close(exec->fd[1]);
-			close(exec->fd[0]); */
-		}
-		close(exec->tempout);
 		close(exec->tempin);
+		close(exec->tempout);
 		if (execve(args[0], args, envp) == -1)
 			perror("execve");
 	}
-	i++;
 	if (append_pid(exec, pid) != OK)
-			return (ERROR);
+		return (ERROR);
 	return (OK);
 }
 
@@ -78,8 +66,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	int		error;
 	// int		fd;
 
-	// fd = open(node->cmd_name, )
-	args = create_args(node, &error);
+	args = create_args(exec, node, &error);
 	if (args == NULL && error == ERROR_BAD_COMMAND)
 		return (ERROR_BAD_COMMAND);
 	else if (args == NULL && error == ERROR_MALLOC)
@@ -88,7 +75,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	if (env_array == NULL)
 	{
 		clear_array(args, ALL_ARRAY);
-		return(ERROR_MALLOC);
+		return (ERROR_MALLOC);
 	}
 	execute_other_command(exec, args, env_array);
 	free_arr(args);
@@ -101,6 +88,8 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
+	if (node->cmd_name == NULL)
+		return (out);
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
 		execution_echo(exec, node);
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)
