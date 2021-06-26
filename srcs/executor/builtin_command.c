@@ -7,7 +7,8 @@
 #include <string.h>
 #include <unistd.h>
 
-void	handle_echo_output(t_exec *exec, t_ast *node, size_t pos, size_t n_flag, size_t d_flag)
+void	handle_echo_output(t_exec *exec, t_ast *node,
+		size_t pos, size_t n_flag, size_t d_flag)
 {
 	(void)n_flag;
 	if (ft_strcmp(node->argv[pos], "") == 0)
