@@ -1,3 +1,4 @@
+#include "includes/env.h"
 #include "includes/errors.h"
 #include "includes/parser.h"
 #include "includes/token.h"
@@ -20,8 +21,10 @@ static char	*make_argument(char *str, t_parser *parser)
 		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
 			str = ft_strjoin(str, "$?");
 		else
+		{
 			str = ft_strjoin(str,
 					get_value_by_key(parser->cur_tok->value, &parser->env));
+		}
 	}
 	else
 		str = ft_strjoin(str, parser->cur_tok->value);
@@ -86,6 +89,12 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 		if (prev_type == ERROR_PARSER)
 			return (ERROR_PARSER);
 		check_fd(node, prev_type);
+	}
+	if (parser->cur_tok->e_type == TOKEN_ID)
+	{
+		node->cmd_name = ft_strdup(parser->cur_tok->value);
+		if (parser_next_token(parser) == ERROR_PARSER)
+			return (ERROR_PARSER);
 	}
 	return (OK);
 }

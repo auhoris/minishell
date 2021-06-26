@@ -35,6 +35,11 @@ char	*connect_str(char *s1, char *s2)
 void	handle_error_msg(char *msg, char *token)
 {
 	ft_putstr_fd(msg, STDERR_FILENO);
+	if (ft_strcmp(token, "") == 0)
+	{
+		ft_putstr_fd("\n", STDERR_FILENO);
+		return ;
+	}
 	ft_putstr_fd("'", STDERR_FILENO);
 	ft_putstr_fd(token, STDERR_FILENO);
 	ft_putstr_fd("'\n", STDERR_FILENO);

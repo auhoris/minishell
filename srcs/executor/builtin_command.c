@@ -3,12 +3,16 @@
 #include "../includes/types.h"
 #include "executor.h"
 #include <errno.h>
+#include <stddef.h>
 #include <string.h>
 #include <unistd.h>
 
-void	handle_echo_output(t_exec *exec, t_ast *node, size_t pos, size_t n_flag)
+void	handle_echo_output(t_exec *exec, t_ast *node, size_t pos, size_t n_flag, size_t d_flag)
 {
-	if (pos != (size_t)n_flag)
+	(void)n_flag;
+	if (ft_strcmp(node->argv[pos], "") == 0)
+		return ;
+	if (pos != n_flag + d_flag)
 		ft_putchar(' ');
 	if (ft_strcmp(node->argv[pos], "$?") == 0)
 		ft_putstr(ft_itoa(exec->exit_status));
@@ -20,9 +24,11 @@ void	execution_echo(t_exec *exec, t_ast *node)
 {
 	size_t	i;
 	int		n_flag;
+	int		d_flag;
 
 	n_flag = 0;
 	i = 0;
+	d_flag = 0;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		write (exec->tempout, "\n", 1);
 	if (node->argv == NULL)
@@ -31,12 +37,15 @@ void	execution_echo(t_exec *exec, t_ast *node)
 			ft_putchar('\n');
 		return ;
 	}
-	while (ft_strcmp(node->argv[i], "-n") == 0)
+	while (i < node->argc && ft_strcmp(node->argv[i], "-n") == 0)
 		i++;
 	n_flag = i;
+	while (i < node->argc && ft_strcmp(node->argv[i], "") == 0)
+		i++;
+	d_flag = i - n_flag;
 	while (i < node->argc)
 	{
-		handle_echo_output(exec, node, i, n_flag);
+		handle_echo_output(exec, node, i, n_flag, d_flag);
 		i++;
 	}
 	if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
