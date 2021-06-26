@@ -62,6 +62,8 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 	while (exec->i < node->table_size)
 	{
 		out = detour_tree(exec, node->table_value[exec->i], env);
+		if (out == ERROR_EXIT)
+			return (out);
 		wait_pids(exec, exec->i);
 		exec->i++;
 	}

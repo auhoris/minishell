@@ -1,3 +1,4 @@
+#include "includes/minishell.h"
 #include "includes/env.h"
 #include "../libs/libft/srcs/libft.h"
 #include "includes/errors.h"
@@ -54,6 +55,11 @@ t_env_list	*init_env_list(char **env)
 		}
 		env_addback(&env_list, temp);
 		i++;
+	}
+	if (advance_shlvl(&env_list) == ERROR_MALLOC)
+	{
+		env_list_clear(&env_list);
+		return (NULL);
 	}
 	return (env_list);
 }

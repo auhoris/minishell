@@ -95,8 +95,6 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	out = OUT;
 	if (node->cmd_name == NULL)
 		return (out);
-	if (ft_strcmp(node->cmd_name, "./minishell") == 0)
-		;
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
 		execution_echo(exec, node);
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)
@@ -110,7 +108,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	else if (ft_strcmp(node->cmd_name, "unset") == 0)
 		out = execution_unset(node, &env);
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)
-		out = ERROR_EXIT;
+		out = decrease_shlvl(&env);
 	else
 		out = other_command(exec, node, env);
 	return (out);
