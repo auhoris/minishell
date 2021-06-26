@@ -37,7 +37,6 @@ static int	wait_pids(t_exec *exec, int cnt)
 	i = 0;
 	if (exec->size_pids == 0)
 		return (OK);
-	// printf("exec.size_pids = %zu\n", exec->size_pids);
 	if (cnt == 0)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
