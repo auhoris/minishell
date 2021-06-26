@@ -31,8 +31,9 @@ void	execution_echo(t_exec *exec, t_ast *node)
 			ft_putchar('\n');
 		return ;
 	}
-	else if (ft_strcmp(node->argv[i], "-n") == 0)
-		n_flag = ++i;
+	while (ft_strcmp(node->argv[i], "-n") == 0)
+		i++;
+	n_flag = i;
 	while (i < node->argc)
 	{
 		handle_echo_output(exec, node, i, n_flag);
@@ -106,7 +107,7 @@ int	execution_export(t_ast *node, t_env_list *env)
 			return (ERROR_MALLOC);
 		i++;
 	}
-	write(1, "\n", 1);
+	// write(1, "\n", 1);
 	return (OUT);
 }
 
