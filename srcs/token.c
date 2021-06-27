@@ -28,7 +28,7 @@ void	destroy_token(t_token *token)
 	}
 }
 
-/* char	*print_token_type(int type)
+char	*print_token_type(int type)
 {
 	switch (type) {
 		case TOKEN_ID: return ("TOKEN_ID");
@@ -48,4 +48,4 @@ void	destroy_token(t_token *token)
 		// case TOKEN_FLAG: return ("TOKEN_FLAG");
 		default: return ("Undefined token");
 	}
-} */
+}

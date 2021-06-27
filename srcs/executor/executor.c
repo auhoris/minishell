@@ -73,8 +73,6 @@ int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
 
-	/* if (ft_strcmp(node->cmd_name, "") == 0)
-		return (OUT); */
 	set_redirection(exec, node);
 	out = check_builtin(exec, node, env);
 	restore_std(exec, node);
