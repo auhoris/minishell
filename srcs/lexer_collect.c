@@ -45,6 +45,8 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 	while ((!ft_inset(SPECIAL, lexer->c)
 			&& lexer->c != SPACE) && lexer->c != '\0')
 	{
+		if (lexer->c == '=')
+			break ;
 		str = connect_str(str, lexer_chtostr(lexer->c));
 		if (str == NULL)
 			return (NULL);
@@ -53,8 +55,6 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 			lexer_advance(lexer);
 			break ;
 		} */
-		if (lexer->c == '=')
-			break ;
 		lexer_advance(lexer);
 	}
 	if (lexer->c == SPACE && !lexer->flag)
