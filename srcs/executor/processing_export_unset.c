@@ -2,8 +2,10 @@
 #include "../includes/types.h"
 #include "../includes/errors.h"
 #include "../../libs/libft/srcs/libft.h"
+#include <stddef.h>
 #include <unistd.h>
 
+#define NOT_VALID "-!%+.,/?:@^_{}~"
 static void	value_key_free(char *value, char *key, t_env_list *new)
 {
 	free(value);
@@ -42,6 +44,38 @@ static int	create_new_env(char *key, char *value, t_env_list *env)
 	}
 	env->next = new; */
 
+static void	put_err_msg(char *str)
+{
+	ft_putstr_fd("\nminishell: export: ", STDERR_FILENO);
+	ft_putchar_fd('\'', STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putchar_fd('\'', STDERR_FILENO);
+	ft_putchar_fd(':', STDERR_FILENO);
+	ft_putstr_fd(" not a valid identifier", STDERR_FILENO);
+}
+
+static int	check_export(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	if (ft_isdigit(str[i]))
+	{
+		put_err_msg(str);
+		return (ERROR);
+	}
+	while (str[i] != '=' || str[i] != '\0')
+	{
+		if (ft_inset(NOT_VALID, str[i]))
+		{
+			put_err_msg(str);
+			return (ERROR);
+		}
+		i++;
+	}
+	return (OK);
+}
+
 int	set_key_value(char *str, t_env_list *env)
 {
 	char	*chr;
@@ -51,6 +85,8 @@ int	set_key_value(char *str, t_env_list *env)
 
 	while (env->next != NULL)
 		env = env->next;
+	if (check_export(str) == ERROR)
+		return (OUT);
 	chr = ft_strchr(str, '=');
 	if (chr == NULL)
 		return (OUT);
