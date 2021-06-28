@@ -25,7 +25,7 @@ typedef struct s_history
 
 typedef struct s_data_processing
 {
-	int					exit_status;
+	int					ex_st;
 	int					l;
 	char				*buf_read;
 	char				*command_line;

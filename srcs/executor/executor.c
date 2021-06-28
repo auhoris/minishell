@@ -84,8 +84,6 @@ int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
-	/* if (node->e_nodetype == NODE_ROOT)
-		return (executor_root(exec, node, env)); */
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
 		return (executor_simplecommand(exec, node, env));
 	if (node->e_nodetype == NODE_PIPE)

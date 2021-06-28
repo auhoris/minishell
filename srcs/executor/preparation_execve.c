@@ -44,7 +44,7 @@ void	clear_array(char **args, int index)
 
 static void	bad_command(t_exec *exec, char *command)
 {
-	g_exst = EXIT_NOT_FOUND;
+	data_processing->ex_st = EXIT_NOT_FOUND;
 	ft_putchar_fd('\n', exec->tempout);
 	ft_putstr_fd("minishell: ", exec->tempout);
 	ft_putstr_fd(command, exec->tempout);

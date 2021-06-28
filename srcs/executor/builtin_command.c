@@ -150,7 +150,10 @@ int	execution_env(t_ast *node, t_env_list *env)
 {
 	write(1, "\n", 1);
 	if (node->argc > 1)
+	{
 		write(1, "\nenv must be without any options or arguments", 45);
+		return (ERROR_NOT_EXIST );
+	}
 	else
 		show_dict(&env);
 	return (OUT);

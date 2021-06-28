@@ -16,12 +16,11 @@ static char	*make_argument(char *str, t_parser *parser)
 	char	*tmp;
 
 	type = parser->cur_tok->e_type;
-	// printf("%s\n", parser->cur_tok->value);
 	tmp = str;
 	if (type == TOKEN_DOLLAR)
 	{
 		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
-			str = ft_strjoin(str, ft_itoa(g_exst));
+			str = ft_strjoin(str, ft_itoa(data_processing->ex_st));
 		else
 		{
 			str = ft_strjoin(str,

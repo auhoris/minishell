@@ -87,6 +87,6 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 		start = start->next;
 	}
 	if (argv != NULL)
-		return (keep_in_range(ft_atoi(argv[0])));
+		data_processing->ex_st = keep_in_range(ft_atoi(argv[0]));
 	return (ERROR_EXIT);
 }

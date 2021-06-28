@@ -7,6 +7,4 @@
 # define EXIT_NOT_EXIST 1
 # define OK 0
 
-int	g_exst;
-
 #endif /* ifndef EXIT_STATUS_H */

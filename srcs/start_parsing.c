@@ -27,7 +27,6 @@ static int	wait_pids(t_exec *exec, int cnt)
 	size_t	i;
 	int		waiting;
 	int		temp;
-	int		exit_status;
 
 	i = 0;
 	if (exec->size_pids == 0)
@@ -36,20 +35,14 @@ static int	wait_pids(t_exec *exec, int cnt)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
 	{
-		// printf("here\n");
 		temp = waitpid(exec->pids[i], &waiting, 0);
-		// printf("temp = %d\n", temp);
 		if ((temp = WIFEXITED(waiting)))
 		{
-			// printf("g_exst = %d\n", g_exst);
-			exit_status = WEXITSTATUS(waiting);
-			// printf("exit_status = %d\n", exit_status);
-			// printf("g_exst = %d\n", g_exst);
+			data_processing->ex_st = WEXITSTATUS(waiting);
 		}
 		i++;
 	}
-	// printf("exit_status = %d\n", exit_status);
-	return (exit_status);
+	return (OK);
 }
 
 static int	exec_commands(t_data_processing *data_processing, t_parser *parser, size_t i)
@@ -68,13 +61,13 @@ static int	exec_commands(t_data_processing *data_processing, t_parser *parser, s
 	if (exec == NULL)
 		return (free_any(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, command, data_processing->env);
-	if (out != OK)
-		return (out);
-	if (out == ERROR_EXIT)
+	if (out == ERROR_EXIT && data_processing->ex_st != OK)
+		return (free_any(data_processing->ex_st, exec, free_exec));
+	else if (out == ERROR_EXIT)
 		return (free_any(out, exec, free_exec));
 	if (out == ERROR_BAD_COMMAND)
 		return (free_any(EXIT_NOT_FOUND, exec, free_exec));
-	out = wait_pids(exec, i);
+	wait_pids(exec, i);
 	free_exec(exec);
 	return (out);
 }
@@ -150,12 +143,12 @@ int	start_parsing(t_data_processing *data_processing)
 	check = check_parser(parser);
 	if (check != OK)
 	{
-		g_exst = EXIT_PARSER;
+		data_processing->ex_st = EXIT_PARSER;
 		return (free_any(check, parser, free_parser));
 	}
-	// printf("g_exst = %d\n", g_exst);
 	out = start_loop(data_processing, parser);
-	g_exst = out;
+	if (out != OK)
+		data_processing->ex_st = out;
 	free_parser(parser);
 	return (out);
 }
