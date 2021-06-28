@@ -1,6 +1,7 @@
 #include "includes/env.h"
 #include "includes/errors.h"
 #include "includes/parser.h"
+#include "includes/exit_status.h"
 #include "includes/token.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +21,7 @@ static char	*make_argument(char *str, t_parser *parser)
 	if (type == TOKEN_DOLLAR)
 	{
 		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
-			str = ft_strjoin(str, "$?");
+			str = ft_strjoin(str, ft_itoa(g_exst));
 		else
 		{
 			str = ft_strjoin(str,

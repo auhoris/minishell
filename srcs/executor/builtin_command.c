@@ -1,6 +1,7 @@
 #include "../includes/ast.h"
 #include "../../libs/libft/srcs/libft.h"
 #include "../includes/types.h"
+#include "../includes/exit_status.h"
 #include "executor.h"
 #include <errno.h>
 #include <stddef.h>
@@ -10,15 +11,19 @@
 void	handle_echo_output(t_exec *exec, t_ast *node,
 		size_t pos, size_t n_flag, size_t d_flag)
 {
+	(void)exec;
 	(void)n_flag;
 	if (ft_strcmp(node->argv[pos], "") == 0)
 		return ;
 	if (pos != n_flag + d_flag)
 		ft_putchar(' ');
-	if (ft_strcmp(node->argv[pos], "$?") == 0)
-		ft_putstr(ft_itoa(exec->exit_status));
+	/* if (ft_strcmp(node->argv[pos], "$?") == 0)
+		ft_putstr(ft_itoa(exec->exit_status)); */
 	else
+	{
+		// printf("%s\n", node->argv[pos]);
 		ft_putstr(node->argv[pos]);
+	}
 }
 
 void	execution_echo(t_exec *exec, t_ast *node)
@@ -79,6 +84,8 @@ int	execution_cd(t_ast *node, t_env_list *env)
 		write(1, node->argv[0], ft_strlen(node->argv[0]));
 		write(1, ": ", 2);
 		write(1, strerror(errno), ft_strlen(strerror(errno)));
+		ft_putchar('\n');
+		return (EXIT_NOT_EXIST);
 	}
 	else
 		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)

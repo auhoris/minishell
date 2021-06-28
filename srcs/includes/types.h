@@ -3,7 +3,7 @@
 
 # define ARROW_UP "\e[A"
 # define ARROW_DOWN "\e[B"
-# define OUT 5
+# define OUT 0
 # define ISPRINT 4
 # define ENTER 3
 # define DEL 2
@@ -25,6 +25,7 @@ typedef struct s_history
 
 typedef struct s_data_processing
 {
+	int					exit_status;
 	int					l;
 	char				*buf_read;
 	char				*command_line;

@@ -8,8 +8,7 @@
 # define ERROR_EXECVE -5
 # define ERROR_READDIR -6
 # define ERROR_EXIT_ARGC 1
-/* # define ERROR_PARSER -7
-# define ERROR_PIPE -8 */
+
 # define ERROR_BAD_COMMAND -9
 # define ERROR -10
 # define OK 0

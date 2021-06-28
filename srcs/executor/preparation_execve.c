@@ -1,5 +1,6 @@
 #include "../includes/ast.h"
 #include "../../libs/libft/srcs/libft.h"
+#include "../includes/exit_status.h"
 #include "../includes/types.h"
 #include "../includes/errors.h"
 #include "executor.h"
@@ -43,6 +44,7 @@ void	clear_array(char **args, int index)
 
 static void	bad_command(t_exec *exec, char *command)
 {
+	g_exst = EXIT_NOT_FOUND;
 	ft_putchar_fd('\n', exec->tempout);
 	ft_putstr_fd("minishell: ", exec->tempout);
 	ft_putstr_fd(command, exec->tempout);

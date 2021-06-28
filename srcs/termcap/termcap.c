@@ -8,6 +8,7 @@
 #include "../includes/types.h"
 #include "../includes/env.h"
 #include "../executor/executor.h"
+#include "../includes/exit_status.h"
 
 static int	get_term_param(struct termios *term, struct termios *term_default)
 {
@@ -108,7 +109,7 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		{
 			write(1, data_processing->command_line, ft_strlen(data_processing->command_line));
 			out = start_parsing(data_processing);
-			if (out != OUT && out != ERROR_BAD_COMMAND && out != ERROR_PARSER)
+			if (out != OUT && out != EXIT_NOT_FOUND && out != EXIT_PARSER)
 			{
 				printf("\nERROR = %d\n", out);
 				return (out);

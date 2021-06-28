@@ -1,5 +1,6 @@
 #include "includes/ast.h"
 #include "includes/parser.h"
+#include "includes/exit_status.h"
 
 int	make_node_fd(char *filename, int type, t_ast *node)
 {
@@ -14,6 +15,7 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 		node->fd_in = open(filename, O_RDONLY);
 	if (node->fd_out == -1 || node->fd_in == -1)
 	{
+		g_exst = EXIT_NOT_EXIST;
 		ft_putchar('\n');
 		perror(filename);
 		return (ERROR_PARSER);
