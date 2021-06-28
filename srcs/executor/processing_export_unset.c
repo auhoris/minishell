@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #define NOT_VALID "-!%+.,/?:@^_{}~"
+
 static void	value_key_free(char *value, char *key, t_env_list *new)
 {
 	free(value);
@@ -64,8 +65,10 @@ static int	check_export(char *str)
 		put_err_msg(str);
 		return (ERROR);
 	}
-	while (str[i] != '=' || str[i] != '\0')
+	while (str[i])
 	{
+		if (str[i] == '=')
+			break ;
 		if (ft_inset(NOT_VALID, str[i]))
 		{
 			put_err_msg(str);
