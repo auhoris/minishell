@@ -107,7 +107,7 @@ int	execution_export(t_ast *node, t_env_list *env)
 	i = 0;
 	if (node->argc == 0)
 	{
-		write_export(env);
+		write_sort_env(env);
 		return (OUT);
 	}
 	while (i < node->argc)
@@ -133,7 +133,6 @@ int	execution_unset(t_ast *node, t_env_list **env)
 		unset_env_elem(env, node->argv[i]);
 		i++;
 	}
-	write(1, "\n", 1);
 	return (OUT);
 }
 

@@ -14,5 +14,6 @@
 # define OK 0
 # define ERROR_NOT_FOUND 127
 # define ERROR_PARSER -7
+# define ERROR_BAD_CD1 1
 
 #endif

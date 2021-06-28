@@ -14,23 +14,33 @@ static void	value_key_free(char *value, char *key, t_env_list *new)
 //Почему не сделать через env_addback?
 static int	create_new_env(char *key, char *value, t_env_list *env)
 {
+	// t_env_list	*new;
+
+	// if (value == NULL)
+	// 	new = env_new(ft_strdup(key), ft_strdup(value));
+	// else
+	// 	new = env_new(ft_strdup(key), ft_strdup(value));
+	// if (new == NULL)
+	// 	return (ERROR_MALLOC);
+	// env_addback(&env, new);
+	// return (OUT);
+
 	t_env_list	*new;
-
-	new = env_new(ft_strdup(key), ft_strdup(value));
-	if (new == NULL)
-		return (ERROR_MALLOC);
-	env_addback(&env, new);
-	return (OUT);
-}
-
-	/* t_env_list	*new;
+	int			null_value;
 
 	new = (t_env_list *)malloc(sizeof(t_env_list));
 	if (new == NULL)
 		return (ERROR_MALLOC);
 	new->key = ft_strdup(key);
-	new->value = ft_strdup(value);
-	if (new->key == NULL || new->value == NULL)
+	null_value = 0;
+	if (value == NULL)
+	{
+		new->value = NULL;
+		null_value = 1;
+	}
+	else
+		new->value = ft_strdup(value);
+	if (new->key == NULL || (new->value == NULL && null_value == 0))
 	{
 		value_key_free(new->value, new->key, new);
 		return (ERROR_MALLOC);
@@ -40,24 +50,34 @@ static int	create_new_env(char *key, char *value, t_env_list *env)
 	{
 		env = env->next;
 	}
-	env->next = new; */
+	env->next = new;
+	return (OUT);
+}
 
 int	set_key_value(char *str, t_env_list *env)
 {
-	char	*chr;
 	char	*key;
 	char	*value;
-	int		len;
+	int		i;
+	int		nul_value;
 
 	while (env->next != NULL)
 		env = env->next;
-	chr = ft_strchr(str, '=');
-	if (chr == NULL)
-		return (OUT);
-	len = chr - str;
-	key = ft_substr(str, 0, len);
-	value = ft_strdup(chr + 1);
-	if (key == NULL || value == NULL)
+	i = 0;
+	nul_value = 0;
+	while (*(str + i) != '\0' && *(str + i) != ' ' && *(str + i) != '=')
+	{
+		i++;
+	}
+	key = ft_substr(str, 0, i);
+	if (*(str + i) == ' ' || *(str + i) == '\0')
+	{
+		value = NULL;
+		nul_value = 1;
+	}
+	else
+		value = ft_strdup(str + i + 1);
+	if (key == NULL || (value == NULL && nul_value == 0))
 	{
 		value_key_free(value, key, NULL);
 		return (ERROR_MALLOC);
