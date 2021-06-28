@@ -15,7 +15,10 @@ void	write_export(t_env_list *env)
 		write(1, "\n", 1);
 		env = env->next;
 	}
-	ft_putstr("declare -x");
+	ft_putstr("declare -x ");
 	ft_putstr(env->key);
+	ft_putchar('=');
+	ft_putchar('"');
 	ft_putstr(env->value);
+	ft_putchar('"');
 }
