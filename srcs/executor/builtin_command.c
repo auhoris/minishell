@@ -49,8 +49,10 @@ void	execution_echo(t_exec *exec, t_ast *node)
 		handle_echo_output(exec, node, i, n_flag, d_flag);
 		i++;
 	}
-	if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
+	if (!n_flag)
 		ft_putchar('\n');
+	/* if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
+		ft_putchar('\n'); */
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		exec->flag_echo = n_flag;
 }

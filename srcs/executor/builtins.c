@@ -60,7 +60,7 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 			perror("execve");
 	}
 	if (append_pid(exec, pid) != OK)
-		return (ERROR);
+		return (ERROR_MALLOC);
 	return (OK);
 }
 
@@ -108,7 +108,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	else if (ft_strcmp(node->cmd_name, "unset") == 0)
 		out = execution_unset(node, &env);
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)
-		out = decrease_shlvl(&env);
+		out = executor_exit(node->argc, node->argv, &env);
 	else
 		out = other_command(exec, node, env);
 	return (out);
