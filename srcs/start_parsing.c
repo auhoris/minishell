@@ -90,24 +90,24 @@ free_exec(exec); */
 static int	start_loop(t_data_processing *data_processing, t_parser *parser)
 {
 	int		out;
-	int		i;
+	// int		i;
 
-	i = 0;
+	data_processing->cmd_i = 0;
 	out = OUT;
-	out = exec_commands(data_processing, parser, i);
+	out = exec_commands(data_processing, parser, data_processing->cmd_i);
 	if (out == ERROR_MALLOC || out == ERROR_EXIT || out == ERROR_PARSER)
 		return (out);
-	i++;
+	data_processing->cmd_i++;
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
 		if (parser_next_token(parser) == ERROR_PARSER)
 			return (EXIT_PARSER);
 		if (parser->cur_tok->e_type == TOKEN_EOF)
 			break ;
-		out = exec_commands(data_processing, parser, i);
+		out = exec_commands(data_processing, parser, data_processing->cmd_i);
 		if (out == ERROR_MALLOC || out == ERROR_EXIT || out == ERROR_PARSER)
 			return (out);
-		i++;
+		data_processing->cmd_i++;
 	}
 	return (out);
 }

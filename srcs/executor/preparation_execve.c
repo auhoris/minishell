@@ -45,7 +45,8 @@ void	clear_array(char **args, int index)
 static void	bad_command(t_exec *exec, char *command)
 {
 	data_processing->ex_st = EXIT_NOT_FOUND;
-	ft_putchar_fd('\n', exec->tempout);
+	if (data_processing->cmd_i == 0)
+		ft_putchar_fd('\n', exec->tempout);
 	ft_putstr_fd("minishell: ", exec->tempout);
 	ft_putstr_fd(command, exec->tempout);
 	if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
