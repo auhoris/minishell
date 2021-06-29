@@ -63,8 +63,6 @@ static int	exec_commands(t_data_processing *data_processing, t_parser *parser, s
 	if (exec == NULL)
 		return (free_any(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, command, data_processing->env);
-	/* if (out == ERROR_EXIT && data_processing->ex_st != OK)
-		return (free_any(data_processing->ex_st, exec, free_exec)); */
 	if (out == ERROR_EXIT)
 		return (free_any(out, exec, free_exec));
 	if (out == ERROR_BAD_COMMAND)
@@ -73,6 +71,8 @@ static int	exec_commands(t_data_processing *data_processing, t_parser *parser, s
 	free_exec(exec);
 	return (out);
 }
+/* if (out == ERROR_EXIT && data_processing->ex_st != OK)
+	return (free_any(data_processing->ex_st, exec, free_exec)); */
 
 /* command = parser_parse_command(parser);
 if (command == NULL)
@@ -146,7 +146,6 @@ int	start_parsing(t_data_processing *data_processing)
 		return (free_any(check, parser, free_parser));
 	}
 	out = start_loop(data_processing, parser);
-	// data_processing->ex_st = out;
 	free_parser(parser);
 	return (out);
 }

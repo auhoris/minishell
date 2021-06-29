@@ -46,6 +46,8 @@ static int	check_numeric(char *arg)
 			return (ERROR);
 		i++;
 	}
+	if (i == 1)
+		return (ERROR);
 	return (OK);
 }
 
@@ -57,8 +59,9 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 	ft_putstr_fd("\nexit\n", STDOUT_FILENO);
 	if (argc > 1)
 	{
-		ft_putstr_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		return (ERROR_EXIT_ARGC);
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+		data_processing->ex_st = ERROR_EXIT_ARGC;
+		return (OK);
 	}
 	if (argv)
 	{
