@@ -33,12 +33,14 @@ void	error_processing(t_env_list *env,
 	if (error_code != OUT
 		&& error_code != ERROR_BAD_COMMAND
 		&& error_code != ERROR_PARSER
-		&& error_code != ERROR_EXIT_ARGC)
+		/*&& error_code != ERROR_EXIT_ARGC*/)
 	{
-		if (error_code == ERROR_EXIT)
+		if (error_code == ERROR_EXIT && data_processing->ex_st == OK)
+		{
+
 			execution_exit(env, data_processing);
+		}
 		param_free(env, data_processing);
-		// printf("error_code = %d\n", error_code);
 		exit(data_processing->ex_st);
 	}
 }

@@ -27,8 +27,10 @@ static int	wait_pids(t_exec *exec, int cnt)
 	size_t	i;
 	int		waiting;
 	int		temp;
+	int		ex_st;
 
 	i = 0;
+	ex_st = OK;
 	if (exec->size_pids == 0)
 		return (OK);
 	if (cnt == 0)
@@ -38,11 +40,11 @@ static int	wait_pids(t_exec *exec, int cnt)
 		temp = waitpid(exec->pids[i], &waiting, 0);
 		if ((temp = WIFEXITED(waiting)))
 		{
-			data_processing->ex_st = WEXITSTATUS(waiting);
+			ex_st = WEXITSTATUS(waiting);
 		}
 		i++;
 	}
-	return (OK);
+	return (ex_st);
 }
 
 static int	exec_commands(t_data_processing *data_processing, t_parser *parser, size_t i)
@@ -61,13 +63,13 @@ static int	exec_commands(t_data_processing *data_processing, t_parser *parser, s
 	if (exec == NULL)
 		return (free_any(ERROR_MALLOC, exec, free_exec));
 	out = detour_tree(exec, command, data_processing->env);
-	if (out == ERROR_EXIT && data_processing->ex_st != OK)
-		return (free_any(data_processing->ex_st, exec, free_exec));
-	else if (out == ERROR_EXIT)
+	/* if (out == ERROR_EXIT && data_processing->ex_st != OK)
+		return (free_any(data_processing->ex_st, exec, free_exec)); */
+	if (out == ERROR_EXIT)
 		return (free_any(out, exec, free_exec));
 	if (out == ERROR_BAD_COMMAND)
-		return (free_any(EXIT_NOT_FOUND, exec, free_exec));
-	wait_pids(exec, i);
+		return (free_any(ERROR_BAD_COMMAND, exec, free_exec));
+	data_processing->ex_st = wait_pids(exec, i);
 	free_exec(exec);
 	return (out);
 }
@@ -93,10 +95,8 @@ static int	start_loop(t_data_processing *data_processing, t_parser *parser)
 	i = 0;
 	out = OUT;
 	out = exec_commands(data_processing, parser, i);
-	if (out == ERROR_MALLOC || out == ERROR_EXIT)
+	if (out == ERROR_MALLOC || out == ERROR_EXIT || out == ERROR_PARSER)
 		return (out);
-	if (out == ERROR_PARSER)
-		return (EXIT_PARSER);
 	i++;
 	while (parser->cur_tok->e_type == TOKEN_SEMI)
 	{
@@ -105,10 +105,8 @@ static int	start_loop(t_data_processing *data_processing, t_parser *parser)
 		if (parser->cur_tok->e_type == TOKEN_EOF)
 			break ;
 		out = exec_commands(data_processing, parser, i);
-		if (out == ERROR_MALLOC || out == ERROR_EXIT)
+		if (out == ERROR_MALLOC || out == ERROR_EXIT || out == ERROR_PARSER)
 			return (out);
-		if (out == ERROR_PARSER)
-			return (EXIT_PARSER);
 		i++;
 	}
 	return (out);
@@ -138,6 +136,7 @@ int	start_parsing(t_data_processing *data_processing)
 	int			out;
 	int			check;
 
+	out = OK;
 	lexer = init_lexer(data_processing->actual_history->prev->command);
 	parser = init_parser(lexer, data_processing->env);
 	check = check_parser(parser);
@@ -147,8 +146,7 @@ int	start_parsing(t_data_processing *data_processing)
 		return (free_any(check, parser, free_parser));
 	}
 	out = start_loop(data_processing, parser);
-	if (out != OK)
-		data_processing->ex_st = out;
+	// data_processing->ex_st = out;
 	free_parser(parser);
 	return (out);
 }

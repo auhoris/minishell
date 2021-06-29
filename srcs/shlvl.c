@@ -54,7 +54,7 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 	t_env_list	*start;
 	int			shlvl;
 
-	ft_putstr_fd("\nexit", STDOUT_FILENO);
+	ft_putstr_fd("\nexit\n", STDOUT_FILENO);
 	if (argc > 1)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments", STDERR_FILENO);
@@ -67,8 +67,8 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 			ft_putstr_fd("\nminishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(argv[0], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required", STDERR_FILENO);
-			// ft_putchar('\n');
-			return (EXIT_NUMERIC);
+			data_processing->ex_st = ERROR_NUMERIC;
+			return (ERROR_EXIT);
 		}
 	}
 	shlvl = ft_atoi(get_value_by_key("SHLVL", env));

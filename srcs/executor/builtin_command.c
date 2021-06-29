@@ -17,13 +17,8 @@ void	handle_echo_output(t_exec *exec, t_ast *node,
 		return ;
 	if (pos != n_flag + d_flag)
 		ft_putchar(' ');
-	/* if (ft_strcmp(node->argv[pos], "$?") == 0)
-		ft_putstr(ft_itoa(exec->exit_status)); */
 	else
-	{
-		// printf("%s\n", node->argv[pos]);
 		ft_putstr(node->argv[pos]);
-	}
 }
 
 void	execution_echo(t_exec *exec, t_ast *node)
@@ -60,6 +55,7 @@ void	execution_echo(t_exec *exec, t_ast *node)
 		ft_putchar('\n'); */
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		exec->flag_echo = n_flag;
+	data_processing->ex_st = OK;
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
