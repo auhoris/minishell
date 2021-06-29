@@ -3,7 +3,7 @@
 
 # define ARROW_UP "\e[A"
 # define ARROW_DOWN "\e[B"
-# define OUT 5
+# define OUT 0
 # define CTRL_D 7
 # define VALUE_REPEATED 6
 # define ISPRINT 4
@@ -27,6 +27,8 @@ typedef struct s_history
 
 typedef struct s_data_processing
 {
+	int					cmd_i;
+	int					ex_st;
 	int					l;
 	char				*buf_read;
 	char				*command_line;
@@ -39,7 +41,6 @@ typedef struct s_data_processing
 	t_env_list			*env;
 	t_history			*start_history;
 	t_history			*actual_history;
-
 }				t_data_processing;
 
 #endif

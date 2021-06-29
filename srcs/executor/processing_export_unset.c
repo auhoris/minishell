@@ -2,7 +2,10 @@
 #include "../includes/types.h"
 #include "../includes/errors.h"
 #include "../../libs/libft/srcs/libft.h"
+#include <stddef.h>
 #include <unistd.h>
+
+#define NOT_VALID "-!%+.,/?:@^_{}~"
 
 static void	value_key_free(char *value, char *key, t_env_list *new)
 {
@@ -102,6 +105,40 @@ static int	get_value_export(char *str, char **value, int *i)
 		return (ERROR_MALLOC);
 	}
 	return (OUT);
+}
+
+static void	put_err_msg(char *str)
+{
+	ft_putstr_fd("\nminishell: export: ", STDERR_FILENO);
+	ft_putchar_fd('\'', STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putchar_fd('\'', STDERR_FILENO);
+	ft_putchar_fd(':', STDERR_FILENO);
+	ft_putstr_fd(" not a valid identifier", STDERR_FILENO);
+}
+
+static int	check_export(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	if (ft_isdigit(str[i]))
+	{
+		put_err_msg(str);
+		return (ERROR);
+	}
+	while (str[i])
+	{
+		if (str[i] == '=')
+			break ;
+		if (ft_inset(NOT_VALID, str[i]))
+		{
+			put_err_msg(str);
+			return (ERROR);
+		}
+		i++;
+	}
+	return (OK);
 }
 
 int	set_key_value(char *str, t_env_list *env)

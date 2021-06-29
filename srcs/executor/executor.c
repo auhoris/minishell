@@ -28,7 +28,7 @@ t_exec	*init_exec(t_ast *root)
 	return (exec);
 }
 
-static int	wait_pids(t_exec *exec, int cnt)
+/* static int	wait_pids(t_exec *exec, int cnt)
 {
 	size_t	i;
 	int		waiting;
@@ -37,7 +37,6 @@ static int	wait_pids(t_exec *exec, int cnt)
 	i = 0;
 	if (exec->size_pids == 0)
 		return (OK);
-	// printf("exec.size_pids = %zu\n", exec->size_pids);
 	if (cnt == 0)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
@@ -50,9 +49,9 @@ static int	wait_pids(t_exec *exec, int cnt)
 		i++;
 	}
 	return (OK);
-}
+} */
 
-static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
+/* static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	// size_t	i;
 	int		out;
@@ -68,14 +67,12 @@ static int	executor_root(t_exec *exec, t_ast *node, t_env_list *env)
 		exec->i++;
 	}
 	return (out);
-}
+} */
 
 int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;
 
-	/* if (ft_strcmp(node->cmd_name, "") == 0)
-		return (OUT); */
 	set_redirection(exec, node);
 	out = check_builtin(exec, node, env);
 	restore_std(exec, node);
@@ -87,8 +84,6 @@ int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
-	if (node->e_nodetype == NODE_ROOT)
-		return (executor_root(exec, node, env));
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
 		return (executor_simplecommand(exec, node, env));
 	if (node->e_nodetype == NODE_PIPE)

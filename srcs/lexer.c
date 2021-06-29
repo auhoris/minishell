@@ -54,8 +54,11 @@ t_token	*lexer_special_tokens(t_lexer *lexer)
 	else if (lexer->c == '=')
 	{
 		if (lexer_peek(lexer, -1) == ' ' || lexer_peek(lexer, 1) == ' ')
+		{
+			ft_putstr_fd("\nminishell: export: '=': not a valid identifier", STDERR_FILENO);
 			return (lexer_advance_with(lexer,
 					init_token(BAD_TOKEN, lexer_chtostr(lexer->c), FALSE)));
+		}
 		return (lexer_advance_with(lexer,
 				init_token(TOKEN_EQUALS, lexer_chtostr(lexer->c), FALSE)));
 	}
@@ -69,16 +72,14 @@ t_token	*lexer_get_next_token(t_lexer *lexer)
 	{
 		if (lexer->flag == FALSE)
 			lexer_skip_whitespace(lexer);
-		if (lexer->c == '\'')
+		if (lexer->c == '\'' && lexer->flag != TRUE)
 			return (lexer_collect_squote(lexer));
 		if (ft_isalnum(lexer->c) || ft_inset(OTHER, lexer->c))
 			return (lexer_collect_id(lexer));
 		if (lexer->c == '$')
 			return (lexer_collect_dollar(lexer));
 		if (lexer->c == '"' || lexer->flag == TRUE)
-		{
 			return (lexer_collect_dquote(lexer));
-		}
 		if (lexer->c == '\\')
 			return (lexer_collect_bslash(lexer));
 		if (ft_inset(";<|>=", lexer->c))

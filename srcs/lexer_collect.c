@@ -7,19 +7,20 @@
 
 t_token	*lexer_errors_handler(t_token *token)
 {
+	ft_putchar('\n');
 	if (token->e_type == TOKEN_SQUOTE)
 	{
 		handle_error_msg(
 			"minishell: unexpected EOF while looking for matching ", "'");
 		ft_putstr_fd(
-			"minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
+			"minishell: syntax error: unexpected end of file", STDERR_FILENO);
 	}
 	else if (token->e_type == TOKEN_DQUOTE)
 	{
 		handle_error_msg(
 			"minishell: unexpected EOF while looking for matching ", "\"");
 		ft_putstr_fd(
-			"minishell: syntax error: unexpected end of file\n", STDERR_FILENO);
+			"minishell: syntax error: unexpected end of file", STDERR_FILENO);
 	}
 	else
 	{
@@ -39,22 +40,20 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 	lexer_advance(lexer);
 	if (ft_isdigit(lexer->c))
 		return (lexer_advance_with(lexer, init_token(TOKEN_ID, ft_strdup(""), FALSE)));
-	if (lexer->c == '\0' || lexer->c == ' ' || lexer->c == '='
-			|| lexer->c == '"')
+	if (lexer->c == '\0' || lexer->c == ' ' || lexer->c == '=')
+	{
+		if (lexer->c == ' ')
+			return (init_token(TOKEN_ID, ft_strdup("$"), TRUE));
 		return (init_token(TOKEN_ID, ft_strdup("$"), FALSE));
+	}
 	while ((!ft_inset(SPECIAL, lexer->c)
 			&& lexer->c != SPACE) && lexer->c != '\0')
 	{
+		if (lexer->c == '=')
+			break ;
 		str = connect_str(str, lexer_chtostr(lexer->c));
 		if (str == NULL)
 			return (NULL);
-		/* if (ft_isdigit(lexer->c))
-		{
-			lexer_advance(lexer);
-			break ;
-		} */
-		if (lexer->c == '=')
-			break ;
 		lexer_advance(lexer);
 	}
 	if (lexer->c == SPACE && !lexer->flag)

@@ -1,6 +1,7 @@
 #include "../includes/ast.h"
 #include "../../libs/libft/srcs/libft.h"
 #include "../includes/types.h"
+#include "../includes/exit_status.h"
 #include "executor.h"
 #include <errno.h>
 #include <stddef.h>
@@ -10,15 +11,14 @@
 void	handle_echo_output(t_exec *exec, t_ast *node,
 		size_t pos, size_t n_flag, size_t d_flag)
 {
+	// printf("%zu: this ---- > %s\n", pos, node->argv[pos]);
+	(void)exec;
 	(void)n_flag;
 	if (ft_strcmp(node->argv[pos], "") == 0)
 		return ;
 	if (pos != n_flag + d_flag)
 		ft_putchar(' ');
-	if (ft_strcmp(node->argv[pos], "$?") == 0)
-		ft_putstr(ft_itoa(exec->exit_status));
-	else
-		ft_putstr(node->argv[pos]);
+	ft_putstr(node->argv[pos]);
 }
 
 void	execution_echo(t_exec *exec, t_ast *node)
@@ -47,12 +47,16 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	while (i < node->argc)
 	{
 		handle_echo_output(exec, node, i, n_flag, d_flag);
+		// printf("%s\n", node->argv[i]);
 		i++;
 	}
-	if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
+	if (!n_flag)
 		ft_putchar('\n');
+	/* if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
+		ft_putchar('\n'); */
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		exec->flag_echo = n_flag;
+	data_processing->ex_st = OK;
 }
 
 int	execution_cd(t_ast *node, t_env_list *env)
@@ -77,6 +81,8 @@ int	execution_cd(t_ast *node, t_env_list *env)
 		write(1, node->argv[0], ft_strlen(node->argv[0]));
 		write(1, ": ", 2);
 		write(1, strerror(errno), ft_strlen(strerror(errno)));
+		ft_putchar('\n');
+		return (EXIT_NOT_EXIST);
 	}
 	else
 		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
@@ -140,7 +146,10 @@ int	execution_env(t_ast *node, t_env_list *env)
 {
 	write(1, "\n", 1);
 	if (node->argc > 1)
+	{
 		write(1, "\nenv must be without any options or arguments", 45);
+		return (ERROR_NOT_EXIST );
+	}
 	else
 		show_dict(&env);
 	return (OUT);

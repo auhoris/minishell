@@ -6,12 +6,13 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/06/03 16:33:10 by auhoris          ###   ########.fr       */
+/*   Updated: 2021/06/28 21:13:13 by vlados_pa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/lexer.h"
 #include "includes/minishell.h"
+#include "includes/exit_status.h"
 #include "includes/token_list.h"
 #include "../libs/get_next_line/srcs/includes/get_next_line.h"
 #include "includes/parser.h"
@@ -50,6 +51,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+	// data_processing->ex_st = OK;
 	data_processing = NULL;
 	env_dict = init_env_list(env);
 	termcap(env_dict);
