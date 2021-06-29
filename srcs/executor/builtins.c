@@ -71,6 +71,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	char	**args;
 	int		error;
 
+	// data_processing->n_flag = FALSE;
 	args = create_args(exec, node, &error);
 	if (args == NULL && error == ERROR_BAD_COMMAND)
 		return (ERROR_BAD_COMMAND);
@@ -93,18 +94,19 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
+	data_processing->n_flag = TRUE;
 	if (node->cmd_name == NULL)
 		return (out);
 	if (ft_strcmp(node->cmd_name, "echo") == 0)
 		execution_echo(exec, node);
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)
-		out = execution_cd(node, env);
+		out = execution_cd(exec, node, env);
 	else if (ft_strcmp(node->cmd_name, "pwd") == 0)
-		out = execution_pwd(env);
+		out = execution_pwd(exec, node, env);
 	else if (ft_strcmp(node->cmd_name, "export") == 0)
 		out = execution_export(node, env);
 	else if (ft_strcmp(node->cmd_name, "env") == 0)
-		out = execution_env(node, env);
+		out = execution_env(exec, node, env);
 	else if (ft_strcmp(node->cmd_name, "unset") == 0)
 		out = execution_unset(node, &env);
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)

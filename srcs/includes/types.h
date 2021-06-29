@@ -27,6 +27,7 @@ typedef struct s_history
 
 typedef struct s_data_processing
 {
+	int					n_flag;
 	int					cmd_i;
 	int					ex_st;
 	int					l;

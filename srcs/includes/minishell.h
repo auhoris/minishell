@@ -24,7 +24,6 @@ typedef struct s_exec
 	int		is_redir;
 	int		*pids;
 	size_t	size_pids;
-	int		flag_echo;
 	int		piperead;
 	int		pipewrite;
 	size_t	i;

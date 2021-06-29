@@ -104,6 +104,8 @@ static int	processing_button(t_data_processing *data_processing, int button)
 		return (out);
 	if (button == ENTER)
 	{
+		if (*data_processing->command_line == '\0')
+			data_processing->n_flag = FALSE;
 		data_processing->permission_create = 1;
 		if (*data_processing->command_line != '\0')
 		{
@@ -111,16 +113,14 @@ static int	processing_button(t_data_processing *data_processing, int button)
 			out = start_parsing(data_processing);
 			if (out != OUT && out != ERROR_BAD_COMMAND && out != ERROR_PARSER)
 			{
-				printf("\nERROR = %d\n", out);
+				printf("ERROR = %d\n", out);
 				return (out);
 			}
 		}
-		if (data_processing->size_pids != 0)
-			write(1, "<minishell>$1 ", 13);
-		else if (out == OUT /*&& data_processing->flag_echo == 0*/)
-			write(1, "\n<minishell>$2 ", 14);
-		else
-			write(1, "<minishell>$3 ", 13);
+		if (data_processing->n_flag == FALSE)
+			ft_putstr("\n<minishell>$[1] ");
+		else if (data_processing->n_flag == TRUE)
+			ft_putstr("<minishell>$[2] ");
 		data_processing->size_pids = 0;
 		tputs(tgetstr("sc", 0), 1, ft_putint);
 		free(data_processing->command_line);
