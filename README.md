@@ -6,3 +6,4 @@ Hotfix:
 - [ ] data_processing.ex_st // ctrl+c = 1 или 130 (cat, wc ...); \
 - [ ] стрелочки влево вправо \
 - [x] \n при выводе
+- [ ] unset PATH: не должны работать команды
