@@ -39,9 +39,9 @@ static int	wait_pids(t_exec *exec, int cnt)
 	{
 		temp = waitpid(exec->pids[i], &waiting, 0);
 		if ((temp = WIFEXITED(waiting)))
-		{
 			ex_st = WEXITSTATUS(waiting);
-		}
+		else
+			data_processing->n_flag = FALSE;
 		i++;
 	}
 	return (ex_st);
