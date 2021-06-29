@@ -48,6 +48,7 @@ int	parser_next_token(t_parser *parser)
 	int			type;
 	int			prev_type;
 
+	// printf("\n'%s'='%s'", print_token_type(parser->cur_tok->e_type), parser->cur_tok->value);
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
 	if (parser->cur_tok == NULL)

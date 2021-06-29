@@ -26,15 +26,22 @@ void	show_dict(t_env_list **env)
 	start = *env;
 	while (start->next != NULL)
 	{
+		if (start->value != NULL)
+		{
+			ft_putstr(start->key);
+			ft_putstr("=");
+			ft_putstr(start->value);
+		}
+		if (start->next->value != NULL)
+			ft_putstr("\n");
+		start = start->next;
+	}
+	if (start->value != NULL)
+	{
 		ft_putstr(start->key);
 		ft_putstr("=");
 		ft_putstr(start->value);
-		ft_putstr("\n");
-		start = start->next;
 	}
-	ft_putstr(start->key);
-	ft_putstr("=");
-	ft_putstr(start->value);
 }
 
 t_env_list	*init_env_list(char **env)

@@ -26,6 +26,6 @@ void	clear_array(char **args, int index);
 char	*search_bin(char *command);
 int		set_redirection(t_exec *exec, t_ast *node);
 int		restore_std(t_exec *exec, t_ast *node);
-void	write_export(t_env_list *env);
+int		write_sort_env(t_env_list *env);
 
 #endif

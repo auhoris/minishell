@@ -21,6 +21,7 @@
 		"_size_t.h": "c",
 		"cdefs.h": "c",
 		"strings.h": "c",
-		"token_list.h": "c"
+		"token_list.h": "c",
+		"__node_handle": "c"
 	}
 }

@@ -27,6 +27,7 @@ t_data_processing	*init_data_processing(t_env_list *env)
 		return (NULL);
 	}
 	data_processing->num_symbol = 0;
+	data_processing->ex_st = OK;
 	return (data_processing);
 }
 
@@ -45,6 +46,8 @@ int	check_buf_read(char *buf_read)
 		return (DEL);
 	else if (buf_read[0] == 10)
 		return (ENTER);
+	else if (buf_read[0] == '\4')
+		return (CTRL_D);
 	else if (ft_isprint(buf_read[0]))
 	{
 		while (*buf_read)
