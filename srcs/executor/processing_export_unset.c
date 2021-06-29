@@ -14,17 +14,6 @@ static void	value_key_free(char *value, char *key, t_env_list *new)
 //Почему не сделать через env_addback?
 static int	create_new_env(char *key, char *value, t_env_list *env)
 {
-	// t_env_list	*new;
-
-	// if (value == NULL)
-	// 	new = env_new(ft_strdup(key), ft_strdup(value));
-	// else
-	// 	new = env_new(ft_strdup(key), ft_strdup(value));
-	// if (new == NULL)
-	// 	return (ERROR_MALLOC);
-	// env_addback(&env, new);
-	// return (OUT);
-
 	t_env_list	*new;
 	int			null_value;
 
@@ -47,10 +36,71 @@ static int	create_new_env(char *key, char *value, t_env_list *env)
 	}
 	new->next = NULL;
 	while (env->next != NULL)
+		env = env->next;
+	env->next = new;
+	return (OUT);
+}
+
+static int	setter_value(char *value, t_env_list *env)
+{
+	free(env->value);
+	if (value == NULL)
+		env->value = NULL;
+	else
 	{
+		env->value = ft_strdup(value);
+		if (env->value == NULL)
+			return (ERROR_MALLOC);
+	}
+	return (OUT);
+}
+
+static int	check_key_value_repeated(char *key, char *value, t_env_list *env)
+{
+	t_env_list	*previous;
+
+	while (env)
+	{
+		if (ft_strcmp(key, env->key) == 0)
+			return (setter_value(value, env));
+		previous = env;
 		env = env->next;
 	}
-	env->next = new;
+	if (create_new_env(key, value, previous) == ERROR_MALLOC)
+	{
+		value_key_free(value, key, NULL);
+		return (ERROR_MALLOC);
+	}
+	return (OUT);
+}
+
+static int	get_key_export(char *str, char **key, int *i)
+{
+	while (*(str + *i) != '\0' && *(str + *i) != ' ' && *(str + *i) != '=')
+		(*i)++;
+	*key = ft_substr(str, 0, *i);
+	if (*key == NULL)
+		return (ERROR_MALLOC);
+	return (OUT);
+}
+
+static int	get_value_export(char *str, char **value, int *i)
+{
+	int		nul_value;
+
+	nul_value = 0;
+	if (*(str + *i) == ' ' || *(str + *i) == '\0')
+	{
+		*value = NULL;
+		nul_value = 1;
+	}
+	else
+		*value = ft_strdup(str + *i + 1);
+	if (*value == NULL && nul_value == 0)
+	{
+		free(*value);
+		return (ERROR_MALLOC);
+	}
 	return (OUT);
 }
 
@@ -59,32 +109,18 @@ int	set_key_value(char *str, t_env_list *env)
 	char	*key;
 	char	*value;
 	int		i;
-	int		nul_value;
 
-	while (env->next != NULL)
-		env = env->next;
 	i = 0;
-	nul_value = 0;
-	while (*(str + i) != '\0' && *(str + i) != ' ' && *(str + i) != '=')
+	if (get_key_export(str, &key, &i) == ERROR_MALLOC)
+		return (ERROR_MALLOC);
+	if (get_value_export(str, &value, &i) == ERROR_MALLOC)
 	{
-		i++;
-	}
-	key = ft_substr(str, 0, i);
-	if (*(str + i) == ' ' || *(str + i) == '\0')
-	{
-		value = NULL;
-		nul_value = 1;
-	}
-	else
-		value = ft_strdup(str + i + 1);
-	if (key == NULL || (value == NULL && nul_value == 0))
-	{
-		value_key_free(value, key, NULL);
+		free(key);
 		return (ERROR_MALLOC);
 	}
-	if (create_new_env(key, value, env) == ERROR_MALLOC)
+	if (check_key_value_repeated(key, value, env) != OUT)
 	{
-		value_key_free(value, key, NULL);
+		free(key);
 		return (ERROR_MALLOC);
 	}
 	value_key_free(value, key, NULL);
@@ -126,22 +162,3 @@ int	unset_env_elem(t_env_list **env, char *key)
 	}
 	return (OK);
 }
-// int	set_export_variables(char *key, char *value, t_env_list *env)
-// {
-// 	t_env_list	*new;
-
-// 	new = (t_env_list *)malloc(sizeof(t_env_list));
-// 	if (new == NULL)
-// 		return (ERROR_MALLOC);
-// 	new->key = ft_strdup(key);
-// 	new->value = ft_strdup(value);
-// 	new->next = NULL;
-// 	if (new->key == NULL || new->value == NULL)
-// 		return (ERROR_MALLOC);
-// 	while (env->next != NULL)
-// 	{
-// 		env = env->next;
-// 	}
-// 	env->next = new;
-// 	return (OUT);
-// }
