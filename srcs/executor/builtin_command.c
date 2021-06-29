@@ -11,14 +11,14 @@
 void	handle_echo_output(t_exec *exec, t_ast *node,
 		size_t pos, size_t n_flag, size_t d_flag)
 {
+	// printf("%zu: this ---- > %s\n", pos, node->argv[pos]);
 	(void)exec;
 	(void)n_flag;
 	if (ft_strcmp(node->argv[pos], "") == 0)
 		return ;
 	if (pos != n_flag + d_flag)
 		ft_putchar(' ');
-	else
-		ft_putstr(node->argv[pos]);
+	ft_putstr(node->argv[pos]);
 }
 
 void	execution_echo(t_exec *exec, t_ast *node)
@@ -47,6 +47,7 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	while (i < node->argc)
 	{
 		handle_echo_output(exec, node, i, n_flag, d_flag);
+		// printf("%s\n", node->argv[i]);
 		i++;
 	}
 	if (!n_flag)
