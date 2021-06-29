@@ -119,20 +119,18 @@ t_token	*lexer_collect_squote(t_lexer *lexer)
 	string = ft_strdup("");
 	if (string == NULL)
 		return (NULL);
-	printf("\nquote = %c\n", lexer->c);
+	// printf("\nquote = %c\n", lexer->c);
 	lexer_advance(lexer);
 	while (lexer->c != '\'' && lexer->c != '\0')
 	{
+		// printf("char = %c\n", lexer->c);
 		string = connect_str(string, lexer_chtostr(lexer->c));
 		if (string == NULL)
 			return (NULL);
 		lexer_advance(lexer);
 	}
 	if (lexer->c != '\'')
-	{
-		printf("matching = %c\n", lexer->c);
 		return (lexer_errors_handler(init_token(TOKEN_SQUOTE, string, FALSE)));
-	}
 	lexer_advance(lexer);
 	if (lexer->c == SPACE)
 		return (init_token(TOKEN_SQUOTE, string, TRUE));
