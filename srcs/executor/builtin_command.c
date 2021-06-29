@@ -34,7 +34,7 @@ void	execution_echo(t_exec *exec, t_ast *node)
 		write (exec->tempout, "\n", 1);
 	if (node->argv == NULL)
 	{
-		if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+		// if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
 			ft_putchar('\n');
 		return ;
 	}
@@ -47,7 +47,6 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	while (i < node->argc)
 	{
 		handle_echo_output(exec, node, i, n_flag, d_flag);
-		// printf("%s\n", node->argv[i]);
 		i++;
 	}
 	if (!n_flag)
