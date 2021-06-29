@@ -13,5 +13,6 @@ int					get_history_data(t_data_processing *data_processing,
 						int button);
 void				error_processing(t_env_list *env, t_data_processing
 						*data_processing, int error_code);
+void				ctrl_d(t_data_processing *data_processing);
 
 #endif

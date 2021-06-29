@@ -46,4 +46,6 @@ int		free_any(int code, void *content, void(*del)(void *));
 int		decrease_shlvl(t_env_list **env);
 int		advance_shlvl(t_env_list **env);
 
+void	test();
+
 #endif /* ifndef MINISHELL_H */

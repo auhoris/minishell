@@ -39,6 +39,11 @@ void	handler(int s)
 
 }
 
+void	test()
+{
+	printf("\ntest\n");
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_env_list	*env_dict;

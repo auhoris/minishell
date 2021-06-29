@@ -215,6 +215,8 @@ static int	input_processing(t_data_processing *data_processing)
 	{
 		out = write_in_terminal_isprint(data_processing);
 	}
+	else if (check_buf == CTRL_D)
+		ctrl_d(data_processing);
 	return (out);
 }
 

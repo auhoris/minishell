@@ -4,6 +4,7 @@
 # define ARROW_UP "\e[A"
 # define ARROW_DOWN "\e[B"
 # define OUT 5
+# define CTRL_D 7
 # define VALUE_REPEATED 6
 # define ISPRINT 4
 # define ENTER 3
