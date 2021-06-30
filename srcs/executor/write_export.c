@@ -59,47 +59,47 @@ static int		copy_env_lst(t_env_list *env, t_env_list **copy_env)
 	return (OUT);
 }
 
-static void	write_export(t_env_list *env)
-{
-	ft_putchar('\n');
-	ft_putstr("declare -x ");
-	ft_putstr(env->key);
-	if (env->value != NULL)
-	{
-		ft_putchar('=');
-		ft_putchar('"');
-		ft_putstr(env->value);
-		ft_putchar('"');
-	}
-}
+// static void	write_export(t_env_list *env)
+// {
+// 	ft_putchar('\n');
+// 	ft_putstr("declare -x ");
+// 	ft_putstr(env->key);
+// 	if (env->value != NULL)
+// 	{
+// 		ft_putchar('=');
+// 		ft_putchar('"');
+// 		ft_putstr(env->value);
+// 		ft_putchar('"');
+// 	}
+// }
 
-static void	delete_env_elem(t_env_list *elem, t_env_list **copy_env)
-{
-	t_env_list *tmp;
-	t_env_list *iter;
+// static void	delete_env_elem(t_env_list *elem, t_env_list **copy_env)
+// {
+// 	t_env_list *tmp;
+// 	t_env_list *iter;
 
-	if (ft_strcmp((*copy_env)->key, elem->key) == 0)
-	{
-		tmp = (*copy_env)->next;
-		free((*copy_env)->key);
-		free((*copy_env)->value);
-		free(*copy_env);
-		*copy_env = tmp;
-	}
-	else
-	{
-		iter = (*copy_env);
-		while (ft_strcmp(iter->next->key, elem->key) != 0)
-		{
-			iter = iter->next;
-		}
-		tmp = iter->next;
-		iter->next = tmp->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
-	}
-}
+// 	if (ft_strcmp((*copy_env)->key, elem->key) == 0)
+// 	{
+// 		tmp = (*copy_env)->next;
+// 		free((*copy_env)->key);
+// 		free((*copy_env)->value);
+// 		free(*copy_env);
+// 		*copy_env = tmp;
+// 	}
+// 	else
+// 	{
+// 		iter = (*copy_env);
+// 		while (ft_strcmp(iter->next->key, elem->key) != 0)
+// 		{
+// 			iter = iter->next;
+// 		}
+// 		tmp = iter->next;
+// 		iter->next = tmp->next;
+// 		free(tmp->key);
+// 		free(tmp->value);
+// 		free(tmp);
+// 	}
+// }
 
 static void clear_env(t_env_list *env)
 {
@@ -141,6 +141,35 @@ static void clear_env(t_env_list *env)
 // 	return (OUT);
 // }
 
+// int		write_sort_env(t_env_list *env)
+// {
+// 	t_env_list *iter;
+// 	t_env_list *min_elem;
+// 	t_env_list *copy_env;
+
+// 	if (copy_env_lst(env, &copy_env) == ERROR_MALLOC)
+// 	{
+// 		clear_env(copy_env);
+// 		return (ERROR_MALLOC);
+// 	}
+// 	while (copy_env->next != NULL)
+// 	{
+// 		iter = copy_env;
+// 		min_elem = copy_env;
+// 		while (iter != NULL)
+// 		{
+// 			if (ft_strcmp(min_elem->key, iter->key) > 0)
+// 				min_elem = iter;
+// 			iter = iter->next;
+// 		}
+// 		write_export(min_elem);
+// 		delete_env_elem(min_elem, &copy_env);
+// 	}
+// 	write_export(copy_env);
+// 	clear_env(copy_env);
+// 	return (OUT);
+// }
+
 int		write_sort_env(t_env_list *env)
 {
 	t_env_list *iter;
@@ -158,14 +187,8 @@ int		write_sort_env(t_env_list *env)
 		min_elem = copy_env;
 		while (iter != NULL)
 		{
-			if (ft_strcmp(min_elem->key, iter->key) > 0)
-				min_elem = iter;
 			iter = iter->next;
 		}
-		write_export(min_elem);
-		delete_env_elem(min_elem, &copy_env);
 	}
-	write_export(copy_env);
-	clear_env(copy_env);
 	return (OUT);
 }
