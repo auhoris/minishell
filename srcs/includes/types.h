@@ -13,6 +13,7 @@
 # define DOWN 0
 # define ALL_ARRAY -1
 # define BUFFER_SIZE 10
+# define LAST 1
 
 # include <term.h>
 # include "env.h"

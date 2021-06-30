@@ -10,6 +10,7 @@ static t_env_list	*create_env(t_env_list *env, t_env_list **copy_env)
 	new_elem = (t_env_list *)malloc(sizeof(t_env_list));
 	if (new_elem == NULL)
 		return (NULL);
+	new_elem->next = NULL;
 	new_elem->key = ft_strdup(env->key);
 	if (env->value == NULL)
 	{
@@ -59,7 +60,7 @@ static int		copy_env_lst(t_env_list *env, t_env_list **copy_env)
 	return (OUT);
 }
 
-static void	write_export(t_env_list *env)
+static void	write_export(t_env_list *env, int last)
 {
 	ft_putchar('\n');
 	ft_putstr("declare -x ");
@@ -71,6 +72,8 @@ static void	write_export(t_env_list *env)
 		ft_putstr(env->value);
 		ft_putchar('"');
 	}
+	if (last == 1)
+		write(1, "\n", 1);
 }
 
 static void	delete_env_elem(t_env_list *elem, t_env_list **copy_env)
@@ -162,10 +165,10 @@ int		write_sort_env(t_env_list *env)
 				min_elem = iter;
 			iter = iter->next;
 		}
-		write_export(min_elem);
+		write_export(min_elem, !LAST);
 		delete_env_elem(min_elem, &copy_env);
 	}
-	write_export(copy_env);
+	write_export(copy_env, LAST);
 	clear_env(copy_env);
 	return (OUT);
 }
