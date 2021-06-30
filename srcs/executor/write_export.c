@@ -62,7 +62,7 @@ static int		copy_env_lst(t_env_list *env, t_env_list **copy_env)
 
 static void	write_export(t_env_list *env, int last)
 {
-	ft_putchar('\n');
+	(void)last;
 	ft_putstr("declare -x ");
 	ft_putstr(env->key);
 	if (env->value != NULL)
@@ -72,8 +72,9 @@ static void	write_export(t_env_list *env, int last)
 		ft_putstr(env->value);
 		ft_putchar('"');
 	}
-	if (last == 1)
-		write(1, "\n", 1);
+	ft_putchar('\n');
+	/* if (last == 1)
+		write(1, "\n", 1); */
 }
 
 static void	delete_env_elem(t_env_list *elem, t_env_list **copy_env)

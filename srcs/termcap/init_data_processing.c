@@ -14,7 +14,6 @@ t_data_processing	*init_data_processing(t_env_list *env)
 	data_processing->actual_history = NULL;
 	data_processing->start_history = NULL;
 	data_processing->permission_create = 1;
-	data_processing->flag_echo = 0;
 	data_processing->env = env;
 	data_processing->buf_read = (char *)ft_calloc(10, 1);
 	data_processing->command_line = (char *)ft_calloc(1, 1);
@@ -28,6 +27,7 @@ t_data_processing	*init_data_processing(t_env_list *env)
 	}
 	data_processing->num_symbol = 0;
 	data_processing->ex_st = OK;
+	data_processing->n_flag = FALSE;
 	return (data_processing);
 }
 

@@ -28,14 +28,14 @@ typedef struct s_history
 
 typedef struct s_data_processing
 {
+	int					n_flag;
 	int					cmd_i;
-	int					ex_st; // ctrl+c = 1 или 130 (cat, wc ...);
+	unsigned int		ex_st;
 	int					l;
 	char				*buf_read;
 	char				*command_line;
 	int					num_symbol;
 	int					permission_create;
-	int					flag_echo;
 	struct termios		*term;
 	struct termios		*term_default;
 	size_t				size_pids;

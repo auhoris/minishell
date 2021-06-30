@@ -1,6 +1,7 @@
 #include "includes/ast.h"
 #include "includes/parser.h"
 #include "includes/exit_status.h"
+#include <errno.h>
 
 int	make_node_fd(char *filename, int type, t_ast *node)
 {
@@ -15,9 +16,13 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 		node->fd_in = open(filename, O_RDONLY);
 	if (node->fd_out == -1 || node->fd_in == -1)
 	{
-		data_processing->ex_st = EXIT_NOT_EXIST;
+		if (errno == ENOENT)
+			data_processing->ex_st = EXIT_NOT_EXIST;
+		else if (errno == EACCES)
+			data_processing->ex_st = ERROR_PERM_DENIED;
 		ft_putchar('\n');
 		perror(filename);
+		data_processing->n_flag =  TRUE;
 		return (ERROR_PARSER);
 	}
 	return (OK);

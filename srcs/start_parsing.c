@@ -38,9 +38,13 @@ static int	wait_pids(t_exec *exec, int cnt)
 	while (i < exec->size_pids)
 	{
 		temp = waitpid(exec->pids[i], &waiting, 0);
-		if ((temp = WIFEXITED(waiting)))
-		{
+		if (WIFEXITED(waiting))
 			ex_st = WEXITSTATUS(waiting);
+		else
+		{
+			data_processing->n_flag = FALSE;
+			if (WIFSIGNALED(waiting))
+				ex_st = ERROR_SIG_KILL + WTERMSIG(waiting);
 		}
 		i++;
 	}

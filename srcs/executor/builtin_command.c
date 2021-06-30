@@ -30,14 +30,10 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	n_flag = 0;
 	i = 0;
 	d_flag = 0;
+	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+		data_processing->n_flag = FALSE;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		write (exec->tempout, "\n", 1);
-	if (node->argv == NULL)
-	{
-		if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
-			ft_putchar('\n');
-		return ;
-	}
 	while (i < node->argc && ft_strcmp(node->argv[i], "-n") == 0)
 		i++;
 	n_flag = i;
@@ -47,23 +43,20 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	while (i < node->argc)
 	{
 		handle_echo_output(exec, node, i, n_flag, d_flag);
-		// printf("%s\n", node->argv[i]);
 		i++;
 	}
 	if (!n_flag)
 		ft_putchar('\n');
-	/* if (!n_flag && (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO))
-		ft_putchar('\n'); */
-	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
-		exec->flag_echo = n_flag;
 	data_processing->ex_st = OK;
 }
 
-int	execution_cd(t_ast *node, t_env_list *env)
+int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int		out;
 	char	pwd_dir[256];
 
+	(void)exec;
+	data_processing->n_flag = FALSE;
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
 	if (set_old_pwd_dir(env, pwd_dir) == ERROR_MALLOC)
@@ -90,26 +83,34 @@ int	execution_cd(t_ast *node, t_env_list *env)
 	return (OUT);
 }
 
-int	execution_pwd(t_env_list *env)
+int	execution_pwd(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int		out;
 	char	*pwd_dir;
 
+	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+		data_processing->n_flag = FALSE;
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		write (exec->tempout, "\n", 1);
 	pwd_dir = NULL;
 	out = get_pwd_dir(env, &pwd_dir);
 	if (out == OUT)
 	{
-		ft_putstr("\n");
 		ft_putstr(pwd_dir);
+		ft_putstr("\n");
 	}
 	return (out);
 }
 
-int	execution_export(t_ast *node, t_env_list *env)
+int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	size_t	i;
 	int		out;
 
+	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+		data_processing->n_flag = FALSE;
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		write (exec->tempout, "\n", 1);
 	i = 0;
 	if (node->argc == 0)
 	{
@@ -123,7 +124,6 @@ int	execution_export(t_ast *node, t_env_list *env)
 			return (ERROR_MALLOC);
 		i++;
 	}
-	// write(1, "\n", 1);
 	return (OUT);
 }
 
@@ -131,6 +131,7 @@ int	execution_unset(t_ast *node, t_env_list **env)
 {
 	size_t		i;
 
+	data_processing->n_flag = FALSE;
 	if (!(*env))
 		return (OUT);
 	i = 0;
@@ -142,9 +143,12 @@ int	execution_unset(t_ast *node, t_env_list **env)
 	return (OUT);
 }
 
-int	execution_env(t_ast *node, t_env_list *env)
+int	execution_env(t_exec *exec, t_ast *node, t_env_list *env)
 {
-	write(1, "\n", 1);
+	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+		data_processing->n_flag = FALSE;
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		write (exec->tempout, "\n", 1);
 	if (node->argc > 1)
 	{
 		write(1, "\nenv must be without any options or arguments", 45);
@@ -152,5 +156,6 @@ int	execution_env(t_ast *node, t_env_list *env)
 	}
 	else
 		show_dict(&env);
+	ft_putchar('\n');
 	return (OUT);
 }

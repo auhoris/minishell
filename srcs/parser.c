@@ -59,13 +59,13 @@ int	parser_next_token(t_parser *parser)
 	type = parser->cur_tok->e_type;
 	if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
 		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+	if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
+		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	if (type == TOKEN_SEMI)
 		i = 0;
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
 		return (err_msg(parser, "\nminishell: syntax error: unexpected end of file", "", ERROR_PARSER));
 		// return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
-	else if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
-		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	else if ((prev_type == TOKEN_LESS || prev_type == TOKEN_MORE
 			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
 		return (err_msg(parser, MSG, "newline", ERROR_PARSER));
