@@ -5,18 +5,28 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include "../includes/errors.h"
+#include "../includes/types.h"
 #include "../../libs/libft/srcs/libft.h"
 
 static char	*compare(struct dirent *dp, char *command, char *bin)
 {
 	char	*bin_command;
+	char	*bin_tmp;
 
 	bin_command = NULL;
+	bin_tmp = NULL;
 	if (ft_strcmp(dp->d_name, command) == 0)
 	{
-		bin_command = ft_strjoin(bin, command);
+		bin_tmp = ft_strjoin(bin, "/");
+		if (bin_tmp == NULL)
+			return (NULL);
+		bin_command = ft_strjoin(bin_tmp, command);
+		// printf("\n%s\n", bin_command);
 		if (bin_command != NULL)
+		{
+			free (bin_tmp);
 			return (bin_command);
+		}
 	}
 	return (NULL);
 }
@@ -77,33 +87,49 @@ static char	*chek_executable(char *command)
 	return (bin_command);
 }
 
-char	*search_bin(char *command)
+int	search_bin(char **bin_command, char *command, char **path_array)
 {
-	char	*bin_command;
+	int	i;
 
-	bin_command = chek_executable(command);
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/Users/skitsch/.brew/bin/");
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/usr/local/bin/");
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/usr/bin/");
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/bin/");
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/usr/sbin/");
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/sbin/");
-	if (bin_command != NULL)
-		return (bin_command);
-	bin_command = get_bin(command, "/usr/local/munki/");
-	if (bin_command != NULL)
-		return (bin_command);
-	return (NULL);
+	i = 0;
+	*bin_command = chek_executable(command);
+	if (*bin_command != NULL)
+		return (OUT);
+	while (path_array[i] != NULL)
+	{
+		// printf("\n%s\n", path_array[i]);
+		*bin_command = get_bin(command, path_array[i]);
+		if (*bin_command != NULL)
+			return (OUT);
+		i++;
+	}
+	*bin_command = ft_strdup(command);
+	if (*bin_command == NULL)
+		return (ERROR_MALLOC);
+	return (OUT);
+	// bin_command = chek_executable(command);
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/Users/skitsch/.brew/bin/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/usr/local/bin/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/usr/bin/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/bin/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/usr/sbin/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/sbin/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// bin_command = get_bin(command, "/usr/local/munki/");
+	// if (bin_command != NULL)
+	// 	return (bin_command);
+	// return (NULL);
 }
