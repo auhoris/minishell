@@ -1,6 +1,7 @@
 #include "includes/minishell.h"
 #include "includes/exit_status.h"
 #include "includes/parser.h"
+#include <stdlib.h>
 
 static int		check_parser(t_parser *paser)
 {
@@ -37,11 +38,14 @@ static int	wait_pids(t_exec *exec, int cnt)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
 	{
+		// printf("[i] = %zu\t", i);
 		temp = waitpid(exec->pids[i], &waiting, 0);
+		// printf("temp = %d\n", temp);
 		if (WIFEXITED(waiting))
 			ex_st = WEXITSTATUS(waiting);
 		else
 		{
+			// exit(ERROR_BAD_COMMAND);
 			data_processing->n_flag = FALSE;
 			if (WIFSIGNALED(waiting))
 				ex_st = ERROR_SIG_KILL + WTERMSIG(waiting);

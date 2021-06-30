@@ -5,6 +5,7 @@
 #include "executor.h"
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
@@ -30,6 +31,43 @@ static int	append_pid(t_exec *exec, int pid)
 	}
 	return (OK);
 }
+
+static void	bad_command(char *command)
+{
+	size_t	i;
+	int		bool;
+
+	i = 0;
+	bool = FALSE;
+	while (command[i])
+	{
+		if (command[i] == '/')
+		{
+			bool = TRUE;
+			break ;
+		}
+		i++;
+	}
+	if (bool)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(command, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		return ;
+	}
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(command, STDERR_FILENO);
+	ft_putstr_fd(": command not found\n", STDERR_FILENO);
+}
+
+/* if (data_processing->cmd_i == 0)
+	ft_putchar_fd('\n', exec->tempout); */
+/* ft_putstr_fd("minishell: ", exec->tempout);
+ft_putstr_fd(command, exec->tempout);
+if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
+	ft_putstr_fd(": command not found", exec->tempout);
+else
+	ft_putstr_fd(": command not found\n", exec->tempout); */
 
 static int	execute_other_command(t_exec *exec, char **args, char **envp)
 {
@@ -57,7 +95,10 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 		signal(SIGINT, SIG_DFL);
 		tcsetattr(0, TCSANOW, data_processing->term_default);
 		if (execve(args[0], args, envp) == -1)
-			perror("execve");
+		{
+			bad_command(args[0]);
+			exit(ERROR_BAD_COMMAND);
+		}
 	}
 	if (append_pid(exec, pid) != OK)
 		return (ERROR_MALLOC);
