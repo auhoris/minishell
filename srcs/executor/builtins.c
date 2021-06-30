@@ -68,14 +68,18 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	char	**env_array;
+	char	**path_array;
 	char	**args;
 	int		error;
 
 	// data_processing->n_flag = FALSE;
-	args = create_args(exec, node, &error);
-	if (args == NULL && error == ERROR_BAD_COMMAND)
-		return (ERROR_BAD_COMMAND);
-	else if (args == NULL && error == ERROR_MALLOC)
+	if (get_path_array(env, &path_array) == ERROR_MALLOC)
+		return (ERROR_MALLOC);
+	args = create_args(exec, node, &error, path_array);
+	// if (args == NULL && error == ERROR_BAD_COMMAND)
+	// 	return (ERROR_BAD_COMMAND);
+	// else
+	if (args == NULL && error == ERROR_MALLOC)
 		return (ERROR_MALLOC);
 	env_array = create_env(env);
 	if (env_array == NULL)

@@ -7,6 +7,7 @@
 # define ERROR_EXIT -4
 # define ERROR_EXECVE -5
 # define ERROR_READDIR -6
+# define NO_PATH -7
 
 # define ERROR_BAD_COMMAND 127
 # define ERROR_PERM_DENIED 126

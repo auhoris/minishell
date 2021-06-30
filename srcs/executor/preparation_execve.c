@@ -42,20 +42,20 @@ void	clear_array(char **args, int index)
 	}
 }
 
-static void	bad_command(t_exec *exec, char *command)
-{
-	data_processing->ex_st = EXIT_NOT_FOUND;
-	if (data_processing->cmd_i == 0)
-		ft_putchar_fd('\n', exec->tempout);
-	ft_putstr_fd("minishell: ", exec->tempout);
-	ft_putstr_fd(command, exec->tempout);
-	if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
-		ft_putstr_fd(": command not found", exec->tempout);
-	else
-		ft_putstr_fd(": command not found\n", exec->tempout);
-}
+// static void	bad_command(t_exec *exec, char *command)
+// {
+// 	data_processing->ex_st = EXIT_NOT_FOUND;
+// 	if (data_processing->cmd_i == 0)
+// 		ft_putchar_fd('\n', exec->tempout);
+// 	ft_putstr_fd("minishell: ", exec->tempout);
+// 	ft_putstr_fd(command, exec->tempout);
+// 	if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
+// 		ft_putstr_fd(": command not found", exec->tempout);
+// 	else
+// 		ft_putstr_fd(": command not found\n", exec->tempout);
+// }
 
-char	**create_args(t_exec *exec, t_ast *node, int *error)
+char	**create_args(t_exec *exec, t_ast *node, int *error, char **path_array)
 {
 	char		**args;
 	char		*bin;
@@ -65,15 +65,21 @@ char	**create_args(t_exec *exec, t_ast *node, int *error)
 	if (args == NULL)
 		return (NULL);
 	args[node->argc + 1] = NULL;
-	bin = search_bin(node->cmd_name);
-	if (bin == NULL)
+	if (search_bin(&bin, node->cmd_name, path_array) == ERROR_MALLOC)
 	{
-		free(bin);
+		*error = ERROR_MALLOC;
 		free(args);
-		bad_command(exec, node->cmd_name);
-		*error = ERROR_BAD_COMMAND;
 		return (NULL);
 	}
+	(void)exec;
+	// if (bin == NULL)
+	// {
+	// 	free(bin);
+	// 	free(args);
+	// 	bad_command(exec, node->cmd_name);
+	// 	*error = ERROR_BAD_COMMAND;
+	// 	return (NULL);
+	// }
 	args[0] = ft_strdup(bin);
 	free(bin);
 	if (args[0] == NULL)
