@@ -64,8 +64,8 @@ static char	*get_bin(char *command, char *path)
 static char	*chek_executable(char *command)
 {
 	struct stat	st;
-	char	*bin_command;
-	int	out;
+	char		*bin_command;
+	int			out;
 
 	bin_command = NULL;
 	out = stat(command, &st);
