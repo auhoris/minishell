@@ -155,6 +155,11 @@ int	set_key_value(char *str, t_env_list *env)
 		free(key);
 		return (ERROR_MALLOC);
 	}
+	if (check_export(key) == ERROR)
+	{
+		value_key_free(value, key, NULL);
+		return (ERROR);
+	}
 	if (check_key_value_repeated(key, value, env) != OUT)
 	{
 		free(key);
