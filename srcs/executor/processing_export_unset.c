@@ -107,7 +107,7 @@ static int	get_value_export(char *str, char **value, int *i)
 	return (OUT);
 }
 
-/* static void	put_err_msg(char *str)
+static void	put_err_msg(char *str)
 {
 	ft_putstr_fd("\nminishell: export: ", STDERR_FILENO);
 	ft_putchar_fd('\'', STDERR_FILENO);
@@ -139,7 +139,7 @@ static int	check_export(char *str)
 		i++;
 	}
 	return (OK);
-} */
+}
 
 int	set_key_value(char *str, t_env_list *env)
 {
