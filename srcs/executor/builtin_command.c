@@ -102,12 +102,15 @@ int	execution_pwd(t_exec *exec, t_ast *node, t_env_list *env)
 	return (out);
 }
 
-int	execution_export(t_ast *node, t_env_list *env)
+int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	size_t	i;
 	int		out;
 
-	data_processing->n_flag = FALSE;
+	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+		data_processing->n_flag = FALSE;
+	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+		write (exec->tempout, "\n", 1);
 	i = 0;
 	if (node->argc == 0)
 	{
@@ -121,7 +124,6 @@ int	execution_export(t_ast *node, t_env_list *env)
 			return (ERROR_MALLOC);
 		i++;
 	}
-	// write(1, "\n", 1);
 	return (OUT);
 }
 
