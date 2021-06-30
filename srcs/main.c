@@ -30,11 +30,11 @@ void	handler(int s)
 	(void)s;
 	if (data_processing != NULL)
 	{
-		// printf("\ncmdline = %s\n", data_processing->command_line);
 		free(data_processing->command_line);
 		data_processing->command_line = ft_calloc(1,1);
 
 	}
+	data_processing->ex_st = 1;
 	ft_putstr("\n<minishell>$ ");
 	tputs(tgetstr("sc", 0), 1, ft_putint);
 
