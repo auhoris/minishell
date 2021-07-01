@@ -95,7 +95,7 @@ int	search_bin(char **bin_command, char *command, char **path_array)
 	*bin_command = chek_executable(command);
 	if (*bin_command != NULL)
 		return (OUT);
-	while (path_array[i] != NULL)
+	while (path_array && path_array[i] != NULL)
 	{
 		// printf("\n%s\n", path_array[i]);
 		*bin_command = get_bin(command, path_array[i]);

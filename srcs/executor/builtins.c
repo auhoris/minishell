@@ -32,7 +32,7 @@ static int	append_pid(t_exec *exec, int pid)
 	return (OK);
 }
 
-static void	bad_command(char *command)
+static void	bad_command(char *command, int no_path_f)
 {
 	size_t	i;
 	int		bool;
@@ -48,13 +48,15 @@ static void	bad_command(char *command)
 		}
 		i++;
 	}
-	if (bool)
+	if (bool || no_path_f)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(command, STDERR_FILENO);
 		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		return ;
 	}
+	if (data_processing->ex_st == 130)
+		ft_putchar_fd('\n', STDERR_FILENO);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(command, STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
@@ -69,7 +71,7 @@ if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
 else
 	ft_putstr_fd(": command not found\n", exec->tempout); */
 
-static int	execute_other_command(t_exec *exec, char **args, char **envp)
+static int	execute_other_command(t_exec *exec, char **args, char **envp, int no_path_f)
 {
 	int			pid;
 
@@ -96,7 +98,7 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp)
 		tcsetattr(0, TCSANOW, data_processing->term_default);
 		if (execve(args[0], args, envp) == -1)
 		{
-			bad_command(args[0]);
+			bad_command(args[0], no_path_f);
 			exit(ERROR_BAD_COMMAND);
 		}
 	}
@@ -112,11 +114,16 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	char	**path_array;
 	char	**args;
 	int		error;
+	int		ret_handler;
 
 	// data_processing->n_flag = FALSE;
-	if (get_path_array(env, &path_array) == ERROR_MALLOC)
+	ret_handler = get_path_array(env, &path_array);
+	if (ret_handler == ERROR_MALLOC)
 		return (ERROR_MALLOC);
-	args = create_args(exec, node, &error, path_array);
+	else if (ret_handler == NO_PATH)
+		args = create_args(exec, node, &error, NULL);
+	else
+		args = create_args(exec, node, &error, path_array);
 	// if (args == NULL && error == ERROR_BAD_COMMAND)
 	// 	return (ERROR_BAD_COMMAND);
 	// else
@@ -128,7 +135,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 		clear_array(args, ALL_ARRAY);
 		return (ERROR_MALLOC);
 	}
-	execute_other_command(exec, args, env_array);
+	execute_other_command(exec, args, env_array, ret_handler);
 	free_arr(args);
 	free_arr(env_array);
 	return (OUT);

@@ -34,22 +34,17 @@ static int	wait_pids(t_exec *exec, int cnt)
 	ex_st = OK;
 	if (exec->size_pids == 0)
 		return (OK);
-	if (cnt == 0)
+	(void)cnt;
+	if (data_processing->n_flag == TRUE && cnt == 0)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
 	{
-		// printf("[i] = %zu\t", i);
 		temp = waitpid(exec->pids[i], &waiting, 0);
-		// printf("temp = %d\n", temp);
 		if (WIFEXITED(waiting))
 			ex_st = WEXITSTATUS(waiting);
 		else
-		{
-			// exit(ERROR_BAD_COMMAND);
-			data_processing->n_flag = FALSE;
 			if (WIFSIGNALED(waiting))
 				ex_st = ERROR_SIG_KILL + WTERMSIG(waiting);
-		}
 		i++;
 	}
 	return (ex_st);

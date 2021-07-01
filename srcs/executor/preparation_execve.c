@@ -71,6 +71,8 @@ char	**create_args(t_exec *exec, t_ast *node, int *error, char **path_array)
 		free(args);
 		return (NULL);
 	}
+	if (path_array)
+		free_arr(path_array);
 	(void)exec;
 	// if (bin == NULL)
 	// {
