@@ -25,6 +25,7 @@ t_exec	*init_exec(t_ast *root)
 	exec->size_pids = 0;
 	exec->piperead = STDIN_FILENO;
 	exec->pipewrite = STDOUT_FILENO;
+	exec->n_flag = FALSE;
 	return (exec);
 }
 
@@ -84,6 +85,7 @@ int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
+	data_processing->n_flag = TRUE;
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
 		return (executor_simplecommand(exec, node, env));
 	if (node->e_nodetype == NODE_PIPE)

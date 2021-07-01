@@ -34,8 +34,7 @@ static int	wait_pids(t_exec *exec, int cnt)
 	ex_st = OK;
 	if (exec->size_pids == 0)
 		return (OK);
-	(void)cnt;
-	if (data_processing->n_flag == TRUE && cnt == 0)
+	if (exec->n_flag != TRUE && cnt == 0)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
 	{
@@ -44,9 +43,14 @@ static int	wait_pids(t_exec *exec, int cnt)
 			ex_st = WEXITSTATUS(waiting);
 		else
 			if (WIFSIGNALED(waiting))
+			{
 				ex_st = ERROR_SIG_KILL + WTERMSIG(waiting);
+				if (WTERMSIG(waiting) == 2)
+					ft_putchar('\n');
+			}
 		i++;
 	}
+	data_processing->n_flag = TRUE;
 	return (ex_st);
 }
 

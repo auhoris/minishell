@@ -27,6 +27,7 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	int		n_flag;
 	int		d_flag;
 
+	exec->n_flag = TRUE;
 	n_flag = 0;
 	i = 0;
 	d_flag = 0;
@@ -56,6 +57,7 @@ int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)
 	char	pwd_dir[256];
 
 	(void)exec;
+	exec->n_flag = TRUE;
 	data_processing->n_flag = FALSE;
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
@@ -88,6 +90,7 @@ int	execution_pwd(t_exec *exec, t_ast *node, t_env_list *env)
 	int		out;
 	char	*pwd_dir;
 
+	exec->n_flag = TRUE;
 	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
 		data_processing->n_flag = FALSE;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
@@ -107,6 +110,7 @@ int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 	size_t	i;
 	int		out;
 
+	exec->n_flag = TRUE;
 	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
 		data_processing->n_flag = FALSE;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
@@ -145,6 +149,7 @@ int	execution_unset(t_ast *node, t_env_list **env)
 
 int	execution_env(t_exec *exec, t_ast *node, t_env_list *env)
 {
+	exec->n_flag = TRUE;
 	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
 		data_processing->n_flag = FALSE;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)

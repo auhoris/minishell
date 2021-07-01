@@ -55,8 +55,6 @@ static void	bad_command(char *command, int no_path_f)
 		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		return ;
 	}
-	if (data_processing->ex_st == 130)
-		ft_putchar_fd('\n', STDERR_FILENO);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(command, STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
@@ -117,6 +115,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	int		ret_handler;
 
 	// data_processing->n_flag = FALSE;
+	exec->n_flag = FALSE;
 	ret_handler = get_path_array(env, &path_array);
 	if (ret_handler == ERROR_MALLOC)
 		return (ERROR_MALLOC);
@@ -146,7 +145,6 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
-	data_processing->n_flag = TRUE;
 	if (node->cmd_name == NULL)
 		return (out);
 	if (ft_strcmp(node->cmd_name, "echo") == 0)

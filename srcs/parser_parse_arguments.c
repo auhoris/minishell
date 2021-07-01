@@ -14,13 +14,20 @@ static char	*make_argument(char *str, t_parser *parser)
 {
 	int		type;
 	char	*tmp;
+	char	*itoa_tmp;
 
 	type = parser->cur_tok->e_type;
 	tmp = str;
 	if (type == TOKEN_DOLLAR)
 	{
 		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
-			str = ft_strjoin(str, ft_itoa(data_processing->ex_st));
+		{
+			itoa_tmp = ft_itoa(data_processing->ex_st);
+			if (itoa_tmp == NULL)
+				return (str);
+			str = ft_strjoin(str, itoa_tmp);
+			free(itoa_tmp);
+		}
 		else
 		{
 			str = ft_strjoin(str,
