@@ -61,17 +61,19 @@ char	*parser_get_args(t_parser *parser)
 		if (str == NULL)
 			return (NULL);
 		type = parser_next_token(parser);
-		if (type == ERROR)
+		if (type == ERROR_PARSER)
 		{
 			free(str);
 			return (ft_strdup("error_parser"));
 		}
 	}
 	str = make_argument(str, parser);
-	if (str == NULL || parser_next_token(parser) == ERROR)
+	if (str == NULL)
+		return (NULL);
+	if (parser_next_token(parser) == ERROR_PARSER)
 	{
 		free(str);
-		return (NULL);
+		return (ft_strdup("error_parser"));
 	}
 	return (str);
 }

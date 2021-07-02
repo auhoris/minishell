@@ -158,7 +158,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	else if (ft_strcmp(node->cmd_name, "env") == 0)
 		out = execution_env(exec, node, env);
 	else if (ft_strcmp(node->cmd_name, "unset") == 0)
-		out = execution_unset(node, &env);
+		out = execution_unset(exec, node, &env);
 	else if (ft_strcmp(node->cmd_name, "exit") == 0)
 		out = executor_exit(node->argc, node->argv, &env);
 	else

@@ -2,6 +2,7 @@
 #include "../includes/types.h"
 #include "../includes/errors.h"
 #include "../../libs/libft/srcs/libft.h"
+#include "../includes/minishell.h"
 #include <stddef.h>
 #include <unistd.h>
 
@@ -109,12 +110,14 @@ static int	get_value_export(char *str, char **value, int *i)
 
 static void	put_err_msg(char *str)
 {
-	ft_putstr_fd("\nminishell: export: ", STDERR_FILENO);
+	data_processing->ex_st = 1;
+	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 	ft_putchar_fd('\'', STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putchar_fd('\'', STDERR_FILENO);
 	ft_putchar_fd(':', STDERR_FILENO);
 	ft_putstr_fd(" not a valid identifier", STDERR_FILENO);
+	data_processing->n_flag = FALSE;
 }
 
 static int	check_export(char *str)
@@ -122,6 +125,8 @@ static int	check_export(char *str)
 	size_t	i;
 
 	i = 0;
+	if (!(*str))
+		return (ERROR);
 	if (ft_isdigit(str[i]))
 	{
 		put_err_msg(str);
@@ -157,6 +162,7 @@ int	set_key_value(char *str, t_env_list *env)
 	}
 	if (check_export(key) == ERROR)
 	{
+		put_err_msg(str);
 		value_key_free(value, key, NULL);
 		return (ERROR);
 	}

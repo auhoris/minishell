@@ -53,14 +53,15 @@ t_token	*lexer_special_tokens(t_lexer *lexer)
 	}
 	else if (lexer->c == '=')
 	{
-		if (lexer_peek(lexer, -1) == ' ' || lexer_peek(lexer, 1) == ' ')
+		/* if (lexer_peek(lexer, -1) == ' ' || lexer_peek(lexer, 1) == ' ')
 		{
+			data_processing->ex_st = 1;
 			ft_putstr_fd("\nminishell: export: '=': not a valid identifier", STDERR_FILENO);
 			return (lexer_advance_with(lexer,
-					init_token(BAD_TOKEN, lexer_chtostr(lexer->c), FALSE)));
-		}
+					init_token(TOKEN_EQUALS, lexer_chtostr(lexer->c), FALSE)));
+		} */
 		return (lexer_advance_with(lexer,
-				init_token(TOKEN_EQUALS, lexer_chtostr(lexer->c), FALSE)));
+				init_token(TOKEN_ID, lexer_chtostr(lexer->c), FALSE)));
 	}
 	return (lexer_advance_with(lexer,
 			init_token(TOKEN_PIPE, lexer_chtostr(lexer->c), FALSE)));

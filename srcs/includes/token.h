@@ -11,6 +11,7 @@ typedef enum e_errors
 {
 	ERR_UNCLOSED_DQUOTE,
 	ERR_UNCLOSED_SQUOTE,
+	ERR_BAD_EQUALS,
 }	t_errors;
 
 /* TOKEN_ID, //0

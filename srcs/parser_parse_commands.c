@@ -15,6 +15,8 @@ static t_ast	*parser_parse_simple_command(t_parser *parser)
 	node->cmd_name = parser_get_args(parser);
 	if (node->cmd_name == NULL)
 		return (ast_error_handler(node, ERROR_MALLOC));
+	if (ft_strcmp(node->cmd_name, "error_parser") == 0)
+		return (ast_error_handler(node, ERROR_PARSER));
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)
@@ -63,7 +65,7 @@ t_ast	*parser_parse_command(t_parser *parser)
 	return (node);
 }
 
-static int	make_table_value(t_ast *node, t_ast *simple_node)
+/* static int	make_table_value(t_ast *node, t_ast *simple_node)
 {
 	if (simple_node)
 	{
@@ -111,4 +113,4 @@ t_ast	*parser_parse_commands(t_parser *parser)
 			return (ast_error_handler(node, ERROR_MALLOC));
 	}
 	return (node);
-}
+} */

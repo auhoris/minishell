@@ -14,7 +14,7 @@ void	execution_echo(t_exec *exec, t_ast *node);
 int		execution_cd(t_exec *exec, t_ast *node, t_env_list *env);
 int		execution_pwd(t_exec *exec, t_ast *node, t_env_list *env);
 int		execution_export(t_exec *exec, t_ast *node, t_env_list *env);
-int		execution_unset(t_ast *node, t_env_list **env);
+int		execution_unset(t_exec *exec, t_ast *node, t_env_list **env);
 int		executor_pipe(t_exec *exec, t_ast *node, t_env_list *env);
 int		executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env);
 int		unset_env_elem(t_env_list **env, char *key);

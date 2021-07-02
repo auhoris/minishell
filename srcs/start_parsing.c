@@ -1,23 +1,25 @@
 #include "includes/minishell.h"
 #include "includes/exit_status.h"
 #include "includes/parser.h"
+#include "includes/token.h"
 #include <stdlib.h>
 
 static int		check_parser(t_parser *paser)
 {
 	int	type;
 
+	// printf("%s\n", print_token_type(paser->cur_tok->e_type));
 	if (paser == NULL)
 		return (ERROR_MALLOC);
 	type = paser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 	{
-		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'\n", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'", STDERR_FILENO);
 		return (ERROR_PARSER);
 	}
 	if (type == TOKEN_PIPE)
 	{
-		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'\n", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'", STDERR_FILENO);
 		return (ERROR_PARSER);
 	}
 	return (OK);
@@ -33,7 +35,7 @@ static int	wait_pids(t_exec *exec, int cnt)
 	i = 0;
 	ex_st = OK;
 	if (exec->size_pids == 0)
-		return (OK);
+		return (data_processing->ex_st);
 	if (exec->n_flag != TRUE && cnt == 0)
 		ft_putchar('\n');
 	while (i < exec->size_pids)
@@ -75,6 +77,7 @@ static int	exec_commands(t_data_processing *data_processing, t_parser *parser, s
 	if (out == ERROR_BAD_COMMAND)
 		return (free_any(ERROR_BAD_COMMAND, exec, free_exec));
 	data_processing->ex_st = wait_pids(exec, i);
+	// printf("data_processing->ex_st = %d\n", data_processing->ex_st);
 	free_exec(exec);
 	return (out);
 }
@@ -153,6 +156,8 @@ int	start_parsing(t_data_processing *data_processing)
 		return (free_any(check, parser, free_parser));
 	}
 	out = start_loop(data_processing, parser);
+	if (out == ERROR_PARSER && data_processing->ex_st != 1)
+		data_processing->ex_st = ERROR_PARSER;
 	free_parser(parser);
 	return (out);
 }
