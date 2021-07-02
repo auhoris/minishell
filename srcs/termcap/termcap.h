@@ -2,6 +2,7 @@
 # define TERMCAP_H
 
 # include "../includes/types.h"
+# include <term.h>
 
 t_data_processing	*init_data_processing(t_env_list *env);
 int					check_buf_read(char	*buf_read);
@@ -14,5 +15,9 @@ int					get_history_data(t_data_processing *data_processing,
 void				error_processing(t_env_list *env, t_data_processing
 						*data_processing, int error_code);
 void				ctrl_d(t_data_processing *data_processing);
+int					write_enter(t_data_processing *data_processing);
+int					get_term_param(struct termios *term,
+						struct termios *term_default);
+void				screen_clear(void);
 
 #endif

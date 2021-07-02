@@ -1,24 +1,5 @@
 #include "executor.h"
 
-/* static int	handle_piping(t_exec *exec, t_ast *exec_node, t_env_list *env)
-{
-	int	out;
-	int	fd[2];
-
-	close(exec->pipewrite);
-	if (pipe(fd) == -1)
-	{
-		close(exec->piperead);
-		return (ERROR);
-	}
-	exec->pipewrite = fd[1];
-	out = executor_simplecommand(exec, exec_node->table_value[0], env);
-	close(exec->piperead);
-	exec->piperead = fd[0];
-	exec_node = exec_node->table_value[1];
-	return (out);
-} */
-
 int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int		out;
