@@ -14,7 +14,6 @@ static char	*make_argument(char *str, t_parser *parser)
 {
 	char	*tmp;
 	char	*itoa_tmp;
-	char	*check;
 
 	tmp = str;
 	if (parser->cur_tok->e_type == TOKEN_DOLLAR)
@@ -28,13 +27,16 @@ static char	*make_argument(char *str, t_parser *parser)
 			free(itoa_tmp);
 		}
 		else
-		{
-			check = get_value_by_key(parser->cur_tok->value, &parser->env);
-			str = ft_strjoin(str, check);
-		}
+			str = ft_strjoin(str,
+					get_value_by_key(parser->cur_tok->value, &parser->env));
 	}
 	else
-		str = ft_strjoin(str, parser->cur_tok->value);
+	{
+		if (ft_strcmp(parser->cur_tok->value, "~") == 0)
+			str = ft_strjoin(str, get_value_by_key("HOME", &parser->env));
+		else
+			str = ft_strjoin(str, parser->cur_tok->value);
+	}
 	free(tmp);
 	if (str == NULL)
 		return (NULL);
