@@ -12,14 +12,12 @@
 
 static char	*make_argument(char *str, t_parser *parser)
 {
-	int		type;
 	char	*tmp;
 	char	*itoa_tmp;
 	char	*check;
 
-	type = parser->cur_tok->e_type;
 	tmp = str;
-	if (type == TOKEN_DOLLAR)
+	if (parser->cur_tok->e_type == TOKEN_DOLLAR)
 	{
 		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
 		{
@@ -32,8 +30,7 @@ static char	*make_argument(char *str, t_parser *parser)
 		else
 		{
 			check = get_value_by_key(parser->cur_tok->value, &parser->env);
-			if (ft_strcmp(check, ""))
-				str = ft_strjoin(str, check);
+			str = ft_strjoin(str, check);
 		}
 	}
 	else
@@ -61,9 +58,7 @@ char	*parser_get_args(t_parser *parser)
 			return (str);
 		str = make_argument(str, parser);
 		if (str == NULL)
-		{
 			return (NULL);
-		}
 		type = parser_next_token(parser);
 		if (type == ERROR_PARSER)
 		{

@@ -13,7 +13,11 @@ char	*get_value_by_key(char *value, t_env_list **env_dict)
 	while (start)
 	{
 		if (ft_strcmp(start->key, value) == 0)
+		{
+			if (!start->value)
+				return ("");
 			return (start->value);
+		}
 		start = start->next;
 	}
 	return ("");
