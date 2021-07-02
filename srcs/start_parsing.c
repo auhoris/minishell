@@ -8,7 +8,6 @@ static int		check_parser(t_parser *paser)
 {
 	int	type;
 
-	// printf("%s\n", print_token_type(paser->cur_tok->e_type));
 	if (paser == NULL)
 		return (ERROR_MALLOC);
 	type = paser->cur_tok->e_type;
