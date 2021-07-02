@@ -30,10 +30,11 @@ int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 	return (OUT);
 }
 
-int	execution_unset(t_ast *node, t_env_list **env)
+int	execution_unset(t_exec *exec, t_ast *node, t_env_list **env)
 {
 	size_t		i;
 
+	(void)exec;
 	data_processing->n_flag = FALSE;
 	if (!(*env))
 		return (OUT);

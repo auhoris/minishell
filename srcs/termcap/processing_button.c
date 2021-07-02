@@ -1,15 +1,29 @@
 #include "../includes/types.h"
 #include "../includes/minishell.h"
 
+static int	is_empty(char *line)
+{
+	int	i;
+
+	if (*line == '\0')
+		return (ERROR);
+	i = -1;
+	while (line[++i] == ' ')
+		;
+	if (line[i] == '\0')
+		return (ERROR);
+	return (OK);
+}
+
 int	write_enter(t_data_processing *data_processing)
 {
 	int	out;
 
 	out = OUT;
-	if (*data_processing->command_line == '\0')
+	if (is_empty(data_processing->command_line) == ERROR)
 		data_processing->n_flag = FALSE;
 	data_processing->permission_create = 1;
-	if (*data_processing->command_line != '\0')
+	if (is_empty(data_processing->command_line) != ERROR)
 	{
 		write(1, data_processing->command_line,
 			ft_strlen(data_processing->command_line));
