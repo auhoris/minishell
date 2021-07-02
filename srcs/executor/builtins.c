@@ -60,16 +60,8 @@ static void	bad_command(char *command, int no_path_f)
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
 }
 
-/* if (data_processing->cmd_i == 0)
-	ft_putchar_fd('\n', exec->tempout); */
-/* ft_putstr_fd("minishell: ", exec->tempout);
-ft_putstr_fd(command, exec->tempout);
-if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
-	ft_putstr_fd(": command not found", exec->tempout);
-else
-	ft_putstr_fd(": command not found\n", exec->tempout); */
-
-static int	execute_other_command(t_exec *exec, char **args, char **envp, int no_path_f)
+static int	execute_other_command(t_exec *exec, char **args,
+				char **envp, int no_path_f)
 {
 	int			pid;
 
@@ -80,15 +72,7 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp, int no_
 		return (ERROR);
 	if (pid == 0)
 	{
-		if (!exec->is_redir)
-		{
-			dup2(exec->piperead, STDIN_FILENO);
-			dup2(exec->pipewrite, STDOUT_FILENO);
-			if (exec->piperead != STDIN_FILENO)
-				close(exec->piperead);
-			if (exec->pipewrite != STDOUT_FILENO)
-				close(exec->pipewrite);
-		}
+		isredir(exec);
 		close(exec->tempin);
 		close(exec->tempout);
 		signal(SIGQUIT, SIG_DFL);
@@ -105,7 +89,6 @@ static int	execute_other_command(t_exec *exec, char **args, char **envp, int no_
 	return (OK);
 }
 
-// Чистить args и env_array надо всегда, вроде бы
 int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	char	**env_array;
@@ -114,18 +97,14 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	int		error;
 	int		ret_handler;
 
-	// data_processing->n_flag = FALSE;
 	exec->n_flag = FALSE;
 	ret_handler = get_path_array(env, &path_array);
 	if (ret_handler == ERROR_MALLOC)
 		return (ERROR_MALLOC);
 	else if (ret_handler == NO_PATH)
-		args = create_args(exec, node, &error, NULL);
+		args = create_args(node, &error, NULL);
 	else
-		args = create_args(exec, node, &error, path_array);
-	// if (args == NULL && error == ERROR_BAD_COMMAND)
-	// 	return (ERROR_BAD_COMMAND);
-	// else
+		args = create_args(node, &error, path_array);
 	if (args == NULL && error == ERROR_MALLOC)
 		return (ERROR_MALLOC);
 	env_array = create_env(env);
@@ -135,8 +114,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 		return (ERROR_MALLOC);
 	}
 	execute_other_command(exec, args, env_array, ret_handler);
-	free_arr(args);
-	free_arr(env_array);
+	free_arr(args, env_array);
 	return (OUT);
 }
 

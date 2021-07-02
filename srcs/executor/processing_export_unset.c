@@ -1,3 +1,4 @@
+#include "executor.h"
 #include "../includes/env.h"
 #include "../includes/types.h"
 #include "../includes/errors.h"
@@ -6,16 +7,6 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#define NOT_VALID "-!%+.,/?:@^_{}~"
-
-static void	value_key_free(char *value, char *key, t_env_list *new)
-{
-	free(value);
-	free(key);
-	free(new);
-}
-
-//Почему не сделать через env_addback?
 static int	create_new_env(char *key, char *value, t_env_list *env)
 {
 	t_env_list	*new;
@@ -59,7 +50,7 @@ static int	setter_value(char *value, t_env_list *env)
 	return (OUT);
 }
 
-static int	check_key_value_repeated(char *key, char *value, t_env_list *env)
+int	check_key_value_repeated(char *key, char *value, t_env_list *env)
 {
 	t_env_list	*previous;
 
@@ -78,7 +69,7 @@ static int	check_key_value_repeated(char *key, char *value, t_env_list *env)
 	return (OUT);
 }
 
-static int	get_key_export(char *str, char **key, int *i)
+int	get_key_export(char *str, char **key, int *i)
 {
 	while (*(str + *i) != '\0' && *(str + *i) != ' ' && *(str + *i) != '=')
 		(*i)++;
@@ -88,7 +79,7 @@ static int	get_key_export(char *str, char **key, int *i)
 	return (OUT);
 }
 
-static int	get_value_export(char *str, char **value, int *i)
+int	get_value_export(char *str, char **value, int *i)
 {
 	int		nul_value;
 
@@ -106,107 +97,4 @@ static int	get_value_export(char *str, char **value, int *i)
 		return (ERROR_MALLOC);
 	}
 	return (OUT);
-}
-
-static void	put_err_msg(char *str)
-{
-	data_processing->ex_st = 1;
-	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
-	ft_putchar_fd('\'', STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putchar_fd('\'', STDERR_FILENO);
-	ft_putchar_fd(':', STDERR_FILENO);
-	ft_putstr_fd(" not a valid identifier", STDERR_FILENO);
-	data_processing->n_flag = FALSE;
-}
-
-static int	check_export(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (!(*str))
-		return (ERROR);
-	if (ft_isdigit(str[i]))
-	{
-		put_err_msg(str);
-		return (ERROR);
-	}
-	while (str[i])
-	{
-		if (str[i] == '=')
-			break ;
-		if (ft_inset(NOT_VALID, str[i]))
-		{
-			put_err_msg(str);
-			return (ERROR);
-		}
-		i++;
-	}
-	return (OK);
-}
-
-int	set_key_value(char *str, t_env_list *env)
-{
-	char	*key;
-	char	*value;
-	int		i;
-
-	i = 0;
-	if (get_key_export(str, &key, &i) == ERROR_MALLOC)
-		return (ERROR_MALLOC);
-	if (get_value_export(str, &value, &i) == ERROR_MALLOC)
-	{
-		free(key);
-		return (ERROR_MALLOC);
-	}
-	if (check_export(key) == ERROR)
-	{
-		put_err_msg(str);
-		value_key_free(value, key, NULL);
-		return (ERROR);
-	}
-	if (check_key_value_repeated(key, value, env) != OUT)
-	{
-		free(key);
-		return (ERROR_MALLOC);
-	}
-	value_key_free(value, key, NULL);
-	return (OUT);
-}
-
-char	*get_value(char *str)
-{
-	char	*chr;
-	char	*key;
-	int		len;
-
-	chr = ft_strchr(str, '=');
-	len = chr - str;
-	key = ft_substr(str, 0, len);
-	return (key);
-}
-
-int	unset_env_elem(t_env_list **env, char *key)
-{
-	t_env_list	*tmp;
-	t_env_list	*prev;
-	t_env_list	*start;
-
-	if (!(*env))
-		return (OK);
-	start = *env;
-	while (start)
-	{
-		if (ft_strcmp((start)->key, key) == 0)
-		{
-			prev->next = start->next;
-			tmp = start;
-			env_list_delone(tmp);
-			return (OK);
-		}
-		prev = start;
-		start = start->next;
-	}
-	return (OK);
 }

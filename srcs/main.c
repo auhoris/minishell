@@ -19,6 +19,7 @@
 #include "includes/ast.h"
 #include "includes/token.h"
 #include "includes/types.h"
+#include "./history/history.h"
 #include <stdio.h>
 #include "includes/visitor.h"
 #include "includes/env.h"
@@ -35,6 +36,7 @@ void	handler(int s)
 
 	}
 	data_processing->ex_st = 1;
+	get_last_element(&data_processing->actual_history);
 	ft_putstr("\n<minishell>$ ");
 	tputs(tgetstr("sc", 0), 1, ft_putint);
 
@@ -51,7 +53,6 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	// data_processing->ex_st = OK;
 	data_processing = NULL;
 	env_dict = init_env_list(env);
 	termcap(env_dict);

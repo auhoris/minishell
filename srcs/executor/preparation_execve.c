@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <sys/_types/_size_t.h>
 
-void	free_arr(char **arr)
+void	free_arr(char **arr, char **env_array)
 {
 	size_t	i;
 
@@ -18,9 +18,17 @@ void	free_arr(char **arr)
 		i++;
 	}
 	free(arr);
+	if (env_array == NULL)
+		return ;
+	i = 0;
+	while (env_array[i])
+	{
+		free(env_array[i]);
+		i++;
+	}
+	free(env_array);
 }
 
-//Я не разобрался почему, но твоя функция почему-то не чистила всё
 void	clear_array(char **args, int index)
 {
 	if (index == ALL_ARRAY)
@@ -42,24 +50,10 @@ void	clear_array(char **args, int index)
 	}
 }
 
-// static void	bad_command(t_exec *exec, char *command)
-// {
-// 	data_processing->ex_st = EXIT_NOT_FOUND;
-// 	if (data_processing->cmd_i == 0)
-// 		ft_putchar_fd('\n', exec->tempout);
-// 	ft_putstr_fd("minishell: ", exec->tempout);
-// 	ft_putstr_fd(command, exec->tempout);
-// 	if (exec->root->table_size > 1 && exec->i + 1 != exec->node->table_size)
-// 		ft_putstr_fd(": command not found", exec->tempout);
-// 	else
-// 		ft_putstr_fd(": command not found\n", exec->tempout);
-// }
-
-char	**create_args(t_exec *exec, t_ast *node, int *error, char **path_array)
+char	**create_args(t_ast *node, int *error, char **path_array)
 {
 	char		**args;
 	char		*bin;
-	size_t		i;
 
 	args = (char **)malloc(sizeof(char *) * (node->argc + 2));
 	if (args == NULL)
@@ -72,16 +66,7 @@ char	**create_args(t_exec *exec, t_ast *node, int *error, char **path_array)
 		return (NULL);
 	}
 	if (path_array)
-		free_arr(path_array);
-	(void)exec;
-	// if (bin == NULL)
-	// {
-	// 	free(bin);
-	// 	free(args);
-	// 	bad_command(exec, node->cmd_name);
-	// 	*error = ERROR_BAD_COMMAND;
-	// 	return (NULL);
-	// }
+		free_arr(path_array, NULL);
 	args[0] = ft_strdup(bin);
 	free(bin);
 	if (args[0] == NULL)
@@ -89,17 +74,8 @@ char	**create_args(t_exec *exec, t_ast *node, int *error, char **path_array)
 		free(args);
 		return (NULL);
 	}
-	i = 1;
-	while (i <= node->argc)
-	{
-		args[i] = ft_strdup(node->argv[i - 1]);
-		if (args[i] == NULL)
-		{
-			clear_array(args, i);
-			return (NULL);
-		}
-		i++;
-	}
+	if (fill_args(args, node) == ERROR_MALLOC)
+		return (NULL);
 	return (args);
 }
 
