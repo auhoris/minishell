@@ -4,12 +4,14 @@
 #include "../../libs/libft/srcs/libft.h"
 #include <unistd.h>
 
-#define NOT_VALID "-!%+.,/?:@^_{}~"
+#define NOT_VALID "-!%+.,/?:@^{}~"
 
-static void	put_err_msg(char *str)
+static void	put_err_msg(char *str, int pos)
 {
 	data_processing->n_flag = FALSE;
 	data_processing->ex_st = 1;
+	if (pos != 0)
+		ft_putchar_fd('\n', STDERR_FILENO);
 	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 	ft_putchar_fd('\'', STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
@@ -23,33 +25,33 @@ static int	check_export(char *str)
 	size_t	i;
 
 	i = 0;
-	if (!str[i])
+	if (!str[i] || str[i] == '=')
 		return (ERROR);
 	if (ft_isdigit(str[i]))
-	{
-		put_err_msg(str);
 		return (ERROR);
-	}
 	while (str[i])
 	{
 		if (str[i] == '=')
 			break ;
 		if (ft_inset(NOT_VALID, str[i]))
-		{
-			put_err_msg(str);
 			return (ERROR);
-		}
 		i++;
 	}
 	return (OK);
 }
 
-int	set_key_value(char *str, t_env_list *env)
+int	set_key_value(char *str, t_env_list *env, int pos)
 {
 	char	*key;
 	char	*value;
 	int		i;
 
+	// (void)pos;
+	if (check_export(str) == ERROR)
+	{
+		put_err_msg(str, pos);
+		return (ERROR);
+	}
 	i = 0;
 	if (get_key_export(str, &key, &i) == ERROR_MALLOC)
 		return (ERROR_MALLOC);
@@ -57,12 +59,6 @@ int	set_key_value(char *str, t_env_list *env)
 	{
 		free(key);
 		return (ERROR_MALLOC);
-	}
-	if (check_export(key) == ERROR)
-	{
-		put_err_msg(str);
-		value_key_free(value, key, NULL);
-		return (ERROR);
 	}
 	if (check_key_value_repeated(key, value, env) != OUT)
 	{

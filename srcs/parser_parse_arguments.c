@@ -15,6 +15,7 @@ static char	*make_argument(char *str, t_parser *parser)
 	int		type;
 	char	*tmp;
 	char	*itoa_tmp;
+	char	*check;
 
 	type = parser->cur_tok->e_type;
 	tmp = str;
@@ -30,8 +31,9 @@ static char	*make_argument(char *str, t_parser *parser)
 		}
 		else
 		{
-			str = ft_strjoin(str,
-					get_value_by_key(parser->cur_tok->value, &parser->env));
+			check = get_value_by_key(parser->cur_tok->value, &parser->env);
+			if (ft_strcmp(check, ""))
+				str = ft_strjoin(str, check);
 		}
 	}
 	else
@@ -59,7 +61,9 @@ char	*parser_get_args(t_parser *parser)
 			return (str);
 		str = make_argument(str, parser);
 		if (str == NULL)
+		{
 			return (NULL);
+		}
 		type = parser_next_token(parser);
 		if (type == ERROR_PARSER)
 		{
@@ -127,10 +131,10 @@ t_ast	*parser_parse_agruments(t_ast *node, t_parser *parser)
 		if (node->argv == NULL)
 			return (ast_error_handler(node, ERROR_MALLOC));
 		node->argv[node->argc - 1] = parser_get_args(parser);
-		if (ft_strcmp(node->argv[node->argc - 1], "error_parser") == 0)
-			return (ast_error_handler(node, ERROR_PARSER));
 		if (node->argv[node->argc - 1] == NULL)
 			return (ast_error_handler(node, ERROR_MALLOC));
+		else if (ft_strcmp(node->argv[node->argc - 1], "error_parser") == 0)
+			return (ast_error_handler(node, ERROR_PARSER));
 	}
 	return (node);
 }

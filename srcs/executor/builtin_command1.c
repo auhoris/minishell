@@ -8,7 +8,9 @@ int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	size_t	i;
 	int		out;
+	int		err_cnt;
 
+	err_cnt = 0;
 	exec->n_flag = TRUE;
 	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
 		data_processing->n_flag = FALSE;
@@ -22,7 +24,10 @@ int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 	}
 	while (i < node->argc)
 	{
-		out = set_key_value(node->argv[i], env);
+		// printf("%s\n", node->argv[i]);
+		out = set_key_value(node->argv[i], env, err_cnt);
+		if (out == ERROR)
+			err_cnt++;
 		if (out == ERROR_MALLOC)
 			return (ERROR_MALLOC);
 		i++;
