@@ -86,6 +86,7 @@ int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 
 	out = OUT;
 	g_data_processing->n_flag = TRUE;
+	// g_data_processing->n_state = TRUE;
 	if (node->e_nodetype == NODE_SIMPLECOMMAND)
 		return (executor_simplecommand(exec, node, env));
 	if (node->e_nodetype == NODE_PIPE)

@@ -9,6 +9,7 @@
 static void	put_err_msg(char *str, int pos)
 {
 	g_data_processing->n_flag = FALSE;
+	g_data_processing->n_state = TRUE;
 	g_data_processing->ex_st = 1;
 	if (pos != 0)
 		ft_putchar_fd('\n', STDERR_FILENO);

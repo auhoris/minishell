@@ -79,7 +79,7 @@ static int	handle_exit(t_env_list **env, char **argv)
 
 int	executor_exit(size_t argc, char **argv, t_env_list **env)
 {
-	ft_putstr_fd("\nexit\n", STDOUT_FILENO);
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (argc > 1)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);

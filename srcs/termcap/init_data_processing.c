@@ -28,6 +28,7 @@ t_data_processing	*init_data_processing(t_env_list *env)
 	g_data_processing->num_symbol = 0;
 	g_data_processing->ex_st = OK;
 	g_data_processing->n_flag = FALSE;
+	g_data_processing->n_state = TRUE;
 	return (g_data_processing);
 }
 
