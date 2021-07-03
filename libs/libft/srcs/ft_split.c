@@ -43,7 +43,8 @@ static char	*create_word(char **wrd_arr, int words, char const *s, char c)
 	i = 0;
 	while (s[i] != '\0' && s[i] != c)
 		i++;
-	if (!(word = malloc(sizeof(char) * (i + 1))))
+	word = malloc(sizeof(char) * (i + 1));
+	if (!word)
 	{
 		while (words-- > 0)
 			free(wrd_arr[words]);
@@ -60,7 +61,7 @@ static char	*create_word(char **wrd_arr, int words, char const *s, char c)
 	return (word);
 }
 
-char		**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**wrd_arr;
 	int		i;
@@ -68,7 +69,8 @@ char		**ft_split(char const *s, char c)
 	i = 0;
 	if (!s)
 		return (0);
-	if (!(wrd_arr = malloc(sizeof(char **) * (word_amount(s, c) + 1))))
+	wrd_arr = malloc(sizeof(char **) * (word_amount(s, c) + 1));
+	if (!wrd_arr)
 		return (0);
 	while (*s)
 	{
@@ -76,7 +78,8 @@ char		**ft_split(char const *s, char c)
 			s++;
 		if (*s && *s != c)
 		{
-			if (!(wrd_arr[i] = create_word(wrd_arr, i, s, c)))
+			wrd_arr[i] = create_word(wrd_arr, i, s, c);
+			if (!wrd_arr[i])
 				return (0);
 			i++;
 			while (*s && *s != c)
