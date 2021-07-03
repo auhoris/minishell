@@ -19,7 +19,7 @@ static size_t	ft_min(size_t a, size_t b)
 	return (b);
 }
 
-char			*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*p_sbs;
 	size_t	i;
@@ -27,7 +27,8 @@ char			*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (s == 0)
 		return (0);
-	if (!(p_sbs = malloc(sizeof(*p_sbs) * (ft_min(ft_strlen(s), len) + 1))))
+	p_sbs = malloc(sizeof(*p_sbs) * (ft_min(ft_strlen(s), len) + 1));
+	if (!p_sbs)
 		return (0);
 	i = 0;
 	j = 0;

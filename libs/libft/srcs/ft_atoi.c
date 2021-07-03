@@ -28,7 +28,7 @@ static int	in_symbols(char c)
 	return (0);
 }
 
-int			ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	int		nbr;
 	int		i;
