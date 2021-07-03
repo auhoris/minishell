@@ -10,91 +10,23 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static char	*make_argument(char *str, t_parser *parser)
+#define AMBIG 95
+
+static int	handle_redirect_loop(t_parser *parser, t_ast *node)
 {
-	char	*tmp;
-	char	*itoa_tmp;
-
-	tmp = str;
-	if (parser->cur_tok->e_type == TOKEN_DOLLAR)
-	{
-		if (ft_strcmp(parser->cur_tok->value, "?") == 0)
-		{
-			itoa_tmp = ft_itoa(data_processing->ex_st);
-			if (itoa_tmp == NULL)
-				return (str);
-			str = ft_strjoin(str, itoa_tmp);
-			free(itoa_tmp);
-		}
-		else
-			str = ft_strjoin(str,
-					get_value_by_key(parser->cur_tok->value, &parser->env));
-	}
-	else
-	{
-		if (ft_strcmp(parser->cur_tok->value, "~") == 0)
-			str = ft_strjoin(str, get_value_by_key("HOME", &parser->env));
-		else
-			str = ft_strjoin(str, parser->cur_tok->value);
-	}
-	free(tmp);
-	if (str == NULL)
-		return (NULL);
-	return (str);
-}
-
-char	*parser_get_args(t_parser *parser)
-{
-	char	*str;
-	int		type;
-
-	str = ft_strdup("");
-	if (str == NULL)
-		return (NULL);
-	type = parser->cur_tok->e_type;
-	while (!parser->cur_tok->f_space && type != TOKEN_EOF)
-	{
-		if (type == TOKEN_SEMI || type == TOKEN_MORE
-			|| type == TOKEN_LESS || type == TOKEN_DMORE
-			|| type == TOKEN_PIPE || type == ERROR)
-			return (str);
-		str = make_argument(str, parser);
-		if (str == NULL)
-			return (NULL);
-		type = parser_next_token(parser);
-		if (type == ERROR_PARSER)
-		{
-			free(str);
-			return (ft_strdup("error_parser"));
-		}
-	}
-	str = make_argument(str, parser);
-	if (str == NULL)
-		return (NULL);
-	if (parser_next_token(parser) == ERROR_PARSER)
-	{
-		free(str);
-		return (ft_strdup("error_parser"));
-	}
-	return (str);
-}
-
-static int	parser_parse_redirect(t_parser *parser, t_ast *node)
-{
-	int	prev_type;
-	int	curr_type;
+	int		prev_type;
+	int		curr_type;
 	char	*file;
 
 	prev_type = parser->cur_tok->e_type;
-	while (prev_type == TOKEN_MORE
-		|| prev_type == TOKEN_LESS
+	while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS
 		|| prev_type == TOKEN_DMORE)
 	{
 		curr_type = parser_next_token(parser);
 		if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
 			return (ERROR_PARSER);
 		if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
-			return (ERROR_PARSER);
+			return (AMBIG);
 		file = parser_get_args(parser);
 		if (ft_strcmp(file, "error_parser") == 0)
 			return (ERROR_PARSER);
@@ -104,6 +36,43 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 		if (prev_type == ERROR_PARSER)
 			return (ERROR_PARSER);
 		check_fd(node, prev_type);
+	}
+	return (OK);
+}
+/* int		prev_type;
+int		curr_type;
+char	*file;
+
+prev_type = parser->cur_tok->e_type;
+while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS
+	|| prev_type == TOKEN_DMORE)
+{
+	curr_type = parser_next_token(parser);
+	if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
+		return (ERROR_PARSER);
+	if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
+		return (ERROR_PARSER);
+	file = parser_get_args(parser);
+	if (ft_strcmp(file, "error_parser") == 0)
+		return (ERROR_PARSER);
+	if (make_node_fd(file, prev_type, node) != OK)
+		return (ERROR_PARSER);
+	prev_type = parser->cur_tok->e_type;
+	if (prev_type == ERROR_PARSER)
+		return (ERROR_PARSER);
+	check_fd(node, prev_type);
+} */
+
+static int	parser_parse_redirect(t_parser *parser, t_ast *node)
+{
+	int	err;
+
+	err = handle_redirect_loop(parser, node);
+	if (err != OK)
+	{
+		if (err == AMBIG)
+			g_data_processing->ex_st = 1;
+		return (ERROR_PARSER);
 	}
 	if (ft_strcmp(node->cmd_name, "") == 0)
 	{

@@ -4,19 +4,21 @@
 #include <stdlib.h>
 #include <term.h>
 
-int	write_in_terminal_isprint(t_data_processing *data_processing)
+int	write_in_terminal_isprint(t_data_processing *g_data_processing)
 {
 	char	*temp;
 	int		out;
 
-	out = make_history(data_processing);
+	out = make_history(g_data_processing);
 	if (out != OUT)
 		return (out);
-	write(1, data_processing->buf_read, ft_strlen(data_processing->buf_read));
-	temp = data_processing->command_line;
-	data_processing->command_line = ft_strjoin(temp, data_processing->buf_read);
+	write(1, g_data_processing->buf_read,
+		ft_strlen(g_data_processing->buf_read));
+	temp = g_data_processing->command_line;
+	g_data_processing->command_line = ft_strjoin(temp,
+			g_data_processing->buf_read);
 	free(temp);
-	data_processing->num_symbol += ft_strlen(data_processing->buf_read);
+	g_data_processing->num_symbol += ft_strlen(g_data_processing->buf_read);
 	return (OUT);
 }
 

@@ -1,3 +1,4 @@
+#include "includes/errors.h"
 #include "includes/minishell.h"
 #include "includes/exit_status.h"
 #include <stddef.h>
@@ -51,29 +52,11 @@ static int	check_numeric(char *arg)
 	return (OK);
 }
 
-int	executor_exit(size_t argc, char **argv, t_env_list **env)
+static int	handle_exit(t_env_list **env, char **argv)
 {
-	t_env_list	*start;
 	int			shlvl;
+	t_env_list	*start;
 
-	ft_putstr_fd("\nexit\n", STDOUT_FILENO);
-	if (argc > 1)
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		data_processing->ex_st = ERROR_EXIT_ARGC;
-		return (OK);
-	}
-	if (argv)
-	{
-		if (check_numeric(argv[0]) != OK)
-		{
-			ft_putstr_fd("\nminishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(argv[0], STDERR_FILENO);
-			ft_putstr_fd(": numeric argument required", STDERR_FILENO);
-			data_processing->ex_st = ERROR_NUMERIC;
-			return (ERROR_EXIT);
-		}
-	}
 	shlvl = ft_atoi(get_value_by_key("SHLVL", env));
 	shlvl--;
 	start = *env;
@@ -90,6 +73,29 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 		start = start->next;
 	}
 	if (argv != NULL)
-		data_processing->ex_st = keep_in_range(ft_atoi(argv[0]));
+		g_data_processing->ex_st = keep_in_range(ft_atoi(argv[0]));
 	return (ERROR_EXIT);
+}
+
+int	executor_exit(size_t argc, char **argv, t_env_list **env)
+{
+	ft_putstr_fd("\nexit\n", STDOUT_FILENO);
+	if (argc > 1)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+		g_data_processing->ex_st = ERROR_EXIT_ARGC;
+		return (OK);
+	}
+	if (argv && check_numeric(argv[0]) != OK)
+	{
+		if (check_numeric(argv[0]) != OK)
+		{
+			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+			ft_putstr_fd(argv[0], STDERR_FILENO);
+			ft_putstr_fd(": numeric argument required", STDERR_FILENO);
+			g_data_processing->ex_st = ERROR_NUMERIC;
+			return (ERROR_EXIT);
+		}
+	}
+	return (handle_exit(env, argv));
 }

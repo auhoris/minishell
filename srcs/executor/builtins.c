@@ -77,7 +77,7 @@ static int	execute_other_command(t_exec *exec, char **args,
 		close(exec->tempout);
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
-		tcsetattr(0, TCSANOW, data_processing->term_default);
+		tcsetattr(0, TCSANOW, g_data_processing->term_default);
 		if (execve(args[0], args, envp) == -1)
 		{
 			bad_command(args[0], no_path_f);

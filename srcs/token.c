@@ -27,7 +27,7 @@ void	destroy_token(t_token *token)
 		token = NULL;
 	}
 }
-
+/*
 char	*print_token_type(int type)
 {
 	switch (type) {
@@ -45,7 +45,6 @@ char	*print_token_type(int type)
 		case BAD_TOKEN: return ("BAD_TOKEN");
 		case TOKEN_EOF: return ("TOKEN_EOF");
 		case TOKEN_CMD: return ("TOKEN_CMD");
-		// case TOKEN_FLAG: return ("TOKEN_FLAG");
 		default: return ("Undefined token");
 	}
-}
+} */

@@ -4,31 +4,31 @@
 
 t_data_processing	*init_data_processing(t_env_list *env)
 {
-	t_data_processing	*data_processing;
+	t_data_processing	*g_data_processing;
 
-	data_processing = (t_data_processing *)malloc(sizeof(t_data_processing));
-	if (data_processing == NULL)
+	g_data_processing = (t_data_processing *)malloc(sizeof(t_data_processing));
+	if (g_data_processing == NULL)
 	{
 		return (NULL);
 	}
-	data_processing->actual_history = NULL;
-	data_processing->start_history = NULL;
-	data_processing->permission_create = 1;
-	data_processing->env = env;
-	data_processing->buf_read = (char *)ft_calloc(10, 1);
-	data_processing->command_line = (char *)ft_calloc(1, 1);
-	if (data_processing->buf_read == NULL
-		|| data_processing->command_line == NULL)
+	g_data_processing->actual_history = NULL;
+	g_data_processing->start_history = NULL;
+	g_data_processing->permission_create = 1;
+	g_data_processing->env = env;
+	g_data_processing->buf_read = (char *)ft_calloc(10, 1);
+	g_data_processing->command_line = (char *)ft_calloc(1, 1);
+	if (g_data_processing->buf_read == NULL
+		|| g_data_processing->command_line == NULL)
 	{
-		free(data_processing->buf_read);
-		free(data_processing->command_line);
-		free(data_processing);
+		free(g_data_processing->buf_read);
+		free(g_data_processing->command_line);
+		free(g_data_processing);
 		return (NULL);
 	}
-	data_processing->num_symbol = 0;
-	data_processing->ex_st = OK;
-	data_processing->n_flag = FALSE;
-	return (data_processing);
+	g_data_processing->num_symbol = 0;
+	g_data_processing->ex_st = OK;
+	g_data_processing->n_flag = FALSE;
+	return (g_data_processing);
 }
 
 int	check_buf_read(char *buf_read)

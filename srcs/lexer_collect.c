@@ -30,37 +30,6 @@ t_token	*lexer_errors_handler(t_token *token)
 	return (init_token(BAD_TOKEN, ft_strdup(""), FALSE));
 }
 
-t_token	*lexer_collect_dollar(t_lexer *lexer)
-{
-	char	*str;
-
-	str = ft_strdup("");
-	if (str == NULL)
-		return (NULL);
-	lexer_advance(lexer);
-	if (ft_isdigit(lexer->c))
-		return (lexer_advance_with(lexer, init_token(TOKEN_ID, ft_strdup(""), FALSE)));
-	if (lexer->c == '\0' || lexer->c == ' ' || lexer->c == '=')
-	{
-		if (lexer->c == ' ')
-			return (init_token(TOKEN_ID, ft_strdup("$"), TRUE));
-		return (init_token(TOKEN_ID, ft_strdup("$"), FALSE));
-	}
-	while ((!ft_inset(SPECIAL, lexer->c)
-			&& lexer->c != SPACE) && lexer->c != '\0')
-	{
-		if (lexer->c == '=')
-			break ;
-		str = connect_str(str, lexer_chtostr(lexer->c));
-		if (str == NULL)
-			return (NULL);
-		lexer_advance(lexer);
-	}
-	if (lexer->c == SPACE && !lexer->flag)
-		return (init_token(TOKEN_DOLLAR, str, TRUE));
-	return (init_token(TOKEN_DOLLAR, str, FALSE));
-}
-
 t_token	*lexer_collect_id(t_lexer *lexer)
 {
 	char	*str;

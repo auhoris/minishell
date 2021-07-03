@@ -17,12 +17,12 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 	if (node->fd_out == -1 || node->fd_in == -1)
 	{
 		if (errno == ENOENT)
-			data_processing->ex_st = EXIT_NOT_EXIST;
+			g_data_processing->ex_st = EXIT_NOT_EXIST;
 		else if (errno == EACCES)
-			data_processing->ex_st = ERROR_PERM_DENIED;
+			g_data_processing->ex_st = ERROR_PERM_DENIED;
 		ft_putchar('\n');
 		perror(filename);
-		data_processing->n_flag =  TRUE;
+		g_data_processing->n_flag = TRUE;
 		return (ERROR_PARSER);
 	}
 	return (OK);
