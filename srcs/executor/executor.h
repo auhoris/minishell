@@ -12,7 +12,7 @@ int		set_old_pwd_dir(t_env_list *env, char *old_pwd_dir);
 int		set_key_value(char *str, t_env_list *env, int pos);
 void	execution_echo(t_exec *exec, t_ast *node);
 int		execution_cd(t_exec *exec, t_ast *node, t_env_list *env);
-int		execution_pwd(t_exec *exec, t_ast *node, t_env_list *env);
+int		execution_pwd(t_exec *exec, t_ast *node);
 int		execution_export(t_exec *exec, t_ast *node, t_env_list *env);
 int		execution_unset(t_exec *exec, t_ast *node, t_env_list **env);
 int		executor_pipe(t_exec *exec, t_ast *node, t_env_list *env);
@@ -36,5 +36,6 @@ int		get_key_export(char *str, char **key, int *i);
 int		get_value_export(char *str, char **value, int *i);
 void	value_key_free(char *value, char *key, t_env_list *new);
 void	write_export(t_env_list *env, int last);
+int		create_new_env(char *key, char *value, t_env_list *env);
 
 #endif

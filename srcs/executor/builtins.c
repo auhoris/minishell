@@ -130,7 +130,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 	else if (ft_strcmp(node->cmd_name, "cd") == 0)
 		out = execution_cd(exec, node, env);
 	else if (ft_strcmp(node->cmd_name, "pwd") == 0)
-		out = execution_pwd(exec, node, env);
+		out = execution_pwd(exec, node);
 	else if (ft_strcmp(node->cmd_name, "export") == 0)
 		out = execution_export(exec, node, env);
 	else if (ft_strcmp(node->cmd_name, "env") == 0)

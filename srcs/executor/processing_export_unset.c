@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <unistd.h>
 
-static int	create_new_env(char *key, char *value, t_env_list *env)
+int	create_new_env(char *key, char *value, t_env_list *env)
 {
 	t_env_list	*new;
 	int			null_value;

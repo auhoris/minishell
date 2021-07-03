@@ -75,22 +75,18 @@ int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)
 	return (OUT);
 }
 
-int	execution_pwd(t_exec *exec, t_ast *node, t_env_list *env)
+int	execution_pwd(t_exec *exec, t_ast *node)
 {
-	int		out;
-	char	*pwd_dir;
+	char	pwd_dir[256];
 
 	exec->n_flag = TRUE;
 	if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
 		data_processing->n_flag = FALSE;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		write (exec->tempout, "\n", 1);
-	pwd_dir = NULL;
-	out = get_pwd_dir(env, &pwd_dir);
-	if (out == OUT)
-	{
-		ft_putstr(pwd_dir);
-		ft_putstr("\n");
-	}
-	return (out);
+	if (getcwd(pwd_dir, 256) == NULL)
+		return (ERROR_MALLOC);
+	ft_putstr(pwd_dir);
+	ft_putstr("\n");
+	return (OUT);
 }
