@@ -4,6 +4,20 @@
 #include "includes/errors.h"
 #include "includes/lexer.h"
 #include "includes/utils.h"
+#include <stddef.h>
+
+static void	lower_command_name(char *cmd)
+{
+	size_t	i;
+
+	i = 0;
+	// if (ft_strcmp(cmd, "export") == 0)
+	while (cmd[i])
+	{
+		cmd[i] = ft_tolower(cmd[i]);
+		i++;
+	}
+}
 
 static t_ast	*parser_parse_simple_command(t_parser *parser)
 {
@@ -25,6 +39,7 @@ static t_ast	*parser_parse_simple_command(t_parser *parser)
 		if (node->err_handler != OK)
 			return (ast_error_handler(node, node->err_handler));
 	}
+	lower_command_name(node->cmd_name);
 	return (node);
 }
 

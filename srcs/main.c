@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/07/03 15:33:57 by vlados_pa        ###   ########.fr       */
+/*   Updated: 2021/07/03 15:34:56 by vlados_pa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #include <sys/_types/_size_t.h>
 #include <term.h>
 
+/* g_data_processing->ex_st = 1;
+get_last_element(&g_data_processing->actual_history); */
 void	handler(int s)
 {
 	(void)s;
@@ -37,8 +39,6 @@ void	handler(int s)
 	g_data_processing->ex_st = 1;
 	g_data_processing->num_symbol = 0;
 	get_last_element(&g_data_processing->actual_history);
-	/* g_data_processing->ex_st = 1;
-	get_last_element(&g_data_processing->actual_history); */
 	ft_putstr("\n<minishell>$ ");
 	tputs(tgetstr("sc", 0), 1, ft_putint);
 }

@@ -20,7 +20,7 @@ int	get_pwd_dir(t_env_list *env, char **pwd_dir)
 
 int	set_pwd_dir(t_env_list *env, char *pwd_dir)
 {
-	t_env_list *start_env;
+	t_env_list	*start_env;
 
 	start_env = env;
 	while (env != NULL && ft_strcmp(env->key, "PWD") != 0)

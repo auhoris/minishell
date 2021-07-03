@@ -17,9 +17,9 @@ static void	param_free(t_env_list *env, t_data_processing *g_data_processing)
 		free(env);
 		env = tmp->next;
 	}
-	// g_data_processing = NULL;
 	clear_history(&g_data_processing->start_history);
 }
+// g_data_processing = NULL;
 
 static void	execution_exit(t_env_list *env,
 		t_data_processing *g_data_processing)
