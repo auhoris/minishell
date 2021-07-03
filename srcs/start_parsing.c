@@ -8,6 +8,7 @@ static int	check_parser(t_parser *paser)
 {
 	int	type;
 
+	g_data_processing->n_flag = FALSE;
 	if (paser == NULL)
 		return (ERROR_MALLOC);
 	type = paser->cur_tok->e_type;

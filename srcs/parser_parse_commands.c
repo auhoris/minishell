@@ -75,12 +75,18 @@ t_ast	*parser_parse_command(t_parser *parser)
 {
 	t_ast	*node;
 
-	node = NULL;
+	node = parser_parse_simple_command(parser);
+	// node = NULL;
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF)
 	{
+		// printf("1\n");
 		if (parser->cur_tok->e_type == TOKEN_PIPE)
+		{
+			// printf("2\n");
 			return (parser_parse_pipe(node, parser));
+		}
+		// printf("3\n");
 		node = parser_parse_simple_command(parser);
 		if (node->err_handler != OK)
 			return (ast_error_handler(node, node->err_handler));

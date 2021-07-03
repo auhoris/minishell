@@ -2,6 +2,7 @@
 
 int	set_redirection(t_exec *exec, t_ast *node)
 {
+	// printf("set_redirection = %p\n", node);
 	exec->tempin = dup(STDIN_FILENO);
 	exec->tempout = dup(STDOUT_FILENO);
 	if (exec->piperead != STDIN_FILENO)
