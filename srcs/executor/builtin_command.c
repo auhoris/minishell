@@ -67,7 +67,7 @@ int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)
 	if (out != 0 && node->argv != NULL)
 	{
 		write_cd(node);
-		return (EXIT_NOT_EXIST);
+		return (OK);
 	}
 	else
 		if (set_pwd_dir(env, pwd_dir) == ERROR_MALLOC)

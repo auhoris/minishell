@@ -9,9 +9,17 @@
 static void	lower_command_name(char *cmd)
 {
 	size_t	i;
+	char	export[7];
 
 	i = 0;
-	// if (ft_strcmp(cmd, "export") == 0)
+	while (cmd[i])
+	{
+		export[i] = ft_tolower(cmd[i]);
+		i++;
+	}
+	if (ft_strcmp(export, "export") == 0)
+		return ;
+	i = 0;
 	while (cmd[i])
 	{
 		cmd[i] = ft_tolower(cmd[i]);
