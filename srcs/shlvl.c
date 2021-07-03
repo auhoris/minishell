@@ -98,7 +98,7 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(argv[0], STDERR_FILENO);
-			ft_putstr_fd(": numeric argument required", STDERR_FILENO);
+			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 			g_data_processing->ex_st = ERROR_NUMERIC;
 			return (ERROR_EXIT);
 		}
