@@ -45,23 +45,8 @@ int	err_msg(t_parser *parser, char *msg, char *token, int code)
 	return (handle_error(parser, code));
 }
 
-int	parser_next_token(t_parser *parser)
+int	handle_parser(t_parser *parser, int ct, int pt)
 {
-	int			ct;
-	int			pt;
-
-	parser->prev_token = parser->cur_tok;
-	parser->cur_tok = lexer_get_next_token(parser->lexer);
-	if (parser->cur_tok == NULL)
-		return (handle_error(parser, ERROR_MALLOC));
-	if (parser->cur_tok->e_type == BAD_TOKEN)
-		return (handle_error(parser, ERROR_PARSER));
-	pt = parser->prev_token->e_type;
-	ct = parser->cur_tok->e_type;
-	if (ct == TOKEN_PIPE && pt == TOKEN_PIPE)
-		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
-	if (ct == TOKEN_SEMI && pt == TOKEN_SEMI)
-		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	if (ct == TOKEN_SEMI && pt == TOKEN_PIPE)
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	else if (pt == TOKEN_PIPE && ct == TOKEN_EOF)
@@ -76,6 +61,30 @@ int	parser_next_token(t_parser *parser)
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	else if ((ct == TOKEN_LESS && (pt == TOKEN_MORE || pt == TOKEN_LESS)))
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
+	return (OK);
+}
+
+int	parser_next_token(t_parser *parser)
+{
+	int			ct;
+	int			pt;
+	int			err;
+
+	parser->prev_token = parser->cur_tok;
+	parser->cur_tok = lexer_get_next_token(parser->lexer);
+	if (parser->cur_tok == NULL)
+		return (handle_error(parser, ERROR_MALLOC));
+	if (parser->cur_tok->e_type == BAD_TOKEN)
+		return (handle_error(parser, ERROR_PARSER));
+	pt = parser->prev_token->e_type;
+	ct = parser->cur_tok->e_type;
+	if (ct == TOKEN_PIPE && pt == TOKEN_PIPE)
+		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
+	if (ct == TOKEN_SEMI && pt == TOKEN_SEMI)
+		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+	err = handle_parser(parser, ct, pt);
+	if (err != OK)
+		return (err);
 	destroy_token(parser->prev_token);
 	return (ct);
 }
