@@ -75,13 +75,9 @@ int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 	int	out;
 
 	out = OUT;
-	// printf("%p\n", node);
-	/* if (node)
-	{ */
-		set_redirection(exec, node);
-		out = check_builtin(exec, node, env);
-		restore_std(exec, node);
-	// }
+	set_redirection(exec, node);
+	out = check_builtin(exec, node, env);
+	restore_std(exec, node);
 	return (out);
 }
 

@@ -36,8 +36,6 @@ int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 		return (ERROR);
 	out = start_pipe(exec, node, env, fd);
 	exec_node = node->table_value[1];
-	/* printf("%p\n", exec_node);
-	printf("%p\n", exec_node->cmd_name); */
 	while (exec_node->e_nodetype == NODE_PIPE)
 	{
 		close(exec->pipewrite);
@@ -47,8 +45,7 @@ int	executor_pipe(t_exec *exec, t_ast *node, t_env_list *env)
 			return (ERROR);
 		}
 		exec->pipewrite = fd[1];
-		if (exec_node->table_value[0])
-			out = executor_simplecommand(exec, exec_node->table_value[0], env);
+		out = executor_simplecommand(exec, exec_node->table_value[0], env);
 		close(exec->piperead);
 		exec->piperead = fd[0];
 		exec_node = exec_node->table_value[1];

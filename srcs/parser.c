@@ -6,8 +6,8 @@
 #include "includes/token.h"
 #include "includes/utils.h"
 
-#define MSG "\nminishell: syntax error near unexpected token "
-#define EOF_MSG "\nminishell: syntax error: unexpected end of file"
+#define MSG "minishell: syntax error near unexpected token "
+#define EOF_MSG "minishell: syntax error: unexpected end of file"
 #define TM TOKEN_MORE
 #define TL TOKEN_LESS
 #define TD TOKEN_DMORE
@@ -58,6 +58,8 @@ int	parser_next_token(t_parser *parser)
 		return (handle_error(parser, ERROR_PARSER));
 	pt = parser->prev_token->e_type;
 	ct = parser->cur_tok->e_type;
+	if (ct == TOKEN_PIPE && pt == TOKEN_PIPE)
+		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	if (ct == TOKEN_SEMI && pt == TOKEN_SEMI)
 		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 	if (ct == TOKEN_SEMI && pt == TOKEN_PIPE)
@@ -66,6 +68,10 @@ int	parser_next_token(t_parser *parser)
 		return (err_msg(parser, EOF_MSG, "", ERROR_PARSER));
 	else if ((pt == TL || pt == TM || pt == TD) && ct == TOKEN_EOF)
 		return (err_msg(parser, MSG, "newline", ERROR_PARSER));
+	else if ((pt == TL || pt == TM || pt == TD) && ct == TOKEN_SEMI)
+		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
+	else if ((pt == TL || pt == TM || pt == TD) && ct == TOKEN_PIPE)
+		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	else if ((ct == TOKEN_MORE && (pt == TOKEN_MORE || pt == TOKEN_LESS)))
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	else if ((ct == TOKEN_LESS && (pt == TOKEN_MORE || pt == TOKEN_LESS)))

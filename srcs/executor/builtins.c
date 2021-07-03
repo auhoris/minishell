@@ -65,6 +65,7 @@ static int	execute_other_command(t_exec *exec, char **args,
 {
 	int			pid;
 
+	// printf("%s\n", args[0]);
 	pid = fork();
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, SIG_IGN);

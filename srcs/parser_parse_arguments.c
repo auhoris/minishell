@@ -26,7 +26,7 @@ static int	handle_redirect_loop(t_parser *parser, t_ast *node)
 		if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
 			return (ERROR_PARSER);
 		if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
-			return (AMBIG);
+			return (ERROR_PARSER);
 		file = parser_get_args(parser);
 		if (ft_strcmp(file, "error_parser") == 0)
 			return (ERROR_PARSER);
@@ -69,11 +69,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 
 	err = handle_redirect_loop(parser, node);
 	if (err != OK)
-	{
-		if (err == AMBIG)
-			g_data_processing->ex_st = 1;
 		return (ERROR_PARSER);
-	}
 	if (ft_strcmp(node->cmd_name, "") == 0)
 	{
 		node->cmd_name = parser_get_args(parser);

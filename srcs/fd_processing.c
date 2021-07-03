@@ -25,6 +25,7 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 		g_data_processing->n_flag = TRUE;
 		return (ERROR_PARSER);
 	}
+	free(filename);
 	return (OK);
 }
 
