@@ -29,15 +29,12 @@ int	write_enter(t_data_processing *g_data_processing)
 			ft_strlen(g_data_processing->command_line));
 		out = start_parsing(g_data_processing);
 		if (out != OUT && out != ERROR_BAD_COMMAND && out != ERROR_PARSER)
-		{
-			printf("ERROR = %d\n", out);
 			return (out);
-		}
 	}
 	if (g_data_processing->n_flag == FALSE)
-		ft_putstr("\n<minishell>$[1] ");
+		ft_putstr("\n<minishell>$ ");
 	else if (g_data_processing->n_flag == TRUE)
-		ft_putstr("<minishell>$[2] ");
+		ft_putstr("<minishell>$ ");
 	g_data_processing->size_pids = 0;
 	return (out);
 }

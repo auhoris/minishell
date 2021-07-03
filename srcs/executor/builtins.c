@@ -97,7 +97,6 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 	int		error;
 	int		ret_handler;
 
-	exec->n_flag = FALSE;
 	ret_handler = get_path_array(env, &path_array);
 	if (ret_handler == ERROR_MALLOC)
 		return (ERROR_MALLOC);
@@ -113,6 +112,7 @@ int	other_command(t_exec *exec, t_ast *node, t_env_list *env)
 		clear_array(args, ALL_ARRAY);
 		return (ERROR_MALLOC);
 	}
+	g_data_processing->n_state = FALSE;
 	execute_other_command(exec, args, env_array, ret_handler);
 	free_arr(args, env_array);
 	return (OUT);

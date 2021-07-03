@@ -80,6 +80,7 @@ int	executor_simplecommand(t_exec *exec, t_ast *node, t_env_list *env)
 	return (out);
 }
 
+// g_data_processing->n_state = TRUE;
 int	detour_tree(t_exec *exec, t_ast *node, t_env_list *env)
 {
 	int	out;

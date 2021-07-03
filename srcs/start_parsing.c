@@ -26,6 +26,8 @@ static int	check_parser(t_parser *paser)
 	return (OK);
 }
 
+/* if (exec->n_flag != TRUE && cnt == 0)
+	ft_putchar('\n'); */
 static int	wait_pids(t_exec *exec, int cnt)
 {
 	int		waiting;
@@ -34,8 +36,6 @@ static int	wait_pids(t_exec *exec, int cnt)
 	ex_st = OK;
 	if (exec->size_pids == 0)
 		return (g_data_processing->ex_st);
-	if (exec->n_flag != TRUE && cnt == 0)
-		ft_putchar('\n');
 	cnt = -1;
 	while ((size_t)++cnt < exec->size_pids)
 	{
@@ -55,6 +55,7 @@ static int	wait_pids(t_exec *exec, int cnt)
 	return (ex_st);
 }
 
+// printf("here\n");
 static int	exec_commands(t_data_processing *g_data_processing,
 		t_parser *parser, size_t i)
 {
@@ -62,6 +63,8 @@ static int	exec_commands(t_data_processing *g_data_processing,
 	t_exec	*exec;
 	int		out;
 
+	if (g_data_processing->n_state == TRUE)
+		ft_putchar('\n');
 	out = OUT;
 	command = parser_parse_command(parser);
 	if (command == NULL)
@@ -101,6 +104,7 @@ static int	start_loop(t_data_processing *g_data_processing, t_parser *parser)
 	int		out;
 
 	g_data_processing->cmd_i = 0;
+	g_data_processing->n_state = TRUE;
 	out = OUT;
 	out = exec_commands(g_data_processing, parser, g_data_processing->cmd_i);
 	if (out == ERROR_MALLOC || out == ERROR_EXIT || out == ERROR_PARSER)
