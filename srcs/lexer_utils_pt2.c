@@ -43,4 +43,6 @@ void	handle_error_msg(char *msg, char *token)
 	ft_putstr_fd("'", STDERR_FILENO);
 	ft_putstr_fd(token, STDERR_FILENO);
 	ft_putchar_fd('\'', STDERR_FILENO);
+	if (g_data_processing->n_state == FALSE)
+		ft_putchar_fd('\n', STDERR_FILENO);
 }

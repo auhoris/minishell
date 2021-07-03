@@ -7,28 +7,29 @@
 
 t_token	*lexer_errors_handler(t_token *token)
 {
-	ft_putchar('\n');
 	if (token->e_type == TOKEN_SQUOTE)
 	{
 		handle_error_msg(
 			"minishell: unexpected EOF while looking for matching ", "'");
 		ft_putstr_fd(
-			"minishell: syntax error: unexpected end of file", STDERR_FILENO);
+			"\nminishell: syntax error: unexpected end of file", STDERR_FILENO);
 	}
 	else if (token->e_type == TOKEN_DQUOTE)
 	{
 		handle_error_msg(
 			"minishell: unexpected EOF while looking for matching ", "\"");
 		ft_putstr_fd(
-			"minishell: syntax error: unexpected end of file", STDERR_FILENO);
+			"\nminishell: syntax error: unexpected end of file", STDERR_FILENO);
 	}
 	else
 	{
-		handle_error_msg(
-			"minishell: syntax error near unexpected token ", token->value);
+		ft_putstr_fd("minishell: syntax error near unexpected token '\\'",
+			STDERR_FILENO);
 	}
 	return (init_token(BAD_TOKEN, ft_strdup(""), FALSE));
 }
+		/* handle_error_msg(
+			"minishell: syntax error near unexpected token ", token->value); */
 
 t_token	*lexer_collect_id(t_lexer *lexer)
 {
