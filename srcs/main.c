@@ -14,7 +14,6 @@
 #include "includes/minishell.h"
 #include "includes/exit_status.h"
 #include "includes/token_list.h"
-#include "../libs/get_next_line/srcs/includes/get_next_line.h"
 #include "includes/parser.h"
 #include "includes/ast.h"
 #include "includes/token.h"
