@@ -71,7 +71,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 	if (err != OK)
 	{
 		if (err == AMBIG)
-			data_processing->ex_st = 1;
+			g_data_processing->ex_st = 1;
 		return (ERROR_PARSER);
 	}
 	if (ft_strcmp(node->cmd_name, "") == 0)

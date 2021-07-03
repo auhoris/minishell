@@ -30,7 +30,7 @@ typedef struct s_exec
 	int		n_flag;
 }			t_exec;
 
-t_data_processing	*data_processing;
+t_data_processing	*g_data_processing;
 t_exec	*init_exec(t_ast *root);
 int		termcap(t_env_list *env);
 void	handler(int s);

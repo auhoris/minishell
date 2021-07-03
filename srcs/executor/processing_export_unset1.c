@@ -8,8 +8,8 @@
 
 static void	put_err_msg(char *str, int pos)
 {
-	data_processing->n_flag = FALSE;
-	data_processing->ex_st = 1;
+	g_data_processing->n_flag = FALSE;
+	g_data_processing->ex_st = 1;
 	if (pos != 0)
 		ft_putchar_fd('\n', STDERR_FILENO);
 	ft_putstr_fd("minishell: export: ", STDERR_FILENO);

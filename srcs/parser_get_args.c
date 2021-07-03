@@ -14,7 +14,7 @@ static char	*handle_dollar_token(char *str)
 {
 	char	*itoa_tmp;
 
-	itoa_tmp = ft_itoa(data_processing->ex_st);
+	itoa_tmp = ft_itoa(g_data_processing->ex_st);
 	if (itoa_tmp == NULL)
 		return (NULL);
 	str = ft_strjoin(str, itoa_tmp);
@@ -22,7 +22,7 @@ static char	*handle_dollar_token(char *str)
 	return (str);
 }
 
-/* itoa_tmp = ft_itoa(data_processing->ex_st);
+/* itoa_tmp = ft_itoa(g_data_processing->ex_st);
 if (itoa_tmp == NULL)
 	return (str);
 str = ft_strjoin(str, itoa_tmp);

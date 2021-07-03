@@ -73,7 +73,7 @@ static int	handle_exit(t_env_list **env, char **argv)
 		start = start->next;
 	}
 	if (argv != NULL)
-		data_processing->ex_st = keep_in_range(ft_atoi(argv[0]));
+		g_data_processing->ex_st = keep_in_range(ft_atoi(argv[0]));
 	return (ERROR_EXIT);
 }
 
@@ -83,7 +83,7 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 	if (argc > 1)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		data_processing->ex_st = ERROR_EXIT_ARGC;
+		g_data_processing->ex_st = ERROR_EXIT_ARGC;
 		return (OK);
 	}
 	if (argv && check_numeric(argv[0]) != OK)
@@ -93,7 +93,7 @@ int	executor_exit(size_t argc, char **argv, t_env_list **env)
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(argv[0], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required", STDERR_FILENO);
-			data_processing->ex_st = ERROR_NUMERIC;
+			g_data_processing->ex_st = ERROR_NUMERIC;
 			return (ERROR_EXIT);
 		}
 	}
