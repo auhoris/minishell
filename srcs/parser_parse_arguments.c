@@ -83,6 +83,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 {
 	int	prev_type;
 	int	curr_type;
+	char	*file;
 
 	prev_type = parser->cur_tok->e_type;
 	while (prev_type == TOKEN_MORE
@@ -94,17 +95,22 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 			return (ERROR_PARSER);
 		if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
 			return (ERROR_PARSER);
-		if (make_node_fd(parser->cur_tok->value, prev_type, node) != OK)
+		file = parser_get_args(parser);
+		if (ft_strcmp(file, "error_parser") == 0)
 			return (ERROR_PARSER);
-		prev_type = parser_next_token(parser);
+		if (make_node_fd(file, prev_type, node) != OK)
+			return (ERROR_PARSER);
+		prev_type = parser->cur_tok->e_type;
 		if (prev_type == ERROR_PARSER)
 			return (ERROR_PARSER);
 		check_fd(node, prev_type);
 	}
-	if (parser->cur_tok->e_type == TOKEN_ID)
+	if (ft_strcmp(node->cmd_name, "") == 0)
 	{
-		node->cmd_name = ft_strdup(parser->cur_tok->value);
-		if (parser_next_token(parser) == ERROR_PARSER)
+		node->cmd_name = parser_get_args(parser);
+		if (node->cmd_name == NULL)
+			return (ERROR_MALLOC);
+		if (ft_strcmp(node->cmd_name, "error_parser") == 0)
 			return (ERROR_PARSER);
 	}
 	return (OK);
