@@ -19,6 +19,11 @@ static void	handle_echo_output(t_ast *node,
 	ft_putstr(node->argv[pos]);
 }
 
+/* if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+	g_data_processing->n_flag = FALSE;
+if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+	write (exec->tempout, "\n", 1); */
+
 void	execution_echo(t_exec *exec, t_ast *node)
 {
 	size_t	i;
@@ -29,10 +34,6 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	n_flag = 0;
 	i = 0;
 	d_flag = 0;
-	/* if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
-		g_data_processing->n_flag = FALSE;
-	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
-		write (exec->tempout, "\n", 1); */
 	while (i < node->argc && ft_strcmp(node->argv[i], "-n") == 0)
 		i++;
 	n_flag = i;
@@ -75,16 +76,16 @@ int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)
 	return (OUT);
 }
 
+/* if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
+	g_data_processing->n_flag = FALSE;
+if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
+	write (exec->tempout, "\n", 1); */
 int	execution_pwd(t_exec *exec, t_ast *node)
 {
 	char	pwd_dir[256];
 
 	(void)node;
 	exec->n_flag = TRUE;
-	/* if (exec->pipewrite != STDOUT_FILENO || node->fd_out != STDOUT_FILENO)
-		g_data_processing->n_flag = FALSE;
-	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
-		write (exec->tempout, "\n", 1); */
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
 	ft_putstr(pwd_dir);

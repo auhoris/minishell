@@ -8,9 +8,7 @@ t_data_processing	*init_data_processing(t_env_list *env)
 
 	g_data_processing = (t_data_processing *)malloc(sizeof(t_data_processing));
 	if (g_data_processing == NULL)
-	{
 		return (NULL);
-	}
 	g_data_processing->actual_history = NULL;
 	g_data_processing->start_history = NULL;
 	g_data_processing->permission_create = 1;
