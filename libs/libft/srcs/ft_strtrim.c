@@ -26,7 +26,7 @@ static int	in_set(char const *set, char c)
 	return (0);
 }
 
-char		*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
 	char	*p_res;
 	int		len;
@@ -43,7 +43,8 @@ char		*ft_strtrim(char const *s1, char const *set)
 		len--;
 	if (len < i)
 		return (ft_strdup(""));
-	if (!(p_res = malloc(sizeof(*p_res) * (len - i + 1))))
+	p_res = malloc(sizeof(*p_res) * (len - i + 1));
+	if (!p_res)
 		return (0);
 	k = 0;
 	while (i < len)

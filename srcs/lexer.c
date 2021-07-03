@@ -1,4 +1,7 @@
-#include "lexer.h"
+#include "includes/lexer.h"
+#include "includes/minishell.h"
+#include "includes/token.h"
+#include <stdlib.h>
 
 t_lexer	*init_lexer(char *content)
 {
@@ -8,16 +11,16 @@ t_lexer	*init_lexer(char *content)
 	if (lexer == NULL)
 		return (NULL);
 	lexer->length = ft_strlen(content);
-	lexer->content = content;
+	lexer->content = ft_strdup(content);
+	if (lexer->content == NULL)
+	{
+		free(lexer);
+		return (NULL);
+	}
 	lexer->current = 0;
 	lexer->c = lexer->content[lexer->current];
+	lexer->flag = FALSE;
 	return (lexer);
-}
-
-void	lexer_advance(t_lexer *lexer)
-{
-	lexer->current++;
-	lexer->c = lexer->content[lexer->current];
 }
 
 void	lexer_skip_whitespace(t_lexer *lexer)
@@ -26,66 +29,59 @@ void	lexer_skip_whitespace(t_lexer *lexer)
 		lexer_advance(lexer);
 }
 
+t_token	*lexer_advance_with(t_lexer *lexer, t_token *token)
+{
+	lexer_advance(lexer);
+	return (token);
+}
+
+t_token	*lexer_special_tokens(t_lexer *lexer)
+{
+	if (lexer->c == ';')
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_SEMI, lexer_chtostr(lexer->c), FALSE)));
+	else if (lexer->c == '<')
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_LESS, lexer_chtostr(lexer->c), FALSE)));
+	else if (lexer->c == '>')
+	{
+		if (lexer_peek(lexer, 1) == '>')
+			return (lexer_advance_with(lexer, lexer_advance_with(lexer,
+						init_token(TOKEN_DMORE, ft_strdup(">>"), FALSE))));
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_MORE, lexer_chtostr(lexer->c), FALSE)));
+	}
+	else if (lexer->c == '=')
+	{
+		if (lexer_peek(lexer, -1) == ' ' || lexer_peek(lexer, 1) == ' ')
+			return (lexer_advance_with(lexer,
+					init_token(TOKEN_ID, lexer_chtostr(lexer->c), TRUE)));
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_ID, lexer_chtostr(lexer->c), FALSE)));
+	}
+	return (lexer_advance_with(lexer,
+			init_token(TOKEN_PIPE, lexer_chtostr(lexer->c), FALSE)));
+}
+
 t_token	*lexer_get_next_token(t_lexer *lexer)
 {
-	while (lexer->c != '\0' && lexer->current < lexer->length)
+	while (lexer->c != '\0' && lexer->c != '\0')
 	{
-		if (lexer->c == ' ')
+		if (lexer->flag == FALSE)
 			lexer_skip_whitespace(lexer);
-		if (lexer->c == '\'')
-			return (lexer_collect_string(lexer));
-		if (ft_isalnum(lexer->c))
+		if (lexer->c == '\'' && lexer->flag != TRUE)
+			return (lexer_collect_squote(lexer));
+		if (ft_isalnum(lexer->c) || ft_inset(OTHER, lexer->c))
 			return (lexer_collect_id(lexer));
-	}
-	return (init_token(TOKEN_EOF, "\0"));
-}
-
-t_token	*lexer_collect_id(t_lexer *lexer)
-{
-	char	*str;
-	char	*tmp;
-
-	str = ft_strdup("");
-	if (str == NULL)
-		return (NULL);
-	while (ft_isalnum(lexer->c) && lexer->current < lexer->length)
-	{
-		tmp = str;
-		str = ft_strjoin(str, lexer_get_char_as_str(lexer->c));
-		free(tmp);
+		if (lexer->c == '$')
+			return (lexer_collect_dollar(lexer));
+		if (lexer->c == '"' || lexer->flag == TRUE)
+			return (lexer_collect_dquote(lexer));
+		if (lexer->c == '\\')
+			return (lexer_collect_bslash(lexer));
+		if (ft_inset(";<|>=", lexer->c))
+			return (lexer_special_tokens(lexer));
 		lexer_advance(lexer);
 	}
-	return (init_token(TOKEN_ID, str));
-}
-
-t_token	*lexer_collect_string(t_lexer *lexer)
-{
-	char	*string;
-	char	*tmp;
-
-	string = ft_strdup("");
-	if (string == NULL)
-		return (NULL);
-	lexer_advance(lexer);
-	while (lexer->c != '\'' && lexer->current < lexer->length)
-	{
-		tmp = string;
-		string = ft_strjoin(string, lexer_get_char_as_str(lexer->c));
-		free(tmp);
-		lexer_advance(lexer);
-	}
-	lexer_advance(lexer);
-	return (init_token(TOKEN_STRING, string));
-}
-
-char	*lexer_get_char_as_str(char c)
-{
-	char	*str;
-
-	str = ft_calloc(2, sizeof(*str));
-	if (str == NULL)
-		return (NULL);
-	str[0] = c;
-	str[1] = '\0';
-	return (str);
+	return (init_token(TOKEN_EOF, ft_strdup(""), FALSE));
 }

@@ -19,7 +19,7 @@ static int	ft_abs(int n)
 	return (n);
 }
 
-void		ft_putnbr_fd(int n, int fd)
+void	ft_putnbr_fd(int n, int fd)
 {
 	int	sv_n;
 	int	ten_pow;
@@ -28,8 +28,11 @@ void		ft_putnbr_fd(int n, int fd)
 	ten_pow = 1;
 	if (n < 0)
 		ft_putchar_fd('-', fd);
-	while ((sv_n /= 10) != 0)
+	while (sv_n != 0)
+	{
+		sv_n /= 10;
 		ten_pow *= 10;
+	}
 	while (ten_pow != 0)
 	{
 		ft_putchar_fd('0' + ft_abs(n / ten_pow % 10), fd);

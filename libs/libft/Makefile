@@ -6,7 +6,7 @@
 #    By: auhoris <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/25 15:29:16 by auhoris           #+#    #+#              #
-#    Updated: 2021/05/04 18:48:54 by vlados_pa        ###   ########.fr        #
+#    Updated: 2021/05/11 16:22:01 by auhoris          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,11 +32,12 @@ $(NAME):	$(OBJS)
 			@echo "\033[0;32m"$@" compiled\033[0m"
 
 $(OBJDIR)/%.o	: $(SRCDIR)/%.c Makefile $(INCLUDES)
+			@mkdir -p $(OBJDIR)
 			$(CC) $(CLAGS) -c $< -o $@
 			@echo "Compiled "$<" successfully!"
 
 clean:
-			$(RM) $(OBJS)
+			$(RM) $(OBJDIR)
 
 fclean:		clean
 			$(RM) $(NAME)
