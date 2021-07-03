@@ -6,7 +6,7 @@
 /*   By: vlados_paperos <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 14:34:19 by vlados_pa         #+#    #+#             */
-/*   Updated: 2021/06/29 22:42:51 by vlados_pa        ###   ########.fr       */
+/*   Updated: 2021/07/03 12:56:39 by vlados_pa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,15 @@ void	handler(int s)
 	if (data_processing != NULL)
 	{
 		free(data_processing->command_line);
-		data_processing->command_line = ft_calloc(1,1);
-
+		data_processing->command_line = ft_calloc(1, 1);
 	}
 	data_processing->ex_st = 1;
 	get_last_element(&data_processing->actual_history);
 	ft_putstr("\n<minishell>$ ");
 	tputs(tgetstr("sc", 0), 1, ft_putint);
-
 }
 
-void	test()
+void	test(void)
 {
 	printf("\ntest\n");
 }

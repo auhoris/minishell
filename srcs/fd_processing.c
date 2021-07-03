@@ -22,7 +22,7 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 			data_processing->ex_st = ERROR_PERM_DENIED;
 		ft_putchar('\n');
 		perror(filename);
-		data_processing->n_flag =  TRUE;
+		data_processing->n_flag = TRUE;
 		return (ERROR_PARSER);
 	}
 	return (OK);

@@ -4,7 +4,7 @@
 #include "includes/token.h"
 #include <stdlib.h>
 
-static int		check_parser(t_parser *paser)
+static int	check_parser(t_parser *paser)
 {
 	int	type;
 
@@ -13,12 +13,14 @@ static int		check_parser(t_parser *paser)
 	type = paser->cur_tok->e_type;
 	if (type == TOKEN_SEMI)
 	{
-		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `;'",
+			STDERR_FILENO);
 		return (ERROR_PARSER);
 	}
 	if (type == TOKEN_PIPE)
 	{
-		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'", STDERR_FILENO);
+		ft_putstr_fd("\nminishell: syntax error near unexpected token `|'",
+			STDERR_FILENO);
 		return (ERROR_PARSER);
 	}
 	return (OK);
@@ -43,19 +45,22 @@ static int	wait_pids(t_exec *exec, int cnt)
 		if (WIFEXITED(waiting))
 			ex_st = WEXITSTATUS(waiting);
 		else
+		{
 			if (WIFSIGNALED(waiting))
 			{
 				ex_st = ERROR_SIG_KILL + WTERMSIG(waiting);
 				if (WTERMSIG(waiting) == 2)
 					ft_putchar('\n');
 			}
+		}
 		i++;
 	}
 	data_processing->n_flag = TRUE;
 	return (ex_st);
 }
 
-static int	exec_commands(t_data_processing *data_processing, t_parser *parser, size_t i)
+static int	exec_commands(t_data_processing *data_processing,
+		t_parser *parser, size_t i)
 {
 	t_ast	*command;
 	t_exec	*exec;
@@ -76,7 +81,6 @@ static int	exec_commands(t_data_processing *data_processing, t_parser *parser, s
 	if (out == ERROR_BAD_COMMAND)
 		return (free_any(ERROR_BAD_COMMAND, exec, free_exec));
 	data_processing->ex_st = wait_pids(exec, i);
-	// printf("data_processing->ex_st = %d\n", data_processing->ex_st);
 	free_exec(exec);
 	return (out);
 }
@@ -99,7 +103,6 @@ free_exec(exec); */
 static int	start_loop(t_data_processing *data_processing, t_parser *parser)
 {
 	int		out;
-	// int		i;
 
 	data_processing->cmd_i = 0;
 	out = OUT;

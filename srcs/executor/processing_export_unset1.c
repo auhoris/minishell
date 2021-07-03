@@ -46,7 +46,6 @@ int	set_key_value(char *str, t_env_list *env, int pos)
 	char	*value;
 	int		i;
 
-	// (void)pos;
 	if (check_export(str) == ERROR)
 	{
 		put_err_msg(str, pos);

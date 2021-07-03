@@ -7,6 +7,7 @@
 #include "includes/utils.h"
 
 #define MSG "\nminishell: syntax error near unexpected token "
+#define EOF_MSG "\nminishell: syntax error: unexpected end of file"
 
 t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
@@ -41,14 +42,14 @@ int	err_msg(t_parser *parser, char *msg, char *token, int code)
 	return (handle_error(parser, code));
 }
 
-// Разобраться с кейсом echo ; ; / echo | | и тому подобное
+// printf("\n'%s'='%s'",
+// print_token_type(parser->cur_tok->e_type), parser->cur_tok->value);
 int	parser_next_token(t_parser *parser)
 {
 	static int	i;
 	int			type;
 	int			prev_type;
 
-	// printf("\n'%s'='%s'", print_token_type(parser->cur_tok->e_type), parser->cur_tok->value);
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
 	if (parser->cur_tok == NULL)
@@ -64,19 +65,21 @@ int	parser_next_token(t_parser *parser)
 	if (type == TOKEN_SEMI)
 		i = 0;
 	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
-		return (err_msg(parser, "\nminishell: syntax error: unexpected end of file", "", ERROR_PARSER));
-		// return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
+		return (err_msg(parser, EOF_MSG, "", ERROR_PARSER));
 	else if ((prev_type == TOKEN_LESS || prev_type == TOKEN_MORE
 			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
 		return (err_msg(parser, MSG, "newline", ERROR_PARSER));
-	else if ((type == TOKEN_MORE && (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS)))
+	else if ((type == TOKEN_MORE
+			&& (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS)))
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
-	else if ((type == TOKEN_LESS && (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS)))
+	else if ((type == TOKEN_LESS
+			&& (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS)))
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
 	i++;
 	destroy_token(parser->prev_token);
 	return (type);
 }
+// return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 /* else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
 {
 	printf("here\n");

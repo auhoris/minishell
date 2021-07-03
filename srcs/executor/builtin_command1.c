@@ -2,11 +2,12 @@
 #include "../../libs/libft/srcs/libft.h"
 #include "../includes/types.h"
 #include "executor.h"
+#include <stddef.h>
 #include <unistd.h>
 
 int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 {
-	size_t	i;
+	int		i;
 	int		out;
 	int		err_cnt;
 
@@ -16,21 +17,19 @@ int	execution_export(t_exec *exec, t_ast *node, t_env_list *env)
 		data_processing->n_flag = FALSE;
 	if (exec->pipewrite == STDOUT_FILENO && node->fd_out == STDOUT_FILENO)
 		write (exec->tempout, "\n", 1);
-	i = 0;
 	if (node->argc == 0)
 	{
 		write_sort_env(env);
 		return (OUT);
 	}
-	while (i < node->argc)
+	i = -1;
+	while ((size_t)++i < node->argc)
 	{
-		// printf("%s\n", node->argv[i]);
 		out = set_key_value(node->argv[i], env, err_cnt);
 		if (out == ERROR)
 			err_cnt++;
 		if (out == ERROR_MALLOC)
 			return (ERROR_MALLOC);
-		i++;
 	}
 	return (OUT);
 }
