@@ -28,20 +28,18 @@ static int	check_parser(t_parser *paser)
 
 static int	wait_pids(t_exec *exec, int cnt)
 {
-	size_t	i;
 	int		waiting;
-	int		temp;
 	int		ex_st;
 
-	i = 0;
 	ex_st = OK;
 	if (exec->size_pids == 0)
 		return (data_processing->ex_st);
 	if (exec->n_flag != TRUE && cnt == 0)
 		ft_putchar('\n');
-	while (i < exec->size_pids)
+	cnt = -1;
+	while ((size_t)++cnt < exec->size_pids)
 	{
-		temp = waitpid(exec->pids[i], &waiting, 0);
+		waitpid(exec->pids[cnt], &waiting, 0);
 		if (WIFEXITED(waiting))
 			ex_st = WEXITSTATUS(waiting);
 		else
@@ -49,11 +47,9 @@ static int	wait_pids(t_exec *exec, int cnt)
 			if (WIFSIGNALED(waiting))
 			{
 				ex_st = ERROR_SIG_KILL + WTERMSIG(waiting);
-				if (WTERMSIG(waiting) == 2)
-					ft_putchar('\n');
+				ft_putchar('\n');
 			}
 		}
-		i++;
 	}
 	data_processing->n_flag = TRUE;
 	return (ex_st);

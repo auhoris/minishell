@@ -8,6 +8,9 @@
 
 #define MSG "\nminishell: syntax error near unexpected token "
 #define EOF_MSG "\nminishell: syntax error: unexpected end of file"
+#define TM TOKEN_MORE
+#define TL TOKEN_LESS
+#define TD TOKEN_DMORE
 
 t_parser	*init_parser(t_lexer *lexer, t_env_list *env)
 {
@@ -42,13 +45,10 @@ int	err_msg(t_parser *parser, char *msg, char *token, int code)
 	return (handle_error(parser, code));
 }
 
-// printf("\n'%s'='%s'",
-// print_token_type(parser->cur_tok->e_type), parser->cur_tok->value);
 int	parser_next_token(t_parser *parser)
 {
-	static int	i;
-	int			type;
-	int			prev_type;
+	int			ct;
+	int			pt;
 
 	parser->prev_token = parser->cur_tok;
 	parser->cur_tok = lexer_get_next_token(parser->lexer);
@@ -56,28 +56,22 @@ int	parser_next_token(t_parser *parser)
 		return (handle_error(parser, ERROR_MALLOC));
 	if (parser->cur_tok->e_type == BAD_TOKEN)
 		return (handle_error(parser, ERROR_PARSER));
-	prev_type = parser->prev_token->e_type;
-	type = parser->cur_tok->e_type;
-	if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
+	pt = parser->prev_token->e_type;
+	ct = parser->cur_tok->e_type;
+	if (ct == TOKEN_SEMI && pt == TOKEN_SEMI)
 		return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
-	if (type == TOKEN_SEMI && prev_type == TOKEN_PIPE)
+	if (ct == TOKEN_SEMI && pt == TOKEN_PIPE)
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
-	if (type == TOKEN_SEMI)
-		i = 0;
-	else if (prev_type == TOKEN_PIPE && type == TOKEN_EOF)
+	else if (pt == TOKEN_PIPE && ct == TOKEN_EOF)
 		return (err_msg(parser, EOF_MSG, "", ERROR_PARSER));
-	else if ((prev_type == TOKEN_LESS || prev_type == TOKEN_MORE
-			|| prev_type == TOKEN_DMORE) && type == TOKEN_EOF)
+	else if ((pt == TL || pt == TM || pt == TD) && ct == TOKEN_EOF)
 		return (err_msg(parser, MSG, "newline", ERROR_PARSER));
-	else if ((type == TOKEN_MORE
-			&& (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS)))
+	else if ((ct == TOKEN_MORE && (pt == TOKEN_MORE || pt == TOKEN_LESS)))
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
-	else if ((type == TOKEN_LESS
-			&& (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS)))
+	else if ((ct == TOKEN_LESS && (pt == TOKEN_MORE || pt == TOKEN_LESS)))
 		return (err_msg(parser, MSG, parser->cur_tok->value, ERROR_PARSER));
-	i++;
 	destroy_token(parser->prev_token);
-	return (type);
+	return (ct);
 }
 // return (err_msg(parser, MSG, parser->prev_token->value, ERROR_PARSER));
 /* else if (type == TOKEN_SEMI && prev_type == TOKEN_SEMI)
