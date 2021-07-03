@@ -36,6 +36,7 @@ void	handler(int s)
 
 	}
 	data_processing->ex_st = 1;
+	data_processing->num_symbol = 0;
 	get_last_element(&data_processing->actual_history);
 	ft_putstr("\n<minishell>$ ");
 	tputs(tgetstr("sc", 0), 1, ft_putint);
