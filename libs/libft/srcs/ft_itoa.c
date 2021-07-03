@@ -35,6 +35,7 @@ static int	ft_nbr_len(int n)
 	int	i;
 
 	i = 1;
+	n /= 10;
 	while (n != 0)
 	{
 		n /= 10;

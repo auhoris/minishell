@@ -9,7 +9,7 @@ srcdir			= srcs
 objdir			= objs
 libdir			= libs
 incdir			= $(srcdir)/includes
-gnldir			= $(libdir)/get_next_line
+# gnldir			= $(libdir)/get_next_line
 libftdir		= $(libdir)/libft
 termcapdir		= $(srcdir)/termcap
 historydir		= $(srcdir)/history
@@ -40,18 +40,18 @@ termcap			= -ltermcap
 
 # Additional libraries
 libft_a			= libft.a
-gnl_a			= gnl.a
-libs			= $(gnldir)/$(gnl_a) $(libftdir)/$(libft_a)
+# gnl_a			= gnl.a
+libs			= $(libftdir)/$(libft_a) #$(gnldir)/$(gnl_a)
 
 # Utils
 rm				= rm -rf
 
 
 
-all:			 lib gnl $(name)
+all:			 lib $(name) #gnl
 
-gnl:
-				@make -C $(gnldir)
+# gnl:
+# 				@make -C $(gnldir)
 lib:
 				@make -C $(libftdir)
 
@@ -75,11 +75,9 @@ $(objdir)/%.o	: $(srcdir)/%.c Makefile $(inclds)
 
 
 clean:
-				@make -C $(gnldir) clean
 				@make -C $(libftdir) clean
 				$(rm) $(objdir)
 fclean:			clean
-				@make -C $(gnldir) fclean
 				@make -C $(libftdir) fclean
 				$(rm) $(name)
 re:				fclean all
