@@ -18,7 +18,7 @@ int	advance_shlvl(t_env_list **env)
 		if (ft_strcmp(start->key, "SHLVL") == 0)
 		{
 			free(start->value);
-			start->value = ft_strdup(ft_itoa(shlvl));
+			start->value = ft_itoa(shlvl);
 			if (start->value == NULL)
 				return (ERROR_MALLOC);
 			break ;
@@ -41,6 +41,12 @@ static int	check_numeric(char *arg)
 	size_t	i;
 
 	i = 1;
+	if (ft_strlen(arg) == 1)
+	{
+		if (!ft_isdigit(arg[0]))
+			return (ERROR);
+		return (OK);
+	}
 	while (arg[i])
 	{
 		if (!ft_isdigit(arg[i]))

@@ -18,6 +18,7 @@ static char	*handle_dollar_token(char *str)
 	if (itoa_tmp == NULL)
 		return (NULL);
 	str = ft_strjoin(str, itoa_tmp);
+	printf("\nEXIT STATUS ============= %s\n",str);
 	free(itoa_tmp);
 	return (str);
 }
