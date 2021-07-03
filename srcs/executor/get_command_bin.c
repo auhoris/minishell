@@ -78,6 +78,8 @@ static char	*chek_executable(char *command)
 
 	bin_command = NULL;
 	out = stat(command, &st);
+	if (out == 0 && st.st_mode & S_IFDIR)
+		return (bin_command);
 	if (out == 0 && st.st_mode & S_IXUSR)
 	{
 		bin_command = ft_strdup(command);
