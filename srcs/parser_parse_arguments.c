@@ -10,6 +10,56 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+/* static int	handle_redirect_loop(t_parser *parser, t_ast *node)
+{
+	int		prev_type;
+	int		curr_type;
+	char	*file;
+
+	prev_type = parser->cur_tok->e_type;
+	while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS
+		|| prev_type == TOKEN_DMORE)
+	{
+		curr_type = parser_next_token(parser);
+		if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
+			return (ERROR_PARSER);
+		if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
+			return (ERROR_PARSER);
+		file = parser_get_args(parser);
+		if (ft_strcmp(file, "error_parser") == 0)
+			return (ERROR_PARSER);
+		if (make_node_fd(file, prev_type, node) != OK)
+			return (ERROR_PARSER);
+		prev_type = parser->cur_tok->e_type;
+		if (prev_type == ERROR_PARSER)
+			return (ERROR_PARSER);
+		check_fd(node, prev_type);
+	}
+	return (OK);
+} */
+/* int		prev_type;
+int		curr_type;
+char	*file;
+
+prev_type = parser->cur_tok->e_type;
+while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS
+	|| prev_type == TOKEN_DMORE)
+{
+	curr_type = parser_next_token(parser);
+	if (curr_type == TOKEN_PIPE || curr_type == TOKEN_SEMI)
+		return (ERROR_PARSER);
+	if (curr_type == ERROR_PARSER || curr_type == TOKEN_DOLLAR)
+		return (ERROR_PARSER);
+	file = parser_get_args(parser);
+	if (ft_strcmp(file, "error_parser") == 0)
+		return (ERROR_PARSER);
+	if (make_node_fd(file, prev_type, node) != OK)
+		return (ERROR_PARSER);
+	prev_type = parser->cur_tok->e_type;
+	if (prev_type == ERROR_PARSER)
+		return (ERROR_PARSER);
+	check_fd(node, prev_type);
+} */
 static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 {
 	int		prev_type;
