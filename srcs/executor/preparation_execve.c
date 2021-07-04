@@ -79,10 +79,29 @@ char	**create_args(t_ast *node, int *error, char **path_array)
 	return (args);
 }
 
+static int	create_env1(t_env_list *env, char **envp, int len)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(env->key, "=");
+	if (env->value != NULL)
+	{
+		envp[len] = ft_strjoin(tmp, env->value);
+		free(tmp);
+	}
+	else
+		envp[len] = tmp;
+	if (envp[len] == NULL)
+	{
+		clear_array(envp, len);
+		return (ERROR_MALLOC);
+	}
+	return (OUT);
+}
+
 char	**create_env(t_env_list *env)
 {
 	char	**envp;
-	char	*tmp;
 	int		len;
 
 	len = env_lstsize(&env);
@@ -93,14 +112,8 @@ char	**create_env(t_env_list *env)
 	len = 0;
 	while (env != NULL)
 	{
-		tmp = ft_strjoin(env->key, "=");
-		envp[len] = ft_strjoin(tmp, env->value);
-		free(tmp);
-		if (envp[len] == NULL)
-		{
-			clear_array(envp, len);
+		if (create_env1(env, envp, len) == ERROR_MALLOC)
 			return (NULL);
-		}
 		env = env->next;
 		len++;
 	}
