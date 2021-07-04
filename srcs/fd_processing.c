@@ -20,8 +20,8 @@ int	make_node_fd(char *filename, int type, t_ast *node)
 			g_data_processing->ex_st = EXIT_NOT_EXIST;
 		else if (errno == EACCES)
 			g_data_processing->ex_st = ERROR_PERM_DENIED;
-		ft_putchar('\n');
 		perror(filename);
+		free(filename);
 		g_data_processing->n_flag = TRUE;
 		return (ERROR_PARSER);
 	}

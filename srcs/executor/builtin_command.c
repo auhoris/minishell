@@ -45,7 +45,6 @@ void	execution_echo(t_exec *exec, t_ast *node)
 	if (!n_flag)
 		ft_putchar('\n');
 	g_data_processing->n_state = FALSE;
-	g_data_processing->ex_st = OK;
 }
 
 int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)

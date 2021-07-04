@@ -141,5 +141,7 @@ int	check_builtin(t_exec *exec, t_ast *node, t_env_list *env)
 		out = executor_exit(node->argc, node->argv, &env);
 	else
 		out = other_command(exec, node, env);
+	if (out == OK)
+		g_data_processing->ex_st = OK;
 	return (out);
 }
