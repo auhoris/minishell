@@ -6,6 +6,10 @@
 #include "includes/utils.h"
 #include <stddef.h>
 
+#define TM TOKEN_MORE
+#define TL TOKEN_LESS
+#define TD TOKEN_DMORE
+
 static void	lower_command_name(char *cmd)
 {
 	size_t	i;
@@ -34,11 +38,15 @@ static t_ast	*parser_parse_simple_command(t_parser *parser)
 	node = init_node(NODE_SIMPLECOMMAND);
 	if (node == NULL)
 		return (ast_error_handler(node, ERROR_MALLOC));
-	node->cmd_name = parser_get_args(parser);
-	if (node->cmd_name == NULL)
-		return (ast_error_handler(node, ERROR_MALLOC));
-	if (ft_strcmp(node->cmd_name, "error_parser") == 0)
-		return (ast_error_handler(node, ERROR_PARSER));
+	if (parser->cur_tok->e_type != TM && parser->cur_tok->e_type != TD
+		&& parser->cur_tok->e_type != TL)
+	{
+		node->cmd_name = parser_get_args(parser);
+		if (node->cmd_name == NULL)
+			return (ast_error_handler(node, ERROR_MALLOC));
+		if (ft_strcmp(node->cmd_name, "error_parser") == 0)
+			return (ast_error_handler(node, ERROR_PARSER));
+	}
 	while (parser->cur_tok->e_type != TOKEN_SEMI
 		&& parser->cur_tok->e_type != TOKEN_EOF
 		&& parser->cur_tok->e_type != TOKEN_PIPE)

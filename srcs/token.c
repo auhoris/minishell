@@ -27,8 +27,8 @@ void	destroy_token(t_token *token)
 		token = NULL;
 	}
 }
-/*
-char	*print_token_type(int type)
+
+/* char	*print_token_type(int type)
 {
 	switch (type) {
 		case TOKEN_ID: return ("TOKEN_ID");

@@ -5,8 +5,16 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#define SET "0123456789?="
+
 static t_token	*handle_dollar_cases(t_lexer *lexer)
 {
+	if (ft_isdigit(lexer->c))
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_ID, ft_strdup(""), FALSE)));
+	if (lexer->c == '?')
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_DOLLAR, ft_strdup("?"), FALSE)));
 	if (lexer->c == ' ')
 		return (init_token(TOKEN_ID, ft_strdup("$"), TRUE));
 	return (init_token(TOKEN_ID, ft_strdup("$"), FALSE));
@@ -20,11 +28,11 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 	if (str == NULL)
 		return (NULL);
 	lexer_advance(lexer);
-	if (ft_isdigit(lexer->c))
-		return (lexer_advance_with(lexer,
-				init_token(TOKEN_ID, ft_strdup(""), FALSE)));
-	if (lexer->c == '\0' || lexer->c == ' ' || lexer->c == '=')
+	if (ft_inset(SET, lexer->c) || lexer->c == '\0')
+	{
+		free(str);
 		return (handle_dollar_cases(lexer));
+	}
 	while ((!ft_inset(SPECIAL, lexer->c)
 			&& lexer->c != SPACE) && lexer->c != '\0')
 	{
@@ -39,3 +47,15 @@ t_token	*lexer_collect_dollar(t_lexer *lexer)
 		return (init_token(TOKEN_DOLLAR, str, TRUE));
 	return (init_token(TOKEN_DOLLAR, str, FALSE));
 }
+	/* if (ft_isdigit(lexer->c))
+	{
+		free(str);
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_ID, ft_strdup(""), FALSE)));
+	}
+	if (lexer->c == '?')
+	{
+		free(str);
+		return (lexer_advance_with(lexer,
+				init_token(TOKEN_DOLLAR, ft_strdup("?"), FALSE)));
+	} */

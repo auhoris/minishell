@@ -63,6 +63,7 @@ while (prev_type == TOKEN_MORE || prev_type == TOKEN_LESS
 	check_fd(node, prev_type);
 } */
 
+// if (ft_strcmp(node->cmd_name, "") == 0)
 static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 {
 	int	err;
@@ -70,7 +71,7 @@ static int	parser_parse_redirect(t_parser *parser, t_ast *node)
 	err = handle_redirect_loop(parser, node);
 	if (err != OK)
 		return (ERROR_PARSER);
-	if (ft_strcmp(node->cmd_name, "") == 0)
+	if (node->cmd_name == NULL)
 	{
 		node->cmd_name = parser_get_args(parser);
 		if (node->cmd_name == NULL)
