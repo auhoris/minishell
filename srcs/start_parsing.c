@@ -27,8 +27,6 @@ static int	check_parser(t_parser *paser)
 	return (OK);
 }
 
-/* if (exec->n_flag != TRUE && cnt == 0)
-	ft_putchar('\n'); */
 static int	wait_pids(t_exec *exec, int cnt)
 {
 	int		waiting;
@@ -56,7 +54,6 @@ static int	wait_pids(t_exec *exec, int cnt)
 	return (ex_st);
 }
 
-// printf("here\n");
 static int	exec_commands(t_data_processing *g_data_processing,
 		t_parser *parser, size_t i)
 {

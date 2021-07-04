@@ -52,6 +52,7 @@ int	execution_cd(t_exec *exec, t_ast *node, t_env_list *env)
 	int		out;
 	char	pwd_dir[256];
 
+	g_data_processing->n_state = FALSE;
 	exec->n_flag = TRUE;
 	if (getcwd(pwd_dir, 256) == NULL)
 		return (ERROR_MALLOC);
